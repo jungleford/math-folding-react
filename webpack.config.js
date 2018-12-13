@@ -31,7 +31,7 @@ export default {
   //target: 'node',
   mode: 'development',
   devtool: 'source-map',
-  entry: ['babel-polyfill', path.join(root, 'js', 'app.jsx')],
+  entry: ['babel-polyfill', path.join(root, 'src', 'js', 'app.jsx')],
   output: {
     path: path.join(root, 'dist', 'js'),
     filename: 'bundle.js'
@@ -61,7 +61,8 @@ export default {
   plugins: [
     new webpack.ProvidePlugin({
       $: 'jquery',
-      _: 'lodash'
+      _: 'lodash',
+      assert: 'assert'
     }),
     // Generates an `index.html` file with the <script> injected.
     new HtmlWebpackPlugin({
