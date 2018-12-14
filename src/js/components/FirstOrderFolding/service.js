@@ -58,6 +58,13 @@ Folding.prototype.init = function() {
 };
 
 /**
+ * @return {number | *} the total count of numbers.
+ */
+Folding.prototype.getCount = function() {
+  return this.count;
+};
+
+/**
  * Give the result of the first-order folading problem.
  *
  * @param algorithm (optional) By default, `recursive` is used.

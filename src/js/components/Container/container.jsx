@@ -17,7 +17,7 @@ import SecondOrderFolding from '../SecondOrderFolding';
 
 function TabContainer(props) {
   return (
-    <Typography component="div" style={{ padding: 8 * 3 }}>
+    <Typography component="div" style={{ padding: 8 * 3, backgroundColor: '#FFFFFF' }}>
       {props.children}
     </Typography>
   );
@@ -30,7 +30,14 @@ TabContainer.propTypes = {
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    backgroundColor: theme.palette.background.paper,
+    width: '80%',
+  },
+  view: {
+    ...theme.mixins.gutters(),
+    paddingTop: theme.spacing.unit * 2,
+    paddingBottom: theme.spacing.unit * 2,
+    marginTop: theme.spacing.unit * 2,
+    marginBottom: theme.spacing.unit * 2,
   },
   formControl: {
     margin: theme.spacing.unit,
@@ -69,7 +76,7 @@ class Container extends React.Component {
 
     return (
       <div className={classes.root}>
-        <Paper square>
+        <Paper className={classes.view} square>
           <FormControl className={classes.formControl}>
             <InputLabel htmlFor="algorithm">Algorithm</InputLabel>
             <Select
