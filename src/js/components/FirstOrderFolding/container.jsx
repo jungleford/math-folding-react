@@ -9,6 +9,7 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import SendIcon from '@material-ui/icons/Send';
+import Input from '@material-ui/core/Input';
 
 import Folding from './service';
 import utils from '../../utils/utils';
@@ -27,7 +28,7 @@ const styles = theme => ({
     paddingBottom: theme.spacing.unit * 2,
     marginTop: theme.spacing.unit * 2,
     marginBottom: theme.spacing.unit * 2,
-    width: '50%',
+    width: '75%',
   },
   formControl: {
     margin: theme.spacing.unit,
@@ -43,8 +44,10 @@ const styles = theme => ({
   rightIcon: {
     marginLeft: theme.spacing.unit,
   },
-  iconSmall: {
-    fontSize: 20,
+  textField: {
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+    width: 32,
   },
   card: {
     padding: 2,
@@ -64,8 +67,14 @@ class FirstOrderFolding extends Component {
     power: defaultPower,
     count: defaultService.getCount(),
     service: defaultService,
+
     result: defaultService.init(),
-    colors: utils.generateGradualColors(defaultService.getCount())
+    colors: utils.generateGradualColors(defaultService.getCount()),
+
+    number: 1,
+    positionOfNumber: 1,
+    position: 1,
+    numberOfPosition: 1
   };
 
   handleChange = event => {
@@ -75,8 +84,14 @@ class FirstOrderFolding extends Component {
       [event.target.name]: newPower,
       count: newService.getCount(),
       service: newService,
+
       result: newService.init(),
-      colors: utils.generateGradualColors(newService.getCount())
+      colors: utils.generateGradualColors(newService.getCount()),
+
+      number: 1,
+      positionOfNumber: 1,
+      position: 1,
+      numberOfPosition: 1
     });
   };
 
@@ -87,6 +102,26 @@ class FirstOrderFolding extends Component {
 
   reset = () => {
     this.setState({ result: this.state.service.init() });
+  };
+
+  positionOfNumber = event => {
+    let number = _.parseInt(event.target.value);
+    if (number >= 1 && number <= this.state.count && this.state.service.isComputeDone()) {
+      this.setState({
+        number: number,
+        positionOfNumber: this.state.service.positionOf(number)
+      });
+    }
+  };
+
+  numberOfPosition = event => {
+    let position = _.parseInt(event.target.value);
+    if (position >= 1 && position <= this.state.count && this.state.service.isComputeDone()) {
+      this.setState({
+        position: position,
+        numberOfPosition: this.state.service.valueOf(position)
+      });
+    }
   };
 
   render() {
@@ -120,10 +155,7 @@ class FirstOrderFolding extends Component {
         <h2>First Order Folding</h2>
         <p>Define an array \([1, 2, ..., n]\), that \(n = 2 ^ k\), and compute folding result.</p>
         <Paper className={classes.pad} elevation={1}
-               style={{
-                 display: 'flex',
-                 flexDirection: 'column',
-               }}>
+               style={{ display: 'flex', flexDirection: 'column' }}>
           <div>
             <FormControl className={classes.formControl}>
               <InputLabel htmlFor="power">Power (k)</InputLabel>
@@ -149,12 +181,25 @@ class FirstOrderFolding extends Component {
             </Button>
           </div>
           <div>
-            {'There are '}<b>{this.state.count}</b>{' numbers in total.'}
+            There are <b>{this.state.count}</b> numbers in total.
           </div>
         </Paper>
         <Paper className={classes.pad} elevation={1}
-               style={{display: 'flex'}}>
+               style={{ display: 'flex', flexDirection: 'column' }}>
+          <span>Result View</span>
+          <hr/>
+          <div style={{display: 'flex'}}>
           {this.props.ui === 'graphics' ? cards : this.state.result.toString()}
+          </div>
+        </Paper>
+        <Paper className={classes.pad} elevation={1}
+               style={{ display: this.state.service.isComputeDone() ? 'flex' : 'none', flexDirection: 'column' }}>
+          <div>
+            Number <Input className={classes.textField} type={'number'} value={this.state.number} onChange={this.positionOfNumber} /> is in position <b>{this.state.positionOfNumber}</b>.
+          </div>
+          <div>
+            Number in position <Input className={classes.textField} type={'number'} value={this.state.position} onChange={this.numberOfPosition} /> is <b>{this.state.numberOfPosition}</b>.
+          </div>
         </Paper>
       </div>
     );

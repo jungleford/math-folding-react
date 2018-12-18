@@ -1,9 +1,18 @@
 # math-folding
 Research for number folding puzzels
 
+## Install and run
+
+    $ npm install
+    $ npm run hot
+    $ npm run dev
+
+Then access: http://localhost:8080/
+
+## Background
 (Chinese edition)
 
-## 对折序列问题（Number Folding Problem）
+### 对折序列问题（Number Folding Problem）
 
 虽然问题本身很容易理解，不过名不正则言不顺，首先需要定义一些概念。以下命名皆为本人自行命名，未查证在数学里的标准命名，未必严格，可能有所出入：
 * **轮**（_Turn_）：经过一系列操作使对象达到与操作前“**自相似**”的状态，我们称为“一轮”，每一轮都有着相同的操作序列。如一张纸条从右往左对折，成为宽度减半，厚度加倍的“纸条”，这算作一轮；一张正方形的纸，从下往上对折，然后从右往左对折，成为面积1/4，厚度4倍的“纸”，这也算作是一轮。
@@ -19,7 +28,7 @@ Research for number folding puzzels
 
 先从简单的“一阶对折问题”（First Order Folding）入手。
 
-### 一阶对折（First Order Folding）
+#### 一阶对折（First Order Folding）
 
 问题：
 
@@ -36,7 +45,7 @@ Research for number folding puzzels
 | 对折次数 | 1            | 2            | 3               |
 | 最终序列 | 1 2          | 1 4 3 2      | 1 8 5 4 3 6 7 2 |
 
-### 二阶对折（Second Order Folding）
+#### 二阶对折（Second Order Folding）
 
 问题：
 

@@ -64,6 +64,10 @@ Folding.prototype.getCount = function() {
   return this.count;
 };
 
+Folding.prototype.isComputeDone = function() {
+  return this.computeDone;
+};
+
 /**
  * Give the result of the first-order folading problem.
  *

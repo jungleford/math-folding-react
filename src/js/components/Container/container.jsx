@@ -110,8 +110,8 @@ class Container extends React.Component {
                 indicatorColor="primary"
                 textColor="primary"
                 onChange={this.handleTabChange}>
-            <Tab label="First Order Folding" />
-            <Tab label="Second Order Folding" />
+            <Tab label="1st Order Folding" />
+            <Tab label="2nd Order Folding" />
           </Tabs>
         </Paper>
         {tab === 0 && <TabContainer><FirstOrderFolding algorithm={this.state.algorithm} ui={this.state.ui} /></TabContainer>}
