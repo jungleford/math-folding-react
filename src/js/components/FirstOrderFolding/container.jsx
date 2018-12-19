@@ -10,6 +10,11 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import SendIcon from '@material-ui/icons/Send';
 import Input from '@material-ui/core/Input';
+import Stepper from '@material-ui/core/Stepper';
+import Step from '@material-ui/core/Step';
+import StepLabel from '@material-ui/core/StepLabel';
+import StepContent from '@material-ui/core/StepContent';
+import Typography from '@material-ui/core/Typography';
 
 import Folding from './service';
 import utils from '../../utils/utils';
@@ -34,11 +39,9 @@ const styles = theme => ({
     margin: theme.spacing.unit,
     minWidth: 120,
   },
-  selectEmpty: {
-    marginTop: theme.spacing.unit * 2,
-  },
   button: {
-    margin: theme.spacing.unit,
+    marginTop: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
     textTransform: 'none',
   },
   rightIcon: {
@@ -55,7 +58,13 @@ const styles = theme => ({
     width: 20,
     height: 20,
     textAlign: 'center'
-  }
+  },
+  actionsContainer: {
+    marginBottom: theme.spacing.unit * 2,
+  },
+  resetContainer: {
+    padding: theme.spacing.unit * 3,
+  },
 });
 
 let defaultPower = 3;
@@ -68,13 +77,15 @@ class FirstOrderFolding extends Component {
     count: defaultService.getCount(),
     service: defaultService,
 
+    computeDone: false,
     result: defaultService.init(),
     colors: utils.generateGradualColors(defaultService.getCount()),
 
     number: 1,
-    positionOfNumber: 1,
     position: 1,
-    numberOfPosition: 1
+
+    activeStep: 0,
+    activeStepContent: []
   };
 
   handleChange = event => {
@@ -85,82 +96,127 @@ class FirstOrderFolding extends Component {
       count: newService.getCount(),
       service: newService,
 
+      computeDone: false,
       result: newService.init(),
       colors: utils.generateGradualColors(newService.getCount()),
 
       number: 1,
-      positionOfNumber: 1,
       position: 1,
-      numberOfPosition: 1
+
+      activeStep: 0,
+      activeStepContent: []
     });
   };
 
   doFolding = () => {
-    let result = this.state.service.compute(this.props.algorithm);
-    this.setState({ result })
+    let service = this.state.service;
+    this.setState({
+      result: service.compute(this.props.algorithm),
+      activeStepContent: service.getSteps(),
+      computeDone: service.isComputeDone(),
+    });
   };
 
   reset = () => {
-    this.setState({ result: this.state.service.init() });
+    this.setState(state => ({ result: state.service.init() }));
   };
 
   positionOfNumber = event => {
     let number = _.parseInt(event.target.value);
-    if (number >= 1 && number <= this.state.count && this.state.service.isComputeDone()) {
-      this.setState({
-        number: number,
-        positionOfNumber: this.state.service.positionOf(number)
-      });
+    if (number >= 1 && number <= this.state.count && this.state.computeDone) {
+      this.setState({ number });
     }
   };
 
   numberOfPosition = event => {
     let position = _.parseInt(event.target.value);
-    if (position >= 1 && position <= this.state.count && this.state.service.isComputeDone()) {
-      this.setState({
-        position: position,
-        numberOfPosition: this.state.service.valueOf(position)
-      });
+    if (position >= 1 && position <= this.state.count && this.state.computeDone) {
+      this.setState({ position });
     }
   };
 
+  stepNext = () => {
+    this.setState(state => ({ activeStep: state.activeStep + 1 }));
+  };
+
+  stepBack = () => {
+    this.setState(state => ({ activeStep: state.activeStep - 1 }));
+  };
+
+  stepReset = () => {
+    this.setState({ activeStep: 0 });
+  };
+
   render() {
-    const { classes } = this.props;
+    const { classes, algorithm, ui } = this.props;
+    const {
+      power, count, service,
+      computeDone, result, colors,
+      number, position,
+      activeStep, activeStepContent
+    } = this.state;
 
     let maxPower = 5;
-    let menus = [];
-    let cards = [];
 
     // Options of values of power
-    for (let i = 1; i <= maxPower; i++) {
-      menus.push(<MenuItem key={i} value={i}>{i}</MenuItem>);
-    }
+    // Remember: `new Array(length)` never initializes itself actually! Must call fill() to initialize it.
+    let menus = new Array(maxPower).fill(null).map((value, index) =>
+      <MenuItem key={index + 1} value={index + 1}>{index + 1}</MenuItem>
+    );
 
     // Generate graphics view
-    for (let i = 0; i < this.state.result.length; i++) {
-      let background = this.state.colors[this.state.result[i] - 1];
-      cards.push(
-        <Paper key={i} className={classes.card}
-               style={{
-                 backgroundColor: background,
-                 color: utils.getReverseColor(background)
-               }}>
-          {this.state.result[i]}
-        </Paper>
+    let cards = new Array(result.length).fill(null).map((value, index) => {
+      let background = colors[result[index] - 1];
+      return (
+      <Paper key={index} className={classes.card}
+             style={{
+               backgroundColor: background,
+               color: utils.getReverseColor(background)
+             }}>
+        {result[index]}
+      </Paper>
       );
-    }
+    });
+
+    let steps = new Array(power).fill(null).map((value, index) =>
+      'Turn ' + (index + 1)
+    ).map((label, index) => {
+      return (
+      <Step key={label}>
+        <StepLabel><b>{label}</b></StepLabel>
+        <StepContent>
+          <Typography>{computeDone ? activeStepContent[index].toString() : ''}</Typography>
+          <div className={classes.actionsContainer}>
+            <div>
+              <Button className={classes.button}
+                      disabled={activeStep === 0}
+                      onClick={this.stepBack}>
+                Back
+              </Button>
+              <Button className={classes.button} color="primary" variant="contained"
+                      onClick={this.stepNext}>
+                {activeStep === power - 1 ? 'Finish' : 'Next'}
+              </Button>
+            </div>
+          </div>
+        </StepContent>
+      </Step>
+      );
+    });
 
     return (
       <div className={classes.root}>
         <h2>First Order Folding</h2>
         <p>Define an array \([1, 2, ..., n]\), that \(n = 2 ^ k\), and compute folding result.</p>
+
+        {/* Controller Pad */}
         <Paper className={classes.pad} elevation={1}
                style={{ display: 'flex', flexDirection: 'column' }}>
           <div>
             <FormControl className={classes.formControl}>
               <InputLabel htmlFor="power">Power (k)</InputLabel>
               <Select
-                value={this.state.power}
+                value={power}
                 onChange={this.handleChange}
                 inputProps={{
                   name: 'power',
@@ -181,24 +237,48 @@ class FirstOrderFolding extends Component {
             </Button>
           </div>
           <div>
-            There are <b>{this.state.count}</b> numbers in total.
+            There are <b>{count}</b> numbers in total.
           </div>
         </Paper>
+
+        {/* Result View Pad */}
         <Paper className={classes.pad} elevation={1}
                style={{ display: 'flex', flexDirection: 'column' }}>
-          <span>Result View</span>
-          <hr/>
+          <h3>Result View</h3>
           <div style={{display: 'flex'}}>
-          {this.props.ui === 'graphics' ? cards : this.state.result.toString()}
+          {ui === 'graphics' ? cards : result.toString()}
           </div>
         </Paper>
+
+        {/* Result View Pad */}
         <Paper className={classes.pad} elevation={1}
-               style={{ display: this.state.service.isComputeDone() ? 'flex' : 'none', flexDirection: 'column' }}>
+               style={{ display: computeDone ? 'flex' : 'none', flexDirection: 'column' }}>
+          <h3>Explore More</h3>
+          <div style={{ marginBottom: 10 }}>You can observe that giving the same number or position, you will get the same position/number! It's amazing, right? We call this <b>SYMMETRY</b>.</div>
           <div>
-            Number <Input className={classes.textField} type={'number'} value={this.state.number} onChange={this.positionOfNumber} /> is in position <b>{this.state.positionOfNumber}</b>.
+            Number <Input className={classes.textField} type={'number'} value={number} onChange={this.positionOfNumber} /> is in position <span style={{ color: 'red', fontWeight: 'bolder', fontSize: 32 }}>{computeDone ? service.positionOf(number) : 1}</span>.
           </div>
           <div>
-            Number in position <Input className={classes.textField} type={'number'} value={this.state.position} onChange={this.numberOfPosition} /> is <b>{this.state.numberOfPosition}</b>.
+            Number in position <Input className={classes.textField} type={'number'} value={position} onChange={this.numberOfPosition} /> is <span style={{ color: 'blue', fontWeight: 'bolder', fontSize: 32 }}>{computeDone ? service.valueOf(position) : 1}</span>.
+          </div>
+        </Paper>
+
+        {/* Steps View Pad: a vertical stepper */}
+        <Paper className={classes.pad} elevation={1}
+               style={{ display: computeDone ? 'flex' : 'none', flexDirection: 'column' }}>
+          <h3>Steps of each Turn</h3>
+          <div style={{ width: '90%' }}>
+            <Stepper activeStep={activeStep} orientation="vertical">
+              {steps}
+            </Stepper>
+            {activeStep === steps.length && (
+              <Paper square elevation={0} className={classes.resetContainer}>
+                <Typography>All steps completed</Typography>
+                <Button onClick={this.stepReset} className={classes.button}>
+                  Once Again!
+                </Button>
+              </Paper>
+            )}
           </div>
         </Paper>
       </div>

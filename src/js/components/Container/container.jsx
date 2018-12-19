@@ -65,7 +65,7 @@ class Container extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { tab } = this.state;
+    const { tab, algorithm, ui } = this.state;
 
     let algMenus = [], uiMenus = [];
 
@@ -80,7 +80,7 @@ class Container extends React.Component {
           <FormControl className={classes.formControl}>
             <InputLabel htmlFor="algorithm">Algorithm</InputLabel>
             <Select
-              value={this.state.algorithm}
+              value={algorithm}
               onChange={this.handleDropdownChange}
               inputProps={{
                 name: 'algorithm',
@@ -93,7 +93,7 @@ class Container extends React.Component {
           <FormControl className={classes.formControl}>
             <InputLabel htmlFor="ui">UI Style</InputLabel>
             <Select
-              value={this.state.ui}
+              value={ui}
               onChange={this.handleDropdownChange}
               inputProps={{
                 name: 'ui',
@@ -114,8 +114,8 @@ class Container extends React.Component {
             <Tab label="2nd Order Folding" />
           </Tabs>
         </Paper>
-        {tab === 0 && <TabContainer><FirstOrderFolding algorithm={this.state.algorithm} ui={this.state.ui} /></TabContainer>}
-        {tab === 1 && <TabContainer><SecondOrderFolding algorithm={this.state.algorithm} ui={this.state.ui} /></TabContainer>}
+        {tab === 0 && <TabContainer><FirstOrderFolding algorithm={algorithm} ui={ui} /></TabContainer>}
+        {tab === 1 && <TabContainer><SecondOrderFolding algorithm={algorithm} ui={ui} /></TabContainer>}
       </div>
     );
   }
