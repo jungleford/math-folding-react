@@ -33,7 +33,6 @@ const styles = theme => ({
     paddingBottom: theme.spacing.unit * 2,
     marginTop: theme.spacing.unit * 2,
     marginBottom: theme.spacing.unit * 2,
-    width: '75%',
   },
   formControl: {
     margin: theme.spacing.unit,
@@ -59,6 +58,12 @@ const styles = theme => ({
     height: 20,
     textAlign: 'center'
   },
+  pile: {
+    padding: 2,
+    margin: 5,
+    minWidth: 10,
+    textAlign: 'center'
+  },
   actionsContainer: {
     marginBottom: theme.spacing.unit * 2,
   },
@@ -77,7 +82,6 @@ class FirstOrderFolding extends Component {
     count: defaultService.getCount(),
     service: defaultService,
 
-    computeDone: false,
     result: defaultService.init(),
     colors: utils.generateGradualColors(defaultService.getCount()),
 
@@ -96,7 +100,6 @@ class FirstOrderFolding extends Component {
       count: newService.getCount(),
       service: newService,
 
-      computeDone: false,
       result: newService.init(),
       colors: utils.generateGradualColors(newService.getCount()),
 
@@ -113,7 +116,6 @@ class FirstOrderFolding extends Component {
     this.setState({
       result: service.compute(this.props.algorithm),
       activeStepContent: service.getSteps(),
-      computeDone: service.isComputeDone(),
     });
   };
 
@@ -123,14 +125,14 @@ class FirstOrderFolding extends Component {
 
   positionOfNumber = event => {
     let number = _.parseInt(event.target.value);
-    if (number >= 1 && number <= this.state.count && this.state.computeDone) {
+    if (number >= 1 && number <= this.state.count && this.state.service.isComputeDone()) {
       this.setState({ number });
     }
   };
 
   numberOfPosition = event => {
     let position = _.parseInt(event.target.value);
-    if (position >= 1 && position <= this.state.count && this.state.computeDone) {
+    if (position >= 1 && position <= this.state.count && this.state.service.isComputeDone()) {
       this.setState({ position });
     }
   };
@@ -151,7 +153,7 @@ class FirstOrderFolding extends Component {
     const { classes, algorithm, ui } = this.props;
     const {
       power, count, service,
-      computeDone, result, colors,
+      result, colors,
       number, position,
       activeStep, activeStepContent
     } = this.state;
@@ -178,14 +180,43 @@ class FirstOrderFolding extends Component {
       );
     });
 
-    let steps = new Array(power).fill(null).map((value, index) =>
-      'Turn ' + (index + 1)
+    // Generate the steps UI.
+    // There are k+1 steps, including the beginning state.
+    let steps = new Array(power + 1).fill(null).map((value, index) =>
+      index === 0 ? 'Original Sequence' : 'Turn ' + index
     ).map((label, index) => {
       return (
       <Step key={label}>
         <StepLabel><b>{label}</b></StepLabel>
         <StepContent>
-          <Typography>{computeDone ? activeStepContent[index].toString() : ''}</Typography>
+          <div style={{ display: 'flex' }}>
+            {
+              activeStepContent.length > 0 && activeStepContent[index].map((pile, i) =>
+                ui === 'graphics' ? (
+                  <Paper key={i} className={classes.pile}
+                         style={{ display: 'flex', flexDirection: 'column-reverse',
+                                  width: 32 }}>
+                    {
+                      pile.map((number, j) =>
+                        /* Here I use the symmetry of folding: cards[number] equals the position. */
+                        cards[service.positionOf(number) - 1]
+                      )
+                    }
+                  </Paper>
+                ) : (
+                  <div key={i}
+                       style={{ display: 'flex', flexDirection: 'column-reverse', justifyContent: 'space-around',
+                                width: '100%' }}>
+                    {
+                      pile.map((number, j) =>
+                        <span key={j}>{number}</span>
+                      )
+                    }
+                  </div>
+                )
+              )
+            }
+          </div>
           <div className={classes.actionsContainer}>
             <div>
               <Button className={classes.button}
@@ -195,7 +226,7 @@ class FirstOrderFolding extends Component {
               </Button>
               <Button className={classes.button} color="primary" variant="contained"
                       onClick={this.stepNext}>
-                {activeStep === power - 1 ? 'Finish' : 'Next'}
+                {activeStep === power ? 'Finish' : 'Next'}
               </Button>
             </div>
           </div>
@@ -214,7 +245,7 @@ class FirstOrderFolding extends Component {
                style={{ display: 'flex', flexDirection: 'column' }}>
           <div>
             <FormControl className={classes.formControl}>
-              <InputLabel htmlFor="power">Power (k)</InputLabel>
+              <InputLabel htmlFor="power">Power (<b>k</b>)</InputLabel>
               <Select
                 value={power}
                 onChange={this.handleChange}
@@ -252,22 +283,22 @@ class FirstOrderFolding extends Component {
 
         {/* Result View Pad */}
         <Paper className={classes.pad} elevation={1}
-               style={{ display: computeDone ? 'flex' : 'none', flexDirection: 'column' }}>
+               style={{ display: service.isComputeDone() ? 'flex' : 'none', flexDirection: 'column' }}>
           <h3>Explore More</h3>
           <div style={{ marginBottom: 10 }}>You can observe that giving the same number or position, you will get the same position/number! It's amazing, right? We call this <b>SYMMETRY</b>.</div>
           <div>
-            Number <Input className={classes.textField} type={'number'} value={number} onChange={this.positionOfNumber} /> is in position <span style={{ color: 'red', fontWeight: 'bolder', fontSize: 32 }}>{computeDone ? service.positionOf(number) : 1}</span>.
+            Number <Input className={classes.textField} type={'number'} value={number} onChange={this.positionOfNumber} /> is in position <span style={{ color: 'red', fontWeight: 'bolder', fontSize: 32 }}>{service.positionOf(number)}</span>.
           </div>
           <div>
-            Number in position <Input className={classes.textField} type={'number'} value={position} onChange={this.numberOfPosition} /> is <span style={{ color: 'blue', fontWeight: 'bolder', fontSize: 32 }}>{computeDone ? service.valueOf(position) : 1}</span>.
+            Number in position <Input className={classes.textField} type={'number'} value={position} onChange={this.numberOfPosition} /> is <span style={{ color: 'blue', fontWeight: 'bolder', fontSize: 32 }}>{service.valueOf(position)}</span>.
           </div>
         </Paper>
 
         {/* Steps View Pad: a vertical stepper */}
         <Paper className={classes.pad} elevation={1}
-               style={{ display: computeDone ? 'flex' : 'none', flexDirection: 'column' }}>
+               style={{ display: service.isComputeDone() ? 'flex' : 'none', flexDirection: 'column' }}>
           <h3>Steps of each Turn</h3>
-          <div style={{ width: '90%' }}>
+          <div>
             <Stepper activeStep={activeStep} orientation="vertical">
               {steps}
             </Stepper>
@@ -275,7 +306,7 @@ class FirstOrderFolding extends Component {
               <Paper square elevation={0} className={classes.resetContainer}>
                 <Typography>All steps completed</Typography>
                 <Button onClick={this.stepReset} className={classes.button}>
-                  Once Again!
+                  Start Again!
                 </Button>
               </Paper>
             )}

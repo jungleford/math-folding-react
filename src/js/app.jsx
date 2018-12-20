@@ -9,7 +9,7 @@ let App = createReactClass({
     return (
       <div>
         <h1>Number Folding Puzzels</h1>
-        <p>(...description...)</p>
+        <p>(...description...see README.md)</p>
         <Container/>
       </div>
     );

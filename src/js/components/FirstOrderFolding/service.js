@@ -14,7 +14,7 @@ function Folding(power) {
   this.count = Math.pow(2, power); // n = 2 ^ k
   this.original = Array.from(new Array(this.count), (val, index) => index + 1); // create [1, 2, ..., n]
   this.final = this.original;
-  this.steps = [];
+  this.steps = [this.original.map(n => [n])];
   this.computeDone = false; // expected to true when computing done.
 }
 
@@ -27,7 +27,6 @@ function Folding(power) {
  * @return {number[][]} the two-dimension array of the merge result.
  */
 function doFoldingByRecursive(piles, steps) {
-  steps && steps.push(piles);
   if (piles.length === 1) return piles;
   let halfLength = piles.length / 2;
 
@@ -45,6 +44,9 @@ function doFoldingByRecursive(piles, steps) {
   for (let i = 0; i < firstHalf.length; i++) {
     result.push(_.concat(firstHalf[i], reversedLaterHalf[i]));
   }
+
+  // Save each step.
+  steps && steps.push(result);
 
   // Then folding the result array recursively.
   return doFoldingByRecursive(result, steps);
@@ -89,7 +91,7 @@ Folding.prototype.compute = function(algorithm) {
   switch (algorithm) {
     case Constants.ALGORITHM_RECURCIVE:
     default:
-      result = doFoldingByRecursive(result.map(n => [n]), this.steps)[0];
+      result = doFoldingByRecursive(this.steps[0], this.steps)[0];
   }
   this.final = result;
   this.computeDone = true;
@@ -104,7 +106,8 @@ Folding.prototype.compute = function(algorithm) {
  * @return {number} the position of an original number in the final sequence.
  */
 Folding.prototype.positionOf = function(x) {
-  assert(this.computeDone, 'You must run `compute()` first.');
+  if (!this.computeDone) return 1;
+
   assert(typeof x === 'number' && x >= 1 && x <= this.count, 'the number `x` must be between 1 and ' + this.count);
   return _.indexOf(this.final, x) + 1;
 };
@@ -117,7 +120,8 @@ Folding.prototype.positionOf = function(x) {
  * @return {number} the value on the given position.
  */
 Folding.prototype.valueOf = function(p) {
-  assert(this.computeDone, 'You must run `compute()` first.');
+  if (!this.computeDone) return 1;
+
   assert(typeof p === 'number' && p >= 1 && p <= this.count, 'the position `p` must be between 1 and ' + this.count);
   return this.final[p - 1];
 };
@@ -128,7 +132,6 @@ Folding.prototype.valueOf = function(p) {
  * @return {Array} All steps in the process of computation.
  */
 Folding.prototype.getSteps = function() {
-  assert(this.computeDone, 'You must run `compute()` first.');
   return this.steps;
 };
 
