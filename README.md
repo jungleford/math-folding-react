@@ -9,10 +9,8 @@ Research for number folding puzzels
 
 Then access: http://localhost:8080/
 
-## Background
+## Background: 对折序列问题（Number Folding Problem）
 (Chinese edition)
-
-### 对折序列问题（Number Folding Problem）
 
 虽然问题本身很容易理解，不过名不正则言不顺，首先需要定义一些概念。以下命名皆为本人自行命名，未查证在数学里的标准命名，未必严格，可能有所出入：
 * **轮**（_Turn_）：经过一系列操作使对象达到与操作前“**自相似**”的状态，我们称为“一轮”，每一轮都有着相同的操作序列。如一张纸条从右往左对折，成为宽度减半，厚度加倍的“纸条”，这算作一轮；一张正方形的纸，从下往上对折，然后从右往左对折，成为面积1/4，厚度4倍的“纸”，这也算作是一轮。
@@ -23,7 +21,7 @@ Then access: http://localhost:8080/
 
 一些显见的结论：
 * $ b=2^r $。一阶对折的基为2，二阶对折的基为4（$ 2^2 $），等等。
-* 只有一阶对折情形下，“次”等于真实对折的次数**k**。高于一阶，真实对折次数=$ k*r $。如二阶对折实际要折叠2k次。
+* 幂次等于轮数**k**。只有一阶对折情形下，“次”等于真实对折的次数**k**。高于一阶，真实对折次数=$ k*r $。如二阶对折实际要折叠**2k**次。
 * $ n=b^k=(2^r)^k=2^(k*r)=2^对折次数 $。如一阶二次是4个数（也称为一阶四元对折），二阶三次是64个数（也称为二阶64元对折），等等。
 
 一些不那么显见的结论：
@@ -34,7 +32,7 @@ Then access: http://localhost:8080/
 
 先从简单的“一阶对折问题”（_First Order Folding_）入手。
 
-#### 一阶对折（First Order Folding）
+### 一阶对折（First Order Folding）
 
 问题：
 
@@ -51,7 +49,7 @@ Then access: http://localhost:8080/
 | 对折次数 | 1            | 2            | 3               |
 | 最终序列 | 1 2          | 1 4 3 2      | 1 8 5 4 3 6 7 2 |
 
-#### 二阶对折（Second Order Folding）
+### 二阶对折（Second Order Folding）
 
 问题：
 

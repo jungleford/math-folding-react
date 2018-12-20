@@ -34,19 +34,18 @@ function doFoldingByRecursive(piles, steps) {
   let firstHalf = _.take(piles, halfLength);
   let laterHalf = _.takeRight(piles, halfLength);
 
-  // Reverse the second half piles
-  let reversedLaterHalf = _.each(_.reverse(laterHalf), function(pile) {
-    return _.reverse(pile); // and then also reverse each pile
-  });
+  // Reverse the second half piles and then also reverse each pile
+  let reversedLaterHalf = _.each(_.reverse(laterHalf), pile => _.reverse(pile));
 
   // Merge the two halves
   let result = [];
-  for (let i = 0; i < firstHalf.length; i++) {
-    result.push(_.concat(firstHalf[i], reversedLaterHalf[i]));
-  }
+  _.each(firstHalf, (unit, index) => {
+    result.push(_.concat(unit, reversedLaterHalf[index]));
+  });
 
   // Save each step.
-  steps && steps.push(result);
+  // Recursive call will change the passed-in `result`, so here must save a full copy.
+  steps && steps.push(_.cloneDeep(result));
 
   // Then folding the result array recursively.
   return doFoldingByRecursive(result, steps);

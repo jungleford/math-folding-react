@@ -161,13 +161,13 @@ class FirstOrderFolding extends Component {
     let maxPower = 5;
 
     // Options of values of power
-    // Remember: `new Array(length)` never initializes itself actually! Must call fill() to initialize it.
-    let menus = new Array(maxPower).fill(null).map((value, index) =>
+    // Remember: `new Array(length)` never initializes itself actually! Must call fill() or from() to initialize it.
+    let menus = Array.from(new Array(maxPower), (value, index) =>
       <MenuItem key={index + 1} value={index + 1}>{index + 1}</MenuItem>
     );
 
     // Generate graphics view
-    let cards = new Array(result.length).fill(null).map((value, index) => {
+    let cards = Array.from(new Array(result.length), (value, index) => {
       let background = colors[result[index] - 1];
       return (
       <Paper key={index} className={classes.card}
@@ -182,7 +182,7 @@ class FirstOrderFolding extends Component {
 
     // Generate the steps UI.
     // There are k+1 steps, including the beginning state.
-    let steps = new Array(power + 1).fill(null).map((value, index) =>
+    let steps = Array.from(new Array(power + 1), (value, index) =>
       index === 0 ? 'Original Sequence' : 'Turn ' + index
     ).map((label, index) => {
       return (
