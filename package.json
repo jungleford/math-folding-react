@@ -17,7 +17,7 @@
     "build": "webpack --config ./webpack.babel.js",
     "hot": "webpack -d --watch --config ./webpack.babel.js",
     "dev": "webpack-dev-server --colors --config ./webpack.babel.js",
-    "start": "start npm run hot && npm run dev"
+    "start": "npm run build && npm run dev"
   },
   "dependencies": {
     "@material-ui/core": "^3.6.2",

@@ -31,6 +31,7 @@ function doFoldingByRecursive(piles, steps) {
   let halfLength = piles.length / 2;
 
   // Split the piles into half and half.
+  let result = [];
   let firstHalf = _.take(piles, halfLength);
   let laterHalf = _.takeRight(piles, halfLength);
 
@@ -38,7 +39,6 @@ function doFoldingByRecursive(piles, steps) {
   let reversedLaterHalf = _.each(_.reverse(laterHalf), pile => _.reverse(pile));
 
   // Merge the two halves
-  let result = [];
   _.each(firstHalf, (unit, index) => {
     result.push(_.concat(unit, reversedLaterHalf[index]));
   });

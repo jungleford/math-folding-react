@@ -78,12 +78,12 @@ let defaultService = new Folding(defaultPower);
 class FirstOrderFolding extends Component {
   // Initial state
   state = {
-    power: defaultPower,
-    count: defaultService.getCount(),
+    power: defaultPower, // k
+    count: defaultService.getCount(), // 2^k
     service: defaultService,
 
-    result: defaultService.init(),
-    colors: utils.generateGradualColors(defaultService.getCount()),
+    result: defaultService.init(), // an one-dimension array
+    colors: utils.generateGradualColors(defaultService.getCount()), // an one-dimension array
 
     number: 1,
     position: 1,
