@@ -56,13 +56,14 @@ const styles = theme => ({
     margin: 5,
     width: 20,
     height: 20,
-    textAlign: 'center'
+    textAlign: 'center',
+    lineHeight: '20px',
   },
   pile: {
     padding: 2,
     margin: 5,
     minWidth: 10,
-    textAlign: 'center'
+    textAlign: 'center',
   },
   actionsContainer: {
     marginBottom: theme.spacing.unit * 2,
@@ -112,11 +113,10 @@ class FirstOrderFolding extends Component {
   };
 
   doFolding = () => {
-    let service = this.state.service;
-    this.setState({
-      result: service.compute(this.props.algorithm),
-      activeStepContent: service.getSteps(),
-    });
+    this.setState(state => ({
+      result: state.service.compute(this.props.algorithm),
+      activeStepContent: state.service.getSteps(),
+    }));
   };
 
   reset = () => {
@@ -175,7 +175,7 @@ class FirstOrderFolding extends Component {
                backgroundColor: background,
                color: utils.getReverseColor(background)
              }}>
-        {result[index]}
+        <b>{result[index]}</b>
       </Paper>
       );
     });
@@ -276,7 +276,7 @@ class FirstOrderFolding extends Component {
         <Paper className={classes.pad} elevation={1}
                style={{ display: 'flex', flexDirection: 'column' }}>
           <h3>Result View</h3>
-          <div style={{display: 'flex'}}>
+          <div style={{ display: 'flex' }}>
           {ui === 'graphics' ? cards : result.toString()}
           </div>
         </Paper>

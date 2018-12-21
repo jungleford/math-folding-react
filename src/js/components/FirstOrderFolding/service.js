@@ -11,7 +11,7 @@ import Constants from '../../utils/constants';
 function Folding(power) {
   assert(typeof power === 'number' && power > 0, '`power` must be an positive integer.');
 
-  this.count = Math.pow(2, power); // n = 2 ^ k
+  this.count = 2 ** power; // n = 2 ^ k
   this.original = Array.from(new Array(this.count), (val, index) => index + 1); // create [1, 2, ..., n]
   this.final = this.original;
   this.steps = [this.original.map(n => [n])];
