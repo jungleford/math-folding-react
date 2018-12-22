@@ -127,7 +127,7 @@ Folding.prototype.compute = function(algorithm) {
 
   let result = this.original;
   switch (algorithm) {
-    case Constants.ALGORITHM_RECURCIVE:
+    case Constants.ALGORITHM_RECURSIVE:
     default:
       result = doFoldingByRecursive(this.steps[0], this.steps)[0];
   }

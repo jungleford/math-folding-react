@@ -18,6 +18,9 @@ import Typography from '@material-ui/core/Typography';
 
 import Folding from './service';
 import utils from '../../utils/utils';
+import Constants from '../../utils/constants';
+
+let cardWidth = 32;
 
 const styles = theme => ({
   root: {
@@ -54,15 +57,14 @@ const styles = theme => ({
   card: {
     padding: 2,
     margin: 5,
-    width: 32,
-    height: 32,
+    width: cardWidth,
+    height: cardWidth,
     textAlign: 'center',
     lineHeight: '32px',
   },
   pile: {
     padding: 2,
     margin: 5,
-    minWidth: 10,
     textAlign: 'center',
   },
   actionsContainer: {
@@ -197,19 +199,22 @@ class SecondOrderFolding extends Component {
     // Generate the steps UI.
     // There are k+1 steps, including the beginning state.
     let steps = Array.from(new Array(2 * power + 1), (value, index) =>
-      index === 0 ? 'Original Sequence' : 'Turn ' + _.ceil(index / 2) + ', Step ' + index
+      index === 0 ? 'Original Matrix' : 'Turn ' + _.ceil(index / 2) + ', Step ' + index
     ).map((label, index) => {
-      let turn = _.floor(index / power) + 1;
+      let turn = _.ceil(index / 2);
+      let isLaterHalfTurn = index > 0 && index % 2 === 0;
+      let numberCountInRow = index > 0 ? 2 ** (power - turn + 1) : 2 ** power;
+      let containerWidth = (cardWidth + 28) * (isLaterHalfTurn ? numberCountInRow / 2 : numberCountInRow) + 10;
       return (
         <Step key={label}>
           <StepLabel><b>{label}</b></StepLabel>
           <StepContent>
-            <div style={{ display: 'flex', flexWrap: 'wrap', }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', width: containerWidth, }}>
               {
                 activeStepContent.length > 0 && activeStepContent[index].map((row, rowIndex) => {// activeStepContent[index] is a three-dimension matrix
                   let rowCount = activeStepContent[index].length;
 
-                  if (ui === 'graphics') {
+                  if (ui === Constants.UI_GRAPHICS) {
                     return (
                       <Paper key={rowIndex} className={classes.pile}
                            style={{
@@ -251,8 +256,9 @@ class SecondOrderFolding extends Component {
                             <div key={colIndex}
                                  style={{
                                    display: 'flex', flexDirection: 'column-reverse',
+                                   margin: 10,
                                  }}>
-                              {column.toString()}
+                              {column.map(number => <span>{number}</span>)}
                             </div>
                           )
                         }
@@ -322,7 +328,7 @@ class SecondOrderFolding extends Component {
                style={{ display: 'flex', flexDirection: 'column' }}>
           <h3>Result View</h3>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            {ui === 'graphics' ? cardRows : numberRows}
+            {ui === Constants.UI_GRAPHICS ? cardRows : numberRows}
           </div>
         </Paper>
 

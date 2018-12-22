@@ -51,7 +51,7 @@ const styles = theme => ({
 class Container extends React.Component {
   state = {
     tab: 0,
-    algorithm: Constants.ALGORITHM_RECURCIVE,
+    algorithm: Constants.ALGORITHM_RECURSIVE,
     ui: Constants.UI_CHARACTER
   };
 
@@ -69,7 +69,7 @@ class Container extends React.Component {
 
     let algMenus = [], uiMenus = [];
 
-    algMenus.push(<MenuItem key={0} value={Constants.ALGORITHM_RECURCIVE}>{Constants.ALGORITHM_RECURCIVE}</MenuItem>);
+    algMenus.push(<MenuItem key={0} value={Constants.ALGORITHM_RECURSIVE}>{Constants.ALGORITHM_RECURSIVE}</MenuItem>);
 
     uiMenus.push(<MenuItem key={0} value={Constants.UI_CHARACTER}>{Constants.UI_CHARACTER}</MenuItem>);
     uiMenus.push(<MenuItem key={1} value={Constants.UI_GRAPHICS}>{Constants.UI_GRAPHICS}</MenuItem>);

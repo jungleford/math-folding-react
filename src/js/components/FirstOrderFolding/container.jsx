@@ -18,6 +18,7 @@ import Typography from '@material-ui/core/Typography';
 
 import Folding from './service';
 import utils from '../../utils/utils';
+import Constants from '../../utils/constants';
 
 const styles = theme => ({
   root: {
@@ -192,7 +193,7 @@ class FirstOrderFolding extends Component {
           <div style={{ display: 'flex' }}>
             {
               activeStepContent.length > 0 && activeStepContent[index].map((pile, i) =>
-                ui === 'graphics' ? (
+                ui === Constants.UI_GRAPHICS ? (
                   <Paper key={i} className={classes.pile}
                          style={{ display: 'flex', flexDirection: 'column-reverse',
                                   width: 32 }}>
@@ -277,7 +278,7 @@ class FirstOrderFolding extends Component {
                style={{ display: 'flex', flexDirection: 'column' }}>
           <h3>Result View</h3>
           <div style={{ display: 'flex' }}>
-          {ui === 'graphics' ? cards : result.toString()}
+          {ui === Constants.UI_GRAPHICS ? cards : result.toString()}
           </div>
         </Paper>
 

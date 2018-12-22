@@ -5,7 +5,7 @@
  * @constructor
  */
 export default {
-  ALGORITHM_RECURCIVE: 'recursive',
+  ALGORITHM_RECURSIVE: 'recursive',
 
   UI_CHARACTER: 'character',
   UI_GRAPHICS: 'graphics'
