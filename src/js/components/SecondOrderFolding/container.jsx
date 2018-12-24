@@ -76,17 +76,18 @@ const styles = theme => ({
 });
 
 let defaultPower = 3;
-let defaultService = new Folding(defaultPower);
 
 class SecondOrderFolding extends Component {
+  defaultService = new Folding(defaultPower);
+
   // Initial state
   state = {
     power: defaultPower, // k
-    count: defaultService.getCount(), // 4^k
-    service: defaultService,
+    count: this.defaultService.getCount(), // 4^k
+    service: this.defaultService,
 
-    result: defaultService.init(), // a two-dimension array
-    colors: utils.generateGradualColorMatrix(defaultService.getRowCount()), // a two-dimension array
+    result: this.defaultService.init(), // a two-dimension array
+    colors: utils.generateGradualColorMatrix(this.defaultService.getRowCount()), // a two-dimension array
 
     number: 1,
     position: 1,
@@ -258,7 +259,11 @@ class SecondOrderFolding extends Component {
                                    display: 'flex', flexDirection: 'column-reverse',
                                    margin: 10,
                                  }}>
-                              {column.map(number => <span>{number}</span>)}
+                              {
+                                column.map(number =>
+                                  <span key={number}>{number}</span>
+                                )
+                              }
                             </div>
                           )
                         }
@@ -289,7 +294,7 @@ class SecondOrderFolding extends Component {
     return (
       <div className={classes.root}>
         <h2>Second Order Folding</h2>
-        <p>{'Define an matrix [[1, 2, ..., 2^k], ... , [2^(2k-1)+1, ..., n]], i.e., \\(\\left( \\begin{array}{ccc} 1 & 2 & \\ldots & 2^k \\\\ 2^k+1 & 2^k+2 & \\ldots & 2^{k+1} \\\\ \\vdots & \\vdots & \\ldots & \\vdots \\\\ 2^{2k-1}+1 & 2^{2k-1}+2 & \\ldots & n \\end{array} \\right)\\), and that \\(n = 4 ^ k\\), and compute folding result.'}</p>
+        <p>{'Define a matrix [[1, 2, ..., 2^k], ... , [2^(2k-1)+1, ..., n]], i.e., \\(\\left( \\begin{array}{ccc} 1 & 2 & \\ldots & 2^k \\\\ 2^k+1 & 2^k+2 & \\ldots & 2^{k+1} \\\\ \\vdots & \\vdots & \\ldots & \\vdots \\\\ 2^{2k-1}+1 & 2^{2k-1}+2 & \\ldots & n \\end{array} \\right)\\), and that \\(n = 4 ^ k\\), and compute folding result.'}</p>
 
         {/* Controller Pad */}
         <Paper className={classes.pad} elevation={1}
@@ -372,6 +377,5 @@ SecondOrderFolding.propTypes = {
   algorithm: PropTypes.string.isRequired,
   ui: PropTypes.string.isRequired
 };
-
 
 export default withStyles(styles)(SecondOrderFolding);

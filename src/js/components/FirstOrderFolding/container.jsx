@@ -75,17 +75,18 @@ const styles = theme => ({
 });
 
 let defaultPower = 3;
-let defaultService = new Folding(defaultPower);
 
 class FirstOrderFolding extends Component {
+  defaultService = new Folding(defaultPower);
+
   // Initial state
   state = {
     power: defaultPower, // k
-    count: defaultService.getCount(), // 2^k
-    service: defaultService,
+    count: this.defaultService.getCount(), // 2^k
+    service: this.defaultService,
 
-    result: defaultService.init(), // an one-dimension array
-    colors: utils.generateGradualColors(defaultService.getCount()), // an one-dimension array
+    result: this.defaultService.init(), // an one-dimension array
+    colors: utils.generateGradualColors(this.defaultService.getCount()), // an one-dimension array
 
     number: 1,
     position: 1,
@@ -198,7 +199,7 @@ class FirstOrderFolding extends Component {
                          style={{ display: 'flex', flexDirection: 'column-reverse',
                                   width: 32 }}>
                     {
-                      pile.map((number, j) =>
+                      pile.map(number =>
                         /* Here I use the symmetry of folding: cards[number] equals the position. */
                         cards[service.positionOf(number) - 1]
                       )
@@ -209,8 +210,8 @@ class FirstOrderFolding extends Component {
                        style={{ display: 'flex', flexDirection: 'column-reverse', justifyContent: 'space-around',
                                 width: '100%' }}>
                     {
-                      pile.map((number, j) =>
-                        <span key={j}>{number}</span>
+                      pile.map(number =>
+                        <span key={number}>{number}</span>
                       )
                     }
                   </div>
@@ -323,6 +324,5 @@ FirstOrderFolding.propTypes = {
   algorithm: PropTypes.string.isRequired,
   ui: PropTypes.string.isRequired
 };
-
 
 export default withStyles(styles)(FirstOrderFolding);
