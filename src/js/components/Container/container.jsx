@@ -5,6 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -110,8 +111,12 @@ class Container extends React.Component {
                 indicatorColor="primary"
                 textColor="primary"
                 onChange={this.handleTabChange}>
-            <Tab label="1st Order Folding" />
-            <Tab label="2nd Order Folding" />
+            <Tooltip title="1st Order Folding">
+              <Tab label="FOF" />
+            </Tooltip>
+            <Tooltip title="2nd Order Folding">
+              <Tab label="SOF" />
+            </Tooltip>
           </Tabs>
         </Paper>
         {tab === 0 && <TabContainer><FirstOrderFolding algorithm={algorithm} ui={ui} /></TabContainer>}

@@ -95,6 +95,10 @@ class FirstOrderFolding extends Component {
     activeStepContent: []
   };
 
+  componentDidMount = () => {
+    eval('MathJax.Hub.Queue(["Typeset", MathJax.Hub])');
+  };
+
   handleChange = event => {
     let newPower = event.target.value;
     let newService = new Folding(newPower);
