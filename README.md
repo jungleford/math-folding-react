@@ -21,10 +21,10 @@ After compiled successfully, then access: http://localhost:8080/
 * **堆**（_Pile_）：初始状态下，每个数字单独组成一个堆，共**n**堆。当每一**步**对折操作结束后，堆数减半；而当每一**轮**操作结束后，堆数减少为前一轮的**1/b**。
 
 一些显见的结论：
-* $b=2^r$。一阶对折的基为2，二阶对折的基为4（$2^2$），以此类推。
-* 幂次等于轮数**k**。只有一阶对折情形下，“次”等于真实对折的次数（即“步数”），即$s=k$。高于一阶，$s=k*r$。如二阶对折实际要折叠**2k**次。
-* 每一**步**对折操作结束后，堆数减半；每一**轮**操作结束后，堆数减少为前一轮的$1/b$。
-* $n=b^k=(2^r)^k=2^(k*r)=2^s$。如“一阶二次”是4个数（也称为一阶四元对折），“二阶三次”是64个数（也称为二阶64元对折），等等。
+* ![](http://latex.codecogs.com/gif.latex?b=2^r)。一阶对折的基为2，二阶对折的基为4（![](http://latex.codecogs.com/gif.latex?2^2)），以此类推。
+* 幂次等于轮数**k**。只有一阶对折情形下，“次”等于真实对折的次数（即“步数”），即![](http://latex.codecogs.com/gif.latex?s=k)。高于一阶，![](http://latex.codecogs.com/gif.latex?s=k*r)。如二阶对折实际要折叠**2k**次。
+* 每一**步**对折操作结束后，堆数减半；每一**轮**操作结束后，堆数减少为前一轮的![](http://latex.codecogs.com/gif.latex?1/b)。
+* ![](http://latex.codecogs.com/gif.latex?n=b^k=(2^r)^k=2^{k*r}=2^s)。如“一阶二次”是4个数（也称为一阶四元对折），“二阶三次”是64个数（也称为二阶64元对折），等等。
 
 一些不那么显见的结论：
 * 数字和位置的**对称性**。见以下讨论。
@@ -35,11 +35,11 @@ After compiled successfully, then access: http://localhost:8080/
 
 #### 问题：
 
-一张纸条，均分成$n=2^k$格，每个格子内按从左到右顺序写下自然数序列1，2，3，……，n
+一张纸条，均分成![](http://latex.codecogs.com/gif.latex?n=2^k)格，每个格子内按从左到右顺序写下自然数序列1，2，3，……，n
 
 将纸条从右往左不断对折（共**k**步），直至剩下一个格子，求：
 1) 最后从下往上数字的序列
-1) 数字x（$1<=x<=n$）的最终位置
+1) 数字x（![](http://latex.codecogs.com/gif.latex?1%20\le%20x%20\le%20n)）的最终位置
 1) 最终序列中位置p的数字
 
 | 名称     | 一阶一次对折 | 一阶二次对折 | 一阶三次对折    |
@@ -49,20 +49,20 @@ After compiled successfully, then access: http://localhost:8080/
 | 最终序列 | 1 2          | 1 4 3 2      | 1 8 5 4 3 6 7 2 |
 
 一阶对折的对称性：
-* 对折前显然是对称，然而经过**k**轮对折后，依然是对称的！记$p(x)$为对折后数字x在最终序列的位置，$v(p)$为对折后位置p上的数字，则有：
-  1) 给定同一个x，有$p(x)=v(x)$
-  1) $p(p(x))=x$
-  1) $v(v(x))=x$
+* 对折前显然是对称，然而经过**k**轮对折后，依然是对称的！记![](http://latex.codecogs.com/gif.latex?p(x))为对折后数字x在最终序列的位置，![](http://latex.codecogs.com/gif.latex?v(p))为对折后位置p上的数字，则有：
+  1) 给定同一个x，有![](http://latex.codecogs.com/gif.latex?p(x)=v(x))
+  1) ![](http://latex.codecogs.com/gif.latex?p%28p%28x%29%29=x)
+  1) ![](http://latex.codecogs.com/gif.latex?v%28v%28x%29%29=x)
 
 ### 二阶对折（Second Order Folding）
 
 #### 问题：
 
-一张正方形的纸，均分成$n=4^k$格，先按从左到右，然后从上到下顺序在每个格子写下自然数序列1，2，3，……，n
+一张正方形的纸，均分成![](http://latex.codecogs.com/gif.latex?n=4^k)格，先按从左到右，然后从上到下顺序在每个格子写下自然数序列1，2，3，……，n
 
 将纸条先从下往上，然后从右往左不断对折（共**k**轮，**2k**步），直至剩下一个格子，求：
 1) 最后从下往上数字的序列
-1) 数字x（$1<=x<=n$）的最终位置
+1) 数字x（![](http://latex.codecogs.com/gif.latex?1%20\le%20x%20\le%20n)）的最终位置
 1) 最终序列中位置p的数字
 
 ### 算法
