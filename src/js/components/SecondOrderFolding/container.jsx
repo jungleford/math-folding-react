@@ -198,7 +198,16 @@ class SecondOrderFolding extends Component {
     ));
 
     let numberRows = result.map((row, rowIndex) => (
-      <div key={rowIndex} style={{ display: 'flex' }}>{row.toString()}</div>
+      //<div key={rowIndex} style={{ display: 'flex' }}>{row.toString()}</div>
+      <div key={rowIndex} style={{ display: 'flex' }}>
+        {
+          row.map((number, colIndex) =>
+            <div key={colIndex} style={{ width: 16 + 2 ** (power - 1), textAlign: 'center', margin: 4, }}>
+              <span>{number}</span>
+            </div>
+          )
+        }
+      </div>
     ));
 
     // Generate the steps UI.
