@@ -291,7 +291,7 @@ class FirstOrderFolding extends Component {
         <Paper className={classes.pad} elevation={1}
                style={{ display: service.isComputeDone() ? 'flex' : 'none', flexDirection: 'column' }}>
           <h3>Explore More</h3>
-          <div style={{ marginBottom: 10 }}>You can observe that giving the same number or position, you will get the same position/number! It's amazing, right? We call this <b>SYMMETRY</b>.</div>
+          <div style={{ marginBottom: 10 }}>You can observe that giving the same number or position, you will get the same position/number! It looks amazing, doesn't it? We call this <b>SYMMETRY</b>.</div>
           <div>
             Number <Input className={classes.textField} type={'number'} value={number} onChange={this.positionOfNumber} /> is in position <span style={{ color: 'red', fontWeight: 'bolder', fontSize: 32 }}>{service.positionOf(number)}</span>.
           </div>
