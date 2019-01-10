@@ -244,7 +244,7 @@ class FirstOrderFolding extends Component {
     return (
       <div className={classes.root}>
         <h2>First Order Folding</h2>
-        <p>Define an array \([1, 2, ..., n]\), that \(n = 2 ^ k\), and compute folding result.</p>
+        <p>Define an array \([1, 2, ..., n]\), that \(n = 2 ^ k\), and compute the folding result.</p>
 
         {/* Controller Pad */}
         <Paper className={classes.pad} elevation={1}

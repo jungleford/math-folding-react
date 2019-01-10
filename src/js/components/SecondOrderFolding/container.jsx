@@ -307,7 +307,7 @@ class SecondOrderFolding extends Component {
     return (
       <div className={classes.root}>
         <h2>Second Order Folding</h2>
-        <p>{'Define a matrix \\([[1, 2, ..., 2^k], ... , [2^{2k-1}+1, ..., n]]\\), i.e., \\(\\left( \\begin{array}{ccc} 1 & 2 & \\ldots & 2^k \\\\ 2^k+1 & 2^k+2 & \\ldots & 2^{k+1} \\\\ \\vdots & \\vdots & \\ldots & \\vdots \\\\ 2^{2k-1}+1 & 2^{2k-1}+2 & \\ldots & n \\end{array} \\right)\\), and that \\(n = 4 ^ k\\), and compute folding result.'}</p>
+        <p>{'Define a matrix \\([[1, 2, ..., 2^k], ... , [2^{2k-1}+1, ..., n]]\\), i.e., \\(\\left( \\begin{array}{ccc} 1 & 2 & \\ldots & 2^k \\\\ 2^k+1 & 2^k+2 & \\ldots & 2^{k+1} \\\\ \\vdots & \\vdots & \\ldots & \\vdots \\\\ 2^{2k-1}+1 & 2^{2k-1}+2 & \\ldots & n \\end{array} \\right)\\), and that \\(n = 4 ^ k\\), and compute the folding result.'}</p>
 
         {/* Controller Pad */}
         <Paper className={classes.pad} elevation={1}

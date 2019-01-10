@@ -60,7 +60,7 @@ After compiled successfully, then access: http://localhost:8080/
 
 #### **头部稳定性**
 
-第t轮对折得到的![](http://latex.codecogs.com/gif.latex?2^{k-t})个堆中，**前面的一半**，即前![](http://latex.codecogs.com/gif.latex?2^{k-t-1})个堆，在下一次第t+1轮对折后保持本堆自身的序列不变。特别地，第一堆的顺序绝对稳定不变。这话有点拗口，但是结果确实很直观的：比如一阶三次对折的最后一个数是8，在第一次对折后它成了第一堆（此时为1，8两个元素）的第二个元素，此后，无论多少次对折，它永远是第二个元素，直到结束。这个结论对下面的推导很重要。
+第t轮对折得到的![](http://latex.codecogs.com/gif.latex?2^{k-t})个堆中，**前面的一半**，即前![](http://latex.codecogs.com/gif.latex?2^{k-t-1})个堆，在下一次第t+1轮对折后保持本堆自身的序列不变。特别地，第一堆的顺序绝对稳定不变。这话有点拗口，但是结果却是很直观的：比如一阶三次对折的最后一个数是8，在第一次对折后它成了第一堆（此时为1，8两个元素）的第二个元素，此后，无论多少次对折，它永远是第二个元素，直到结束。这个结论对下面的推导很重要。
 
 
 #### 一阶对折的**菊形增长规律**
@@ -103,9 +103,9 @@ After compiled successfully, then access: http://localhost:8080/
     首先，在进行k次折叠时，记数字x所在的“块”的序号为B(x)。
     由于1和2分别位于头尾，这里，定义
         B(1)=0
-        B(2)=i
+        B(2)=N
     由于块内元素数目始终不超过2，故
-        i=n/2+1-1=n/2，加1是因为头尾块均只有1个元素，减1是因为“块”从0开始编号
+        N=n/2+1-1=n/2，加1是因为头尾块均只有1个元素，减1是因为“块”从0开始编号
     即
         B(2)=2^(k-1)
 
@@ -132,7 +132,7 @@ After compiled successfully, then access: http://localhost:8080/
     或
         P[k+1](x)=2*P[k](x)-1，当P(x)为奇数时
 
-此时我们就得到了第一个迭代：
+此时我们就得到了**第一个迭代**：
 
 ![](http://latex.codecogs.com/gif.latex?P_{k+1}_%28x%29=\begin{cases}2P_k_%28x%29,&\textrm{P%28x%29%20is%20even}\\\\2P_k_%28x%29-1,&\textrm{P%28x%29%20is%20odd}\end{cases})
 
@@ -155,10 +155,10 @@ After compiled successfully, then access: http://localhost:8080/
 这些点，我不妨将其称为“**锚点**”（_anchor_）。锚点有这样一些特点：
 1) 锚点在它所在的块当中，总是这个块里的两个数字当中排在前面的那个。
 1) 除数字1排在第一个以外，其余锚点是按降序排列。
-1) 锚点间距是递增的，确切地说，除1以外，排在后面的锚点j（即数字![](http://latex.codecogs.com/gif.latex?2^j)）与排在前面的锚点j+1（即数字![](http://latex.codecogs.com/gif.latex?2^{j+1})）之间间隔了![](http://latex.codecogs.com/gif.latex?2^{k-j}-1)个数字。
+1) 锚点间距是递增的，确切地说，除1以外，排在后面的锚点j（即数字![](http://latex.codecogs.com/gif.latex?2^j)）与排在前面的锚点j+1（即数字![](http://latex.codecogs.com/gif.latex?2^{j+1})）之间间隔了![](http://latex.codecogs.com/gif.latex?2^{k-j}-1)个数字（或者说![](http://latex.codecogs.com/gif.latex?2^{k-j-1}-1)个块）。
 
 在此，我们已经得到了这幅拼图当中的一小块，能够精确计算锚点的位置了。现在我们尝试继续往前迈一步，分析“块”的性质：
-1) 首先，容易看出的，除去头尾两个数字，每个块均由一奇一偶两个数字组成，且**偶数总是排在前面**。
+1) 首先，容易看出的，除去头尾两个数字，每个块均由一奇一偶两个数字组成，且**偶数总是排在前面**。于是对于任何一个折叠序列，总是奇偶相间排列的。
 1) 因此，加上头尾的1和2，我们可以断定：**奇数总是排列在奇数号位置，偶数总是排列在偶数号位置**。
 1) 锚点所在的块中，紧跟着锚点j后面的数字是![](http://latex.codecogs.com/gif.latex?2^{j-1}+1)，因此根据上面总结的锚点位置公式，有![](http://latex.codecogs.com/gif.latex?P%282^{j-1}+1%29=2^{k-j+1}+1,0<j\le%20k)，不妨将此点称为“**邻锚点**”。拼图又接上了一小块。
 
@@ -176,7 +176,111 @@ After compiled successfully, then access: http://localhost:8080/
 
 总共**4k-4**个数。还剩![](http://latex.codecogs.com/gif.latex?2^k-4k+4)个数的位置待确定。
 
+#### 块首倍增
 
+在单独一个序列不容易看出规律的情况下，我们再次来观察两个相邻的序列，看看有什么规律。当然，我们很快就找到了——
+
+    对于k次序列，对于分布在1和2之间的各块，有：对于块i的第一个数字，在k+1次序列中的相同位置处的数字是它的两倍。
+
+给定![](http://latex.codecogs.com/gif.latex?B_{k,i}_)，它的第一个数字（根据上面块的性质第一条，一定是个偶数）是**x**，那么在![](http://latex.codecogs.com/gif.latex?B_{k+1,i}_)中，第一个数字是**2x**，即
+
+![](http://latex.codecogs.com/gif.latex?B_{k+1,i,1}_=2B_{k,i,1}_)
+
+这里我们记块**i**的第一个数字为![](http://latex.codecogs.com/gif.latex?B_{i,1}_)，第二个数字为![](http://latex.codecogs.com/gif.latex?B_{i,2}_)。而对于每个块的第二个数字（奇数）——
+
+    对于k次序列的块i的第二个数字x，在k+1次序列中的相同位置处的数字是2x-1。
+
+即
+
+![](http://latex.codecogs.com/gif.latex?B_{k+1,i,2}_=2B_{k,i,2}_-1)
+
+用值关系表示为，我们得到**第二个迭代**：
+
+![](http://latex.codecogs.com/gif.latex?V_{k+1}_%28x%29=\begin{cases}2V_k_%28x%29,&\textrm{x is even}\\\\2V_k_%28x%29-1,&\textrm{x is odd}\end{cases},1<x\le2^k)
+
+观察第一和第二迭代式，似乎长得完全一样啊？不对，其实它们是两个不同的等式。因为第一迭代式的条件是P(x)即**位置序号的奇偶性**；而第二迭代式的条件是**x本身的奇偶性**。但是却可以得出形式完全相同的迭代关系，这也从另一个角度揭示了前面总结过的**对称性**。
+
+如果换算成数字的位置关系，则应该是：
+
+![](http://latex.codecogs.com/gif.latex?\begin{cases}P_{k+1}_%282x%29=P_k_%28x%29,&\textrm{x is even}\\\\P_{k+1}_%282x-1%29=P_k_%28x%29,&\textrm{x is odd}\end{cases},1<x\le2^k)
+
+至此，k+1次序列的前一半的所有块的数字，都可以从k次序列完全推出！
+
+而序列的后一半数字呢？我们也观察到了——
+
+    k次序列的后半段数字与前半段有着镜像对应关系。
+    偶数在后半段的镜像位数字比该偶数数小1，而奇数在后半段镜像位数字比该奇数大1。
+
+这个性质和前面锚点/邻锚点及其镜像点位的关系完全一致，即
+
+![](http://latex.codecogs.com/gif.latex?M%28x%29=\begin{cases}x-1,&\textrm{x is even}\\\\x+1,&\textrm{x is odd}\end{cases},1\le%20P%28x%29\le%202^{k-1})
+
+此处记M(x)为数字x对称位（镜像位）上的数字。转换成位置函数关系就是：
+
+![](http://latex.codecogs.com/gif.latex?P%28M%28x%29%29=2^k-P%28x%29+1,1\le%20P%28x%29\le%202^{k-1})
+
+或
+
+![](http://latex.codecogs.com/gif.latex?\begin{cases}P%28x-1%29=2^k-P%28x%29+1,&\textrm{x is even}\\\\P%28x+1%29=2^k-P%28x%29+1,&\textrm{x is odd}\end{cases},1\le%20P%28x%29\le%202^{k-1})
+
+于是序列的后半段也可以完全构造出来。至此，我们已经可以完全计算整个序列：
+1) 确定头尾分别为1和2，即
+
+   ![](http://latex.codecogs.com/gif.latex?P%281%29=1)
+
+   ![](http://latex.codecogs.com/gif.latex?P%282%29=2^k=n)
+
+1) 确定中间块的两个数字分别为4和3，即
+
+   ![](http://latex.codecogs.com/gif.latex?P%283%29=2^{k-1}+1={n\over2}+1)
+
+   ![](http://latex.codecogs.com/gif.latex?P%284%29=2^{k-1}={n\over2})
+
+1) 如何确定一个数是分布在序列的前半段（也称为“左边”）还是后半段（也称为“右边”）呢？这里有个快速的判断方法：
+
+       数字模4余0或余1的，分布在左边；而余2和余3的，则分布在右边。
+
+   知道这个规律以后就可以分别构造前半段和后半段了。
+
+1) 构造序列的前半段（模4余0或余1）：
+
+   ![](http://latex.codecogs.com/gif.latex?P%282^k%29=P%28n%29=2)
+
+   ![](http://latex.codecogs.com/gif.latex?P%282^{k-1}+1%29=P%28{n\over2}+1%29=3)
+
+   ......
+
+   ![](http://latex.codecogs.com/gif.latex?P%282^{j}%29=2^{k-j+1},0<j\le%20k)
+
+   ![](http://latex.codecogs.com/gif.latex?P%282^{j-1}+1%29=2^{k-j+1}+1,0<j\le%20k)
+
+   ......
+
+   ![](http://latex.codecogs.com/gif.latex?P_k_%284i%29=P_{k-1}%282i%29=P_{k-2}_%28i%29,1\le%20i\le%202^{k-2})
+
+   ![](http://latex.codecogs.com/gif.latex?P_k%284i-3%29=P_{k-1}_%282i-1%29=P_{k-2}_%28i%29,1\le%20i\le%202^{k-2})
+
+1) 构造序列的后半段（模4余2或余3）：
+
+   ![](http://latex.codecogs.com/gif.latex?P%282^k-1%29=P%28n-1%29=2^k-1=n-1)
+
+   ![](http://latex.codecogs.com/gif.latex?P%282^{k-1}+2%29=P%28{n\over2}+2%29=2^k-2=n-2)
+
+   ......
+
+   ![](http://latex.codecogs.com/gif.latex?P%282^j-1%29=2^k-2^{k-j+1}+1,0<j\le%20k)
+
+   ![](http://latex.codecogs.com/gif.latex?P%282^{j-1}+2%29=2^k-2^{k-j+1},1<j\le%20k)
+
+   ......
+
+   ![](http://latex.codecogs.com/gif.latex?P_k_%284i-1%29=2^k-P_k_%284i%29+1=2^k-P_{k-2}_%28i%29+1,1\le%20i\le%202^{k-2})
+
+   ![](http://latex.codecogs.com/gif.latex?P_k_%284i-2%29=2^k-P_k_%284i-3%29+1=2^k-P_{k-2}_%28i%29+1,1\le%20i\le%202^{k-2})
+
+根据对称性，求序列位置上的数字的公式也是完全一样的。
+
+最后，必须重申的是：以上我的所有推理都是根据观察和归纳，**并非严格的数学证明**。
 
 ## 二阶对折（Second Order Folding）
 
