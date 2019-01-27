@@ -11,6 +11,7 @@ import Constants from '../../utils/constants';
 function Folding(power) {
   assert(typeof power === 'number' && power > 0, '`power` must be an positive integer.');
 
+  this.power = power;
   this.count = 4 ** power; // n = 4 ^ k
   this.rowCount = 2 ** power;
   // build up a two-dimension array [[1, 2, ..., 2k], ..., [..., n]]
@@ -121,13 +122,13 @@ Folding.prototype.isComputeDone = function() {
  */
 Folding.prototype.compute = function(algorithm) {
   assert(!algorithm || typeof algorithm === 'string',
-    '`algorithm` must be a flag defined in `Constants`, and it can be just omitted.');
+    '`algorithm` must be a flag defined in `Constants`, and it can be just omitted.\nYour algorithm: ' + algorithm);
 
   if (this.computeDone) return this.final;
 
   let result = this.original;
   switch (algorithm) {
-    case Constants.ALGORITHM_RECURSIVE:
+    case Constants.algorithm.RECURSIVE:
     default:
       result = doFoldingByRecursive(this.steps[0], this.steps)[0];
   }
@@ -147,7 +148,7 @@ Folding.prototype.compute = function(algorithm) {
 Folding.prototype.positionOf = function(x) {
   if (!this.computeDone) return 1;
 
-  assert(typeof x === 'number' && x >= 1 && x <= this.count, 'the number `x` must be between 1 and ' + this.count);
+  assert(typeof x === 'number' && x >= 1 && x <= this.count, 'the number `x` must be between 1 and ' + this.count + '\nYour number x is: ' + x);
   return _.indexOf(this.finalFlat, x) + 1;
 };
 
@@ -161,7 +162,7 @@ Folding.prototype.positionOf = function(x) {
 Folding.prototype.valueOf = function(p) {
   if (!this.computeDone) return 1;
 
-  assert(typeof p === 'number' && p >= 1 && p <= this.count, 'the position `p` must be between 1 and ' + this.count);
+  assert(typeof p === 'number' && p >= 1 && p <= this.count, 'the position `p` must be between 1 and ' + this.count + '\nYour position p is: ' + p);
   return this.finalFlat[p - 1];
 };
 

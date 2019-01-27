@@ -76,6 +76,7 @@ const styles = theme => ({
 });
 
 let defaultPower = 3;
+let maxPower = 5;
 
 class SecondOrderFolding extends Component {
   defaultService = new Folding(defaultPower);
@@ -122,6 +123,7 @@ class SecondOrderFolding extends Component {
   doFolding = () => {
     this.setState(state => ({
       result: state.service.compute(this.props.algorithm),
+      activeStep: 0,
       activeStepContent: state.service.getSteps(),
     }));
   };
@@ -164,8 +166,6 @@ class SecondOrderFolding extends Component {
       number, position,
       activeStep, activeStepContent
     } = this.state;
-
-    let maxPower = 5;
 
     // Options of values of power
     // Remember: `new Array(length)` never initializes itself actually! Must call fill() or from() to initialize it.
@@ -228,7 +228,7 @@ class SecondOrderFolding extends Component {
                 activeStepContent.length > 0 && activeStepContent[index].map((row, rowIndex) => {// activeStepContent[index] is a three-dimension matrix
                   let rowCount = activeStepContent[index].length;
 
-                  if (ui === Constants.UI_GRAPHICS) {
+                  if (ui === Constants.ui.GRAPHICS) {
                     return (
                       <Paper key={rowIndex} className={classes.pile}
                            style={{
@@ -346,7 +346,7 @@ class SecondOrderFolding extends Component {
                style={{ display: 'flex', flexDirection: 'column' }}>
           <h3>Result View</h3>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            {ui === Constants.UI_GRAPHICS ? cardRows : numberRows}
+            {ui === Constants.ui.GRAPHICS ? cardRows : numberRows}
           </div>
         </Paper>
 

@@ -5,8 +5,13 @@
  * @constructor
  */
 export default {
-  ALGORITHM_RECURSIVE: 'recursive',
+  algorithm: {
+    RECURSIVE: 'recursive',
+    FORMULA: 'formula'
+  },
 
-  UI_CHARACTER: 'character',
-  UI_GRAPHICS: 'graphics'
+  ui: {
+    CHARACTER: 'character',
+    GRAPHICS: 'graphics'
+  }
 };

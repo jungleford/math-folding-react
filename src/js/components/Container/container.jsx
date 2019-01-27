@@ -52,8 +52,8 @@ const styles = theme => ({
 class Container extends React.Component {
   state = {
     tab: 0,
-    algorithm: Constants.ALGORITHM_RECURSIVE,
-    ui: Constants.UI_CHARACTER
+    algorithm: Constants.algorithm.RECURSIVE,
+    ui: Constants.ui.CHARACTER
   };
 
   handleDropdownChange = event => {
@@ -70,10 +70,13 @@ class Container extends React.Component {
 
     let algMenus = [], uiMenus = [];
 
-    algMenus.push(<MenuItem key={0} value={Constants.ALGORITHM_RECURSIVE}>{Constants.ALGORITHM_RECURSIVE}</MenuItem>);
+    _.each(Constants.algorithm, alg => {
+      algMenus.push(<MenuItem key={alg} value={alg}>{alg}</MenuItem>);
+    });
 
-    uiMenus.push(<MenuItem key={0} value={Constants.UI_CHARACTER}>{Constants.UI_CHARACTER}</MenuItem>);
-    uiMenus.push(<MenuItem key={1} value={Constants.UI_GRAPHICS}>{Constants.UI_GRAPHICS}</MenuItem>);
+    _.each(Constants.ui, ui => {
+      uiMenus.push(<MenuItem key={ui} value={ui}>{ui}</MenuItem>);
+    });
 
     return (
       <div className={classes.root}>

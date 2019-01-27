@@ -196,13 +196,13 @@ After compiled successfully, then access: http://localhost:8080/
 
 用值关系表示为，我们得到**第二个迭代**：
 
-![](http://latex.codecogs.com/gif.latex?V_{k+1}_%28x%29=\begin{cases}2V_k_%28x%29,&\textrm{x is even}\\\\2V_k_%28x%29-1,&\textrm{x is odd}\end{cases},1<x\le2^k)
+![](http://latex.codecogs.com/gif.latex?V_{k+1}_%28x%29=\begin{cases}2V_k_%28x%29,&\textrm{x%20is%20even}\\\\2V_k_%28x%29-1,&\textrm{x%20is%20odd}\end{cases},1<x\le2^k)
 
 观察第一和第二迭代式，似乎长得完全一样啊？不对，其实它们是两个不同的等式。因为第一迭代式的条件是P(x)即**位置序号的奇偶性**；而第二迭代式的条件是**x本身的奇偶性**。但是却可以得出形式完全相同的迭代关系，这也从另一个角度揭示了前面总结过的**对称性**。
 
 如果换算成数字的位置关系，则应该是：
 
-![](http://latex.codecogs.com/gif.latex?\begin{cases}P_{k+1}_%282x%29=P_k_%28x%29,&\textrm{x is even}\\\\P_{k+1}_%282x-1%29=P_k_%28x%29,&\textrm{x is odd}\end{cases},1<x\le2^k)
+![](http://latex.codecogs.com/gif.latex?\begin{cases}P_{k+1}_%282x%29=P_k_%28x%29,&\textrm{x%20is%20even}\\\\P_{k+1}_%282x-1%29=P_k_%28x%29,&\textrm{x%20is%20odd}\end{cases},1<x\le2^k)
 
 至此，k+1次序列的前一半的所有块的数字，都可以从k次序列完全推出！
 
@@ -213,7 +213,7 @@ After compiled successfully, then access: http://localhost:8080/
 
 这个性质和前面锚点/邻锚点及其镜像点位的关系完全一致，即
 
-![](http://latex.codecogs.com/gif.latex?M%28x%29=\begin{cases}x-1,&\textrm{x is even}\\\\x+1,&\textrm{x is odd}\end{cases},1\le%20P%28x%29\le%202^{k-1})
+![](http://latex.codecogs.com/gif.latex?M%28x%29=\begin{cases}x-1,&\textrm{x%20is%20even}\\\\x+1,&\textrm{x%20is%20odd}\end{cases},1\le%20P%28x%29\le%202^{k-1})
 
 此处记M(x)为数字x对称位（镜像位）上的数字。转换成位置函数关系就是：
 

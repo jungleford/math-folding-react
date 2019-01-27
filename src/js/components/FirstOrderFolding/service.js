@@ -11,11 +11,10 @@ import Constants from '../../utils/constants';
 function Folding(power) {
   assert(typeof power === 'number' && power > 0, '`power` must be an positive integer.');
 
+  this.power = power;
   this.count = 2 ** power; // n = 2 ^ k
   this.original = Array.from(new Array(this.count), (val, index) => index + 1); // create [1, 2, ..., n]
-  this.final = this.original;
-  this.steps = [this.original.map(n => [n])];
-  this.computeDone = false; // expected to true when computing done.
+  this.reset();
 }
 
 /**
@@ -52,11 +51,60 @@ function doFoldingByRecursive(piles, steps) {
 }
 
 /**
+ * Compute the folding result by formula.
+ *
+ * V(k, 4i-3) = V(k-2, i)
+ * V(k, 4i-2) = 2^k - V(k-2, i) + 1
+ * V(k, 4i-1) = 2^k - V(k-2, i) + 1
+ * V(k, 4i) = V(k-2, i)
+ *
+ * This algorithm will not save steps.
+ *
+ * @return {number[]} the two-dimension array of the merge result.
+ */
+function doFoldingByFormula(power) {
+  assert(power >= 1, '`power` must larger than 1.\nYour power is: ' + power);
+
+  let result = [];
+  let level1Result = [1, 2];
+
+  switch (power) {
+    case 1:
+      result = level1Result;
+      break;
+    default:
+      let preLevelResult = level1Result;
+      for (let level = 2; level <= power; level++) {
+        let currentCount = 2 ** level;
+        let currentLevelResult = new Array(currentCount);
+        _.each(preLevelResult, (number, index) => {
+          // Compute the "left" half (the first half)
+          let pos = index + 1;
+          currentLevelResult[pos - 1] = pos % 2 === 0 ? 2 * preLevelResult[pos - 1] : 2 * preLevelResult[pos - 1] - 1;
+
+          // Compute the "right" half (the later half)
+          let mirrorPos = currentCount - pos + 1;
+          currentLevelResult[mirrorPos - 1] = pos % 2 === 0 ? currentLevelResult[pos - 1] - 1 : currentLevelResult[pos - 1] + 1;
+        });
+        preLevelResult = currentLevelResult;
+      }
+      result = preLevelResult;
+  }
+
+  return result;
+}
+
+/**
  * Build the original array before computing.
  *
+ * @param forceReset true if you want to reset all internal states when initiating.
  * @return {number[] | *} the original array.
  */
-Folding.prototype.init = function() {
+Folding.prototype.init = function(forceReset) {
+  if (forceReset === true) {
+    this.reset();
+  }
+
   return this.original;
 };
 
@@ -75,6 +123,20 @@ Folding.prototype.isComputeDone = function() {
 };
 
 /**
+ * ATTENTION: NOT RECOMMEND to call this method directly.
+ * Keep this as a private method.
+ */
+Folding.prototype.reset = function() {
+  this.final = this.original;
+  this.steps = [this.original.map(n => [n])];
+  this.computeDoneWithAlgorithm = {};
+  _.each(Constants.algorithm, alg => {
+    this.computeDoneWithAlgorithm[alg] = false;
+  });
+  this.computeDone = false; // expected to true when computing done.
+};
+
+/**
  * Give the result of the first-order folading problem.
  *
  * @param algorithm (optional) By default, `recursive` is used.
@@ -82,18 +144,25 @@ Folding.prototype.isComputeDone = function() {
  */
 Folding.prototype.compute = function(algorithm) {
   assert(!algorithm || typeof algorithm === 'string',
-         '`algorithm` must be a flag defined in `Constants`, and it can be just omitted.');
+         '`algorithm` must be a flag defined in `Constants`, and it can be just omitted.\nYour algorithm: ' + algorithm);
 
+  if (!this.computeDoneWithAlgorithm[algorithm]) {
+    this.reset(); // once algorithm is changed, clean all internal states, and prepare to compute again.
+  }
   if (this.computeDone) return this.final;
 
   let result = this.original;
   switch (algorithm) {
-    case Constants.ALGORITHM_RECURSIVE:
+    case Constants.algorithm.FORMULA:
+      result = doFoldingByFormula(this.power);
+      break;
+    case Constants.algorithm.RECURSIVE:
     default:
       result = doFoldingByRecursive(this.steps[0], this.steps)[0];
   }
   this.final = result;
   this.computeDone = true;
+  this.computeDoneWithAlgorithm[algorithm] = true;
   return result;
 };
 
@@ -107,7 +176,7 @@ Folding.prototype.compute = function(algorithm) {
 Folding.prototype.positionOf = function(x) {
   if (!this.computeDone) return 1;
 
-  assert(typeof x === 'number' && x >= 1 && x <= this.count, 'the number `x` must be between 1 and ' + this.count);
+  assert(typeof x === 'number' && x >= 1 && x <= this.count, 'the number `x` must be between 1 and ' + this.count + '\nYour number x is: ' + x);
   return _.indexOf(this.final, x) + 1;
 };
 
@@ -121,7 +190,7 @@ Folding.prototype.positionOf = function(x) {
 Folding.prototype.valueOf = function(p) {
   if (!this.computeDone) return 1;
 
-  assert(typeof p === 'number' && p >= 1 && p <= this.count, 'the position `p` must be between 1 and ' + this.count);
+  assert(typeof p === 'number' && p >= 1 && p <= this.count, 'the position `p` must be between 1 and ' + this.count + '\nYour position p is: ' + p);
   return this.final[p - 1];
 };
 

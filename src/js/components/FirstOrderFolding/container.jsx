@@ -75,17 +75,20 @@ const styles = theme => ({
 });
 
 let defaultPower = 3;
+let maxPower = 5;
 
 class FirstOrderFolding extends Component {
   defaultService = new Folding(defaultPower);
 
   // Initial state
   state = {
+    algorithm: this.props.algorithm,
     power: defaultPower, // k
     count: this.defaultService.getCount(), // 2^k
     service: this.defaultService,
 
     result: this.defaultService.init(), // an one-dimension array
+    resultReset: true,
     colors: utils.generateGradualColors(this.defaultService.getCount()), // an one-dimension array
 
     number: 1,
@@ -95,11 +98,37 @@ class FirstOrderFolding extends Component {
     activeStepContent: []
   };
 
+  /*
+   * MathJax lib will be activated only once from <script> tag.
+   * So here must reload it by manual when shifting between FOF/SOF tabs.
+   */
   componentDidMount = () => {
     eval('MathJax.Hub.Queue(["Typeset", MathJax.Hub])');
   };
 
-  handleChange = event => {
+  /*
+   * React new feature since v16.3
+   * `componentWillReceiveProps` is deprecated, and `getDerivedStateFromProps` is the replacement.
+   */
+  static getDerivedStateFromProps = (nextProps, prevState) => {
+    if (prevState.algorithm !== nextProps.algorithm) {
+      return { //Same as setState()
+        algorithm: nextProps.algorithm,
+        result: prevState.service.init(true),
+        resultReset: true,
+
+        number: 1,
+        position: 1,
+
+        activeStep: 0,
+        activeStepContent: []
+      }
+    }
+
+    return null; // null means no state change.
+  };
+
+  changePower = event => {
     let newPower = event.target.value;
     let newService = new Folding(newPower);
     this.setState({
@@ -108,6 +137,7 @@ class FirstOrderFolding extends Component {
       service: newService,
 
       result: newService.init(),
+      resultReset: true,
       colors: utils.generateGradualColors(newService.getCount()),
 
       number: 1,
@@ -120,13 +150,19 @@ class FirstOrderFolding extends Component {
 
   doFolding = () => {
     this.setState(state => ({
-      result: state.service.compute(this.props.algorithm),
-      activeStepContent: state.service.getSteps(),
+      result: state.service.compute(state.algorithm),
+      resultReset: false,
+      activeStep: 0,
+      activeStepContent: state.algorithm === Constants.algorithm.RECURSIVE ? state.service.getSteps() : [],
     }));
   };
 
   reset = () => {
-    this.setState(state => ({ result: state.service.init() }));
+    this.setState(state => ({
+      result: state.service.init(),
+      resultReset: true,
+      activeStep: 0
+    }));
   };
 
   positionOfNumber = event => {
@@ -156,15 +192,13 @@ class FirstOrderFolding extends Component {
   };
 
   render() {
-    const { classes, algorithm, ui } = this.props;
+    const { classes, ui } = this.props;
     const {
-      power, count, service,
-      result, colors,
+      algorithm, power, count, service,
+      result, resultReset, colors,
       number, position,
       activeStep, activeStepContent
     } = this.state;
-
-    let maxPower = 5;
 
     // Options of values of power
     // Remember: `new Array(length)` never initializes itself actually! Must call fill() or from() to initialize it.
@@ -198,14 +232,16 @@ class FirstOrderFolding extends Component {
           <div style={{ display: 'flex' }}>
             {
               activeStepContent.length > 0 && activeStepContent[index].map((pile, i) =>
-                ui === Constants.UI_GRAPHICS ? (
+                ui === Constants.ui.GRAPHICS ? (
                   <Paper key={i} className={classes.pile}
                          style={{ display: 'flex', flexDirection: 'column-reverse',
                                   width: 32 }}>
                     {
                       pile.map(number =>
-                        /* Here I use the symmetry of folding: cards[number] equals the position. */
-                        cards[service.positionOf(number) - 1]
+                        resultReset ?
+                          cards[number - 1] :
+                          /* Here I use the symmetry of folding: cards[number] equals the position. */
+                          cards[service.positionOf(number) - 1]
                       )
                     }
                   </Paper>
@@ -254,7 +290,7 @@ class FirstOrderFolding extends Component {
               <InputLabel htmlFor="power">Power (<b>k</b>)</InputLabel>
               <Select
                 value={power}
-                onChange={this.handleChange}
+                onChange={this.changePower}
                 inputProps={{
                   name: 'power',
                   id: 'power',
@@ -283,7 +319,7 @@ class FirstOrderFolding extends Component {
                style={{ display: 'flex', flexDirection: 'column' }}>
           <h3>Result View</h3>
           <div style={{ display: 'flex' }}>
-          {ui === Constants.UI_GRAPHICS ? cards : result.toString()}
+          {ui === Constants.ui.GRAPHICS ? cards : result.toString()}
           </div>
         </Paper>
 
@@ -300,9 +336,20 @@ class FirstOrderFolding extends Component {
           </div>
         </Paper>
 
+        {/* Formula View Pad */}
+        <Paper className={classes.pad} elevation={1}
+               style={{ display: algorithm === Constants.algorithm.FORMULA ? 'flex' : 'none', flexDirection: 'column' }}>
+          <h3>Formula of Computing</h3>
+          <p>\(P(1) = 1\)</p>
+          <p>\(P(2) = n = 2^k\)</p>
+          <p>{'\\( P_k(x) = \\begin{cases} 2P_{k-1}(x), &\\textrm{x is even} \\\\ 2P_{k-1}(x)-1, &\\textrm{x is odd} \\end{cases}, 1<x\\le2^{k-1} \\)'}</p>
+          <p>{'\\( P_k(2^k-x+1) = \\begin{cases} P_k(x)-1, &\\textrm{x is even} \\\\ P_k(x)+1, &\\textrm{x is odd} \\end{cases}, 1<x\\le2^{k-1} \\)'}</p>
+          <p>You can replace \(P(x)\) with \(V(x)\) as well to compute the value in a given position \(x\) in the final sequence.</p>
+        </Paper>
+
         {/* Steps View Pad: a vertical stepper */}
         <Paper className={classes.pad} elevation={1}
-               style={{ display: service.isComputeDone() ? 'flex' : 'none', flexDirection: 'column' }}>
+               style={{ display: algorithm === Constants.algorithm.RECURSIVE && service.isComputeDone() ? 'flex' : 'none', flexDirection: 'column' }}>
           <h3>Steps of each Turn</h3>
           <div>
             <Stepper activeStep={activeStep} orientation="vertical">
