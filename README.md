@@ -221,7 +221,7 @@ After compiled successfully, then access: http://localhost:8080/
 
 或
 
-![](http://latex.codecogs.com/gif.latex?\begin{cases}P%28x-1%29=2^k-P%28x%29+1,&\textrm{x is even}\\\\P%28x+1%29=2^k-P%28x%29+1,&\textrm{x is odd}\end{cases},1\le%20P%28x%29\le%202^{k-1})
+![](http://latex.codecogs.com/gif.latex?\begin{cases}P%28x-1%29=2^k-P%28x%29+1,&\textrm{x is even}\\\\P%28x+1%29=2^k-P%28x%29+1,&\textrm{x%20is%20odd}\end{cases},1\le%20P%28x%29\le%202^{k-1})
 
 于是序列的后半段也可以完全构造出来。至此，我们已经可以完全计算整个序列：
 1) 确定头尾分别为1和2，即
@@ -294,4 +294,4 @@ After compiled successfully, then access: http://localhost:8080/
 1) 最终序列中位置p的数字
 
 ## 算法
-目前仅支持最容易设计的“**递归**算法”（_Recursive_）。请参见源代码中各组件的service部分。
+目前仅支持最容易设计的“**递归算法**”（_Recursive_）一阶对折还额外支持“**迭代公式算法**”（_Formula_）。请参见源代码中各组件的service部分。

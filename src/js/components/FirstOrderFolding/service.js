@@ -5,6 +5,9 @@ import Constants from '../../utils/constants';
  * Here k is the `power`: given k=1, there are two numbers; given k=2, there are four numbers; given k=3, there are
  * eight numbers... etc.
  *
+ * Supported algorithm:
+ *   recursive, formula
+ *
  * @param power the exponent of the number of the elements.
  * @constructor
  */
@@ -138,6 +141,9 @@ Folding.prototype.reset = function() {
 
 /**
  * Give the result of the first-order folading problem.
+ *
+ * Supported algorithm:
+ *   recursive, formula
  *
  * @param algorithm (optional) By default, `recursive` is used.
  * @return {number[]}

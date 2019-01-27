@@ -83,11 +83,13 @@ class SecondOrderFolding extends Component {
 
   // Initial state
   state = {
+    algorithm: this.props.algorithm,
     power: defaultPower, // k
     count: this.defaultService.getCount(), // 4^k
     service: this.defaultService,
 
     result: this.defaultService.init(), // a two-dimension array
+    resultReset: true,
     colors: utils.generateGradualColorMatrix(this.defaultService.getRowCount()), // a two-dimension array
 
     number: 1,
@@ -97,11 +99,37 @@ class SecondOrderFolding extends Component {
     activeStepContent: []
   };
 
+  /*
+   * MathJax lib will be activated only once from <script> tag.
+   * So here must reload it by manual when shifting between FOF/SOF tabs.
+   */
   componentDidMount = () => {
     eval('MathJax.Hub.Queue(["Typeset", MathJax.Hub])');
   };
 
-  handleChange = event => {
+  /*
+   * React new feature since v16.3
+   * `componentWillReceiveProps` is deprecated, and `getDerivedStateFromProps` is the replacement.
+   */
+  static getDerivedStateFromProps = (nextProps, prevState) => {
+    if (prevState.algorithm !== nextProps.algorithm) {
+      return { //Same as setState()
+        algorithm: nextProps.algorithm,
+        result: prevState.service.init(true),
+        resultReset: true,
+
+        number: 1,
+        position: 1,
+
+        activeStep: 0,
+        activeStepContent: []
+      }
+    }
+
+    return null; // null means no state change.
+  };
+
+  changePower = event => {
     let newPower = event.target.value;
     let newService = new Folding(newPower);
     this.setState({
@@ -110,6 +138,7 @@ class SecondOrderFolding extends Component {
       service: newService,
 
       result: newService.init(),
+      resultReset: true,
       colors: utils.generateGradualColorMatrix(newService.getRowCount()),
 
       number: 1,
@@ -122,14 +151,19 @@ class SecondOrderFolding extends Component {
 
   doFolding = () => {
     this.setState(state => ({
-      result: state.service.compute(this.props.algorithm),
+      result: state.service.compute(state.algorithm),
+      resultReset: false,
       activeStep: 0,
       activeStepContent: state.service.getSteps(),
     }));
   };
 
   reset = () => {
-    this.setState(state => ({ result: state.service.init() }));
+    this.setState(state => ({
+      result: state.service.init(),
+      resultReset: true,
+      activeStep: 0
+    }));
   };
 
   positionOfNumber = event => {
@@ -159,10 +193,10 @@ class SecondOrderFolding extends Component {
   };
 
   render() {
-    const { classes, algorithm, ui } = this.props;
+    const { classes, ui } = this.props;
     const {
-      power, count, service,
-      result, colors,
+      algorithm, power, count, service,
+      result, resultReset, colors,
       number, position,
       activeStep, activeStepContent
     } = this.state;
@@ -317,7 +351,7 @@ class SecondOrderFolding extends Component {
               <InputLabel htmlFor="power">Power (<b>k</b>)</InputLabel>
               <Select
                 value={power}
-                onChange={this.handleChange}
+                onChange={this.changePower}
                 inputProps={{
                   name: 'power',
                   id: 'power',

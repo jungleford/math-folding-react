@@ -18,11 +18,7 @@ function Folding(power) {
   this.original = Array.from(new Array(this.rowCount), (val, rowIndex) =>
                              Array.from(new Array(this.rowCount), (val, colIndex) =>
                                         rowIndex * this.rowCount + colIndex + 1));
-  // the final array is one-dimension
-  this.final = this.original;
-  this.finalFlat = this.original.reduce((accumulator, currentValue) => accumulator.concat(currentValue));
-  this.steps = [this.final.map(row => row.map(number => [number]))];// steps is 4-dimension array
-  this.computeDone = false; // expected to true when computing done.
+  this.reset();
 }
 
 /**
@@ -87,9 +83,14 @@ function doFoldingByRecursive(piles, steps) {
 /**
  * Build the original array before computing.
  *
+ * @param forceReset true if you want to reset all internal states when initiating.
  * @return {number[] | *} the original array.
  */
-Folding.prototype.init = function() {
+Folding.prototype.init = function(forceReset) {
+  if (forceReset === true) {
+    //TODO:this.reset();
+  }
+
   return this.original;
 };
 
@@ -112,6 +113,17 @@ Folding.prototype.getRowCount = function() {
  */
 Folding.prototype.isComputeDone = function() {
   return this.computeDone;
+};
+
+/**
+ * ATTENTION: NOT RECOMMEND to call this method directly.
+ * Keep this as a private method.
+ */
+Folding.prototype.reset = function() {
+  this.final = this.original; // the final array is one-dimension
+  this.finalFlat = this.original.reduce((accumulator, currentValue) => accumulator.concat(currentValue));
+  this.steps = [this.final.map(row => row.map(number => [number]))];// steps is 4-dimension array
+  this.computeDone = false; // expected to true when computing done.
 };
 
 /**
