@@ -32,6 +32,8 @@ const styles = theme => ({
   },
   pad: {
     ...theme.mixins.gutters(),
+    display: 'flex',
+    flexDirection: 'column',
     paddingTop: theme.spacing.unit * 2,
     paddingBottom: theme.spacing.unit * 2,
     marginTop: theme.spacing.unit * 2,
@@ -344,8 +346,7 @@ class SecondOrderFolding extends Component {
         <p>{'Define a matrix \\([[1, 2, ..., 2^k], ... , [2^{2k-1}+1, ..., n]]\\), i.e., \\(\\left( \\begin{array}{ccc} 1 & 2 & \\ldots & 2^k \\\\ 2^k+1 & 2^k+2 & \\ldots & 2^{k+1} \\\\ \\vdots & \\vdots & \\ldots & \\vdots \\\\ 2^{2k-1}+1 & 2^{2k-1}+2 & \\ldots & n \\end{array} \\right)\\), and that \\(n = 4 ^ k\\), and compute the folding result.'}</p>
 
         {/* Controller Pad */}
-        <Paper className={classes.pad} elevation={1}
-               style={{ display: 'flex', flexDirection: 'column' }}>
+        <Paper className={classes.pad} elevation={1}>
           <div>
             <FormControl className={classes.formControl}>
               <InputLabel htmlFor="power">Power (<b>k</b>)</InputLabel>
@@ -376,8 +377,7 @@ class SecondOrderFolding extends Component {
         </Paper>
 
         {/* Result View Pad */}
-        <Paper className={classes.pad} elevation={1}
-               style={{ display: 'flex', flexDirection: 'column' }}>
+        <Paper className={classes.pad} elevation={1}>
           <h3>Result View</h3>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             {ui === Constants.ui.GRAPHICS ? cardRows : numberRows}
@@ -385,8 +385,8 @@ class SecondOrderFolding extends Component {
         </Paper>
 
         {/* Result View Pad */}
-        <Paper className={classes.pad} elevation={1}
-               style={{ display: service.isComputeDone() ? 'flex' : 'none', flexDirection: 'column' }}>
+        {!resultReset && service.isComputeDone() && (
+        <Paper className={classes.pad} elevation={1}>
           <h3>Explore More</h3>
           <div>
             Number <Input className={classes.textField} type={'number'} value={number} onChange={this.positionOfNumber} /> is in position <span style={{ color: 'red', fontWeight: 'bolder', fontSize: 32 }}>{service.positionOf(number)}</span>.
@@ -395,10 +395,11 @@ class SecondOrderFolding extends Component {
             Number in position <Input className={classes.textField} type={'number'} value={position} onChange={this.numberOfPosition} /> is <span style={{ color: 'blue', fontWeight: 'bolder', fontSize: 32 }}>{service.valueOf(position)}</span>.
           </div>
         </Paper>
+        )}
 
         {/* Steps View Pad: a vertical stepper */}
-        <Paper className={classes.pad} elevation={1}
-               style={{ display: service.isComputeDone() ? 'flex' : 'none', flexDirection: 'column' }}>
+        {!resultReset && service.isComputeDone() && (
+        <Paper className={classes.pad} elevation={1}>
           <h3>Steps of each Turn</h3>
           <div>
             <Stepper activeStep={activeStep} orientation="vertical">
@@ -414,6 +415,8 @@ class SecondOrderFolding extends Component {
             )}
           </div>
         </Paper>
+        )}
+
       </div>
     );
   }

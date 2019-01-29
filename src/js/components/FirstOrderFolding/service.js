@@ -9,15 +9,16 @@ import Constants from '../../utils/constants';
  *   recursive, formula
  *
  * @param power the exponent of the number of the elements.
+ * @param original (optional) assign the initial sequence to the folding service.
+ *                 If omitted, use the sequence of natural numbers.
  * @constructor
  */
-function Folding(power) {
+function Folding(power, original) {
   assert(typeof power === 'number' && power > 0, '`power` must be an positive integer.');
 
   this.power = power;
   this.count = 2 ** power; // n = 2 ^ k
-  this.original = Array.from(new Array(this.count), (val, index) => index + 1); // create [1, 2, ..., n]
-  this.reset();
+  this.reset(original);
 }
 
 /**
@@ -100,19 +101,30 @@ function doFoldingByFormula(power) {
 /**
  * Build the original array before computing.
  *
- * @param forceReset true if you want to reset all internal states when initiating.
+ * @param forceReset (optional) true if you want to reset all internal states when initiating.
  * @return {number[] | *} the original array.
  */
 Folding.prototype.init = function(forceReset) {
   if (forceReset === true) {
-    this.reset();
+    this.reset(this.original);
   }
 
   return this.original;
 };
 
 /**
- * @return {number | *} the total count of numbers.
+ * The value of k
+ *
+ * @return {number} the exponent of the number of the elements.
+ */
+Folding.prototype.getPower = function() {
+  return this.power;
+};
+
+/**
+ * The value of n.
+ *
+ * @return {number} the total count of numbers.
  */
 Folding.prototype.getCount = function() {
   return this.count;
@@ -128,8 +140,17 @@ Folding.prototype.isComputeDone = function() {
 /**
  * ATTENTION: NOT RECOMMEND to call this method directly.
  * Keep this as a private method.
+ *
+ * @param original (optional) re-assign another initial sequence to the folding service.
+ *                 If omitted, use the sequence of natural numbers.
  */
-Folding.prototype.reset = function() {
+Folding.prototype.reset = function(original) {
+  assert(original === undefined || _.isArray(original) && original.length === this.count,
+    '`original` must be an array with ' + this.count + ' members.\nYour `original` is: ' + original);
+
+  this.original = _.isArray(original) && original.length === this.count ?
+                 _.cloneDeep(original) : // use a copy of the given array
+                 Array.from(new Array(this.count), (val, index) => index + 1); // create [1, 2, ..., n]
   this.final = this.original;
   this.steps = [this.original.map(n => [n])];
   this.computeDoneWithAlgorithm = {};
@@ -149,11 +170,11 @@ Folding.prototype.reset = function() {
  * @return {number[]}
  */
 Folding.prototype.compute = function(algorithm) {
-  assert(!algorithm || typeof algorithm === 'string',
-         '`algorithm` must be a flag defined in `Constants`, and it can be just omitted.\nYour algorithm: ' + algorithm);
+  assert(algorithm === undefined || typeof algorithm === 'string',
+         '`algorithm` must be a flag defined in `Constants`, or it can be just omitted.\nYour algorithm: ' + algorithm);
 
   if (!this.computeDoneWithAlgorithm[algorithm]) {
-    this.reset(); // once algorithm is changed, clean all internal states, and prepare to compute again.
+    this.reset(this.original); // once algorithm is changed, clean all internal states, and prepare to compute again.
   }
   if (this.computeDone) return this.final;
 
