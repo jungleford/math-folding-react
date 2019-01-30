@@ -18,6 +18,10 @@ function Folding(power, original) {
 
   this.power = power;
   this.count = 2 ** power; // n = 2 ^ k
+  this.cache = {};
+  _.each(Constants.algorithm, alg => {
+    this.cache[alg] = {};
+  });
   this.reset(original);
 }
 
@@ -25,9 +29,11 @@ function Folding(power, original) {
  * Recursive computing of folding.
  *
  * @param piles a two-dimension array that represents the piles of each step of folding/merging,
- * and each pile is composed of the current result.
- * Example: [[x, x], [x, x], [x, x], [x, x]]
- * @return {number[][]} the two-dimension array of the merge result.
+ *              and each pile is composed of the current result.
+ *              Example: [[x, x], [x, x], [x, x], [x, x]]
+ * @param steps a three-dimension array that represents the state of each step during the folding.
+ * @return {number[][] | *[][]} the two-dimension array of the merge result.
+ *                              Actually it has only one array inside the first level.
  */
 function doFoldingByRecursive(piles, steps) {
   if (piles.length === 1) return piles;
@@ -64,7 +70,7 @@ function doFoldingByRecursive(piles, steps) {
  *
  * This algorithm will not save steps.
  *
- * @return {number[]} the two-dimension array of the merge result.
+ * @return {number[] | *[]} the array of the folding result.
  */
 function doFoldingByFormula(power) {
   assert(power >= 1, '`power` must larger than 1.\nYour power is: ' + power);
@@ -102,7 +108,7 @@ function doFoldingByFormula(power) {
  * Build the original array before computing.
  *
  * @param forceReset (optional) true if you want to reset all internal states when initiating.
- * @return {number[] | *} the original array.
+ * @return {number[] | *[]} the original array.
  */
 Folding.prototype.init = function(forceReset) {
   if (forceReset === true) {
@@ -153,10 +159,6 @@ Folding.prototype.reset = function(original) {
                  Array.from(new Array(this.count), (val, index) => index + 1); // create [1, 2, ..., n]
   this.final = this.original;
   this.steps = [this.original.map(n => [n])];
-  this.computeDoneWithAlgorithm = {};
-  _.each(Constants.algorithm, alg => {
-    this.computeDoneWithAlgorithm[alg] = false;
-  });
   this.computeDone = false; // expected to true when computing done.
 };
 
@@ -167,15 +169,20 @@ Folding.prototype.reset = function(original) {
  *   recursive, formula
  *
  * @param algorithm (optional) By default, `recursive` is used.
- * @return {number[]}
+ * @return {number[] | *[]} the final folding result.
  */
 Folding.prototype.compute = function(algorithm) {
   assert(algorithm === undefined || typeof algorithm === 'string',
          '`algorithm` must be a flag defined in `Constants`, or it can be just omitted.\nYour algorithm: ' + algorithm);
 
-  if (!this.computeDoneWithAlgorithm[algorithm]) {
-    this.reset(this.original); // once algorithm is changed, clean all internal states, and prepare to compute again.
+  if (this.cache[algorithm].result) {
+    this.final = this.cache[algorithm].result;
+    this.steps = this.cache[algorithm].steps;
+    this.computeDone = true;
+  } else {
+    this.computeDone = false;
   }
+
   if (this.computeDone) return this.final;
 
   let result = this.original;
@@ -187,9 +194,10 @@ Folding.prototype.compute = function(algorithm) {
     default:
       result = doFoldingByRecursive(this.steps[0], this.steps)[0];
   }
+  this.cache[algorithm].result = _.cloneDeep(result);
+  this.cache[algorithm].steps = _.cloneDeep(this.steps);
   this.final = result;
   this.computeDone = true;
-  this.computeDoneWithAlgorithm[algorithm] = true;
   return result;
 };
 
@@ -212,7 +220,7 @@ Folding.prototype.positionOf = function(x) {
  * You must run `compute()` first.
  *
  * @param p the position in the final sequence.
- * @return {number} the value on the given position.
+ * @return {number | *} the value on the given position.
  */
 Folding.prototype.valueOf = function(p) {
   if (!this.computeDone) return 1;
