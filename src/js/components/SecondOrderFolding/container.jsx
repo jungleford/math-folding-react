@@ -9,6 +9,9 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import SendIcon from '@material-ui/icons/Send';
+import Tooltip from '@material-ui/core/Tooltip';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
 import Input from '@material-ui/core/Input';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
@@ -98,7 +101,15 @@ class SecondOrderFolding extends Component {
     position: 1,
 
     activeStep: 0,
-    activeStepContent: []
+    activeStepContent: [],
+
+    exploreMore: false,
+    showFoldingReverse: false,
+
+    serviceReverse: null,
+    resultReverse: null,
+    activeStepReverse: 0,
+    activeStepContentReverse: []
   };
 
   /*
@@ -124,7 +135,15 @@ class SecondOrderFolding extends Component {
         position: 1,
 
         activeStep: 0,
-        activeStepContent: []
+        activeStepContent: [],
+
+        exploreMore: false,
+        showFoldingReverse: false,
+
+        serviceReverse: null,
+        resultReverse: null,
+        activeStepReverse: 0,
+        activeStepContentReverse: []
       }
     }
 
@@ -147,7 +166,15 @@ class SecondOrderFolding extends Component {
       position: 1,
 
       activeStep: 0,
-      activeStepContent: []
+      activeStepContent: [],
+
+      exploreMore: false,
+      showFoldingReverse: false,
+
+      serviceReverse: null,
+      resultReverse: null,
+      activeStepReverse: 0,
+      activeStepContentReverse: []
     });
   };
 
@@ -164,55 +191,35 @@ class SecondOrderFolding extends Component {
     this.setState(state => ({
       result: state.service.init(),
       resultReset: true,
-      activeStep: 0
+      activeStep: 0,
+
+      exploreMore: false,
+      showFoldingReverse: false,
+
+      resultReverse: state.serviceReverse ? state.serviceReverse.init() : null,
+      activeStepReverse: 0
     }));
   };
 
-  positionOfNumber = event => {
-    let number = _.parseInt(event.target.value);
-    if (number >= 1 && number <= this.state.count && this.state.service.isComputeDone()) {
-      this.setState({ number });
-    }
+  toggleExplore = event => {
+    this.setState({ exploreMore: event.target.checked });
   };
 
-  numberOfPosition = event => {
-    let position = _.parseInt(event.target.value);
-    if (position >= 1 && position <= this.state.count && this.state.service.isComputeDone()) {
-      this.setState({ position });
-    }
+  toggleFoldingReverse = event => {
+    this.setState({ showFoldingReverse: event.target.checked });
   };
 
-  stepNext = () => {
-    this.setState(state => ({ activeStep: state.activeStep + 1 }));
-  };
+  /**
+   * PRIVATE METHOD
+   *
+   * Generate graphics view: this is a square matrix
+   */
+  generateCards = (service, result, colors) => {
+    const {classes} = this.props;
 
-  stepBack = () => {
-    this.setState(state => ({ activeStep: state.activeStep - 1 }));
-  };
-
-  stepReset = () => {
-    this.setState({ activeStep: 0 });
-  };
-
-  render() {
-    const { classes, ui } = this.props;
-    const {
-      algorithm, power, count, service,
-      result, resultReset, colors,
-      number, position,
-      activeStep, activeStepContent
-    } = this.state;
-
-    // Options of values of power
-    // Remember: `new Array(length)` never initializes itself actually! Must call fill() or from() to initialize it.
-    let menus = Array.from(new Array(maxPower), (value, index) =>
-      <MenuItem key={index + 1} value={index + 1}>{index + 1}</MenuItem>
-    );
-
-    // Generate graphics view: this is a square matrix
-    let cards = result.map((row, rowIndex) =>
+    return result.map((row, rowIndex) =>
       row.map((number, colIndex) => {
-        let p = power * rowIndex + colIndex;
+        let p = service.getPower() * rowIndex + colIndex;
         let n = service.valueOf(p + 1) - 1;// number starts from 1, but coordinate is from 0
         let y = _.floor(n / service.getRowCount());
         let x = n % service.getRowCount();
@@ -228,28 +235,20 @@ class SecondOrderFolding extends Component {
         );
       })
     );
+  };
 
-    let cardRows = cards.map((cardRow, rowIndex) => (
-      <div key={rowIndex} style={{ display: 'flex' }}>{cardRow}</div>
-    ));
+  /**
+   * PRIVATE METHOD
+   *
+   * Generate the steps UI.
+   * There are k+1 steps, including the beginning state.
+   */
+  generateSteps = (titleOfStartStep, service, activeStep, activeStepContent, cards, result, resultReset, stepNext, stepBack) => {
+    const { classes, ui } = this.props;
+    let power = service.getPower();
 
-    let numberRows = result.map((row, rowIndex) => (
-      //<div key={rowIndex} style={{ display: 'flex' }}>{row.toString()}</div>
-      <div key={rowIndex} style={{ display: 'flex' }}>
-        {
-          row.map((number, colIndex) =>
-            <div key={colIndex} style={{ width: 16 + 2 ** (power - 1), textAlign: 'center', margin: 4, }}>
-              <span>{number}</span>
-            </div>
-          )
-        }
-      </div>
-    ));
-
-    // Generate the steps UI.
-    // There are k+1 steps, including the beginning state.
-    let steps = Array.from(new Array(2 * power + 1), (value, index) =>
-      index === 0 ? 'Original Matrix' : 'Turn ' + _.ceil(index / 2) + ', Step ' + index
+    return Array.from(new Array(2 * power + 1), (value, index) =>
+      index === 0 ? titleOfStartStep : 'Turn ' + _.ceil(index / 2) + ', Step ' + index
     ).map((label, index) => {
       let turn = _.ceil(index / 2);
       let isLaterHalfTurn = index > 0 && index % 2 === 0;
@@ -267,31 +266,35 @@ class SecondOrderFolding extends Component {
                   if (ui === Constants.ui.GRAPHICS) {
                     return (
                       <Paper key={rowIndex} className={classes.pile}
-                           style={{
-                             display: 'flex',
-                             width: '100%',
-                           }}>
-                      {
-                        row.map((column, colIndex) => {
-                          return (
-                            <Paper key={colIndex} className={classes.pile}
-                                   style={{
-                                     display: 'flex', flexDirection: 'column-reverse',
-                                     width: 'calc(100%/' + rowCount + ')', // row count = column count
-                                   }}>
-                              {
-                                column.map((number, i) => {
-                                  let p = number - 1;// number starts from 1, but coordinate is from 0
-                                  let y = _.floor(p / service.getRowCount());
-                                  let x = p % service.getRowCount();
+                             style={{
+                               display: 'flex',
+                               width: '100%',
+                             }}>
+                        {
+                          row.map((column, colIndex) => {
+                            return (
+                              <Paper key={colIndex} className={classes.pile}
+                                     style={{
+                                       display: 'flex', flexDirection: 'column-reverse',
+                                       width: 'calc(100%/' + rowCount + ')', // row count = column count
+                                     }}>
+                                {
+                                  column.map((number, i) => {
+                                    let p = number - 1;// number starts from 1, but coordinate is from 0
+                                    let y = _.floor(p / service.getRowCount());
+                                    let x = p % service.getRowCount();
 
-                                  return result.length === 1 ? cards[0][service.positionOf(number) - 1] : cards[y][x];
-                                })
-                              }
-                            </Paper>
-                          )
-                        })
-                      }
+                                    return result.length === 1 ?
+                                           (resultReset ?
+                                              cards[0][number - 1] :
+                                              cards[0][service.positionOf(number) - 1]) :
+                                           cards[y][x];
+                                  })
+                                }
+                              </Paper>
+                            )
+                          })
+                        }
                       </Paper>
                     )
                   } else {
@@ -326,11 +329,11 @@ class SecondOrderFolding extends Component {
               <div>
                 <Button className={classes.button}
                         disabled={activeStep === 0}
-                        onClick={this.stepBack}>
+                        onClick={stepBack}>
                   Back
                 </Button>
                 <Button className={classes.button} color="primary" variant="contained"
-                        onClick={this.stepNext}>
+                        onClick={stepNext}>
                   {activeStep === 2 * power ? 'Finish' : 'Next'}
                 </Button>
               </div>
@@ -339,6 +342,83 @@ class SecondOrderFolding extends Component {
         </Step>
       );
     });
+  };
+
+  positionOfNumber = event => {
+    let number = _.parseInt(event.target.value);
+    if (number >= 1 && number <= this.state.count && this.state.service.isComputeDone()) {
+      this.setState({ number });
+    }
+  };
+
+  numberOfPosition = event => {
+    let position = _.parseInt(event.target.value);
+    if (position >= 1 && position <= this.state.count && this.state.service.isComputeDone()) {
+      this.setState({ position });
+    }
+  };
+
+  stepNext = () => {
+    this.setState(state => ({ activeStep: state.activeStep + 1 }));
+  };
+
+  stepBack = () => {
+    this.setState(state => ({ activeStep: state.activeStep - 1 }));
+  };
+
+  stepReset = () => {
+    this.setState({ activeStep: 0 });
+  };
+
+  stepNextReverse = () => {
+    this.setState(state => ({ activeStepReverse: state.activeStepReverse + 1 }));
+  };
+
+  stepBackReverse = () => {
+    this.setState(state => ({ activeStepReverse: state.activeStepReverse - 1 }));
+  };
+
+  stepResetReverse = () => {
+    this.setState({ activeStepReverse: 0 });
+  };
+
+  render() {
+    const { classes, ui } = this.props;
+    const {
+      algorithm, power, count, service,
+      result, resultReset, colors,
+      number, position,
+      activeStep, activeStepContent,
+      exploreMore, showFoldingReverse,
+      serviceReverse, resultReverse, activeStepReverse, activeStepContentReverse
+    } = this.state;
+
+    // Options of values of power
+    // Remember: `new Array(length)` never initializes itself actually! Must call fill() or from() to initialize it.
+    let menus = Array.from(new Array(maxPower), (value, index) =>
+      <MenuItem key={index + 1} value={index + 1}>{index + 1}</MenuItem>
+    );
+
+    let cards = this.generateCards(service, result, colors);
+
+    let cardRows = cards.map((cardRow, rowIndex) => (
+      <div key={rowIndex} style={{ display: 'flex' }}>{cardRow}</div>
+    ));
+
+    let numberRows = result.map((row, rowIndex) => (
+      //<div key={rowIndex} style={{ display: 'flex' }}>{row.toString()}</div>
+      <div key={rowIndex} style={{ display: 'flex' }}>
+        {
+          row.map((number, colIndex) =>
+            <div key={colIndex} style={{ width: 16 + 2 ** (power - 1), textAlign: 'center', margin: 4, }}>
+              <span>{number}</span>
+            </div>
+          )
+        }
+      </div>
+    ));
+
+    let steps = this.generateSteps('Original Matrix', service, activeStep, activeStepContent, cards, result, resultReset, this.stepNext, this.stepBack);
 
     return (
       <div className={classes.root}>
@@ -370,6 +450,16 @@ class SecondOrderFolding extends Component {
                     onClick={this.reset}>
               Reset
             </Button>
+            {service.isComputeDone() && (
+            <Tooltip title={'Enable to view more details' /*+ (algorithm === Constants.algorithm.RECURSIVE ? ' and REVERSE MAGIC!' : '')*/}>
+              <FormControlLabel
+                control={
+                  <Switch checked={exploreMore} disabled={resultReset} onChange={this.toggleExplore} color="primary" />
+                }
+                label="Explore More"
+              />
+            </Tooltip>
+            )}
           </div>
           <div>
             There are <b>{count}</b> numbers in total.<h3>{power === maxPower ? ' The matrix is really quite LARGE. Do you want to try indeed?' : ''}</h3>
@@ -384,21 +474,8 @@ class SecondOrderFolding extends Component {
           </div>
         </Paper>
 
-        {/* Result View Pad */}
-        {!resultReset && service.isComputeDone() && (
-        <Paper className={classes.pad} elevation={1}>
-          <h3>Explore More</h3>
-          <div>
-            Number <Input className={classes.textField} type={'number'} value={number} onChange={this.positionOfNumber} /> is in position <span style={{ color: 'red', fontWeight: 'bolder', fontSize: 32 }}>{service.positionOf(number)}</span>.
-          </div>
-          <div>
-            Number in position <Input className={classes.textField} type={'number'} value={position} onChange={this.numberOfPosition} /> is <span style={{ color: 'blue', fontWeight: 'bolder', fontSize: 32 }}>{service.valueOf(position)}</span>.
-          </div>
-        </Paper>
-        )}
-
         {/* Steps View Pad: a vertical stepper */}
-        {!resultReset && service.isComputeDone() && (
+        {exploreMore && !resultReset && service.isComputeDone() && (
         <Paper className={classes.pad} elevation={1}>
           <h3>Steps of each Turn</h3>
           <div>
@@ -415,6 +492,48 @@ class SecondOrderFolding extends Component {
             )}
           </div>
         </Paper>
+        )}
+
+        {/* Result View Pad */}
+        {exploreMore && !resultReset && service.isComputeDone() && (
+          <Paper className={classes.pad} elevation={1}>
+            <h3>Explore More</h3>
+            <div>
+              Number <Input className={classes.textField} type={'number'} value={number} onChange={this.positionOfNumber} /> is in position <span style={{ color: 'red', fontWeight: 'bolder', fontSize: 32 }}>{service.positionOf(number)}</span>.
+            </div>
+            <div>
+              Number in position <Input className={classes.textField} type={'number'} value={position} onChange={this.numberOfPosition} /> is <span style={{ color: 'blue', fontWeight: 'bolder', fontSize: 32 }}>{service.valueOf(position)}</span>.
+            </div>
+            {false && algorithm === Constants.algorithm.RECURSIVE && (
+            <FormControlLabel
+              control={
+                <Switch checked={showFoldingReverse} onChange={this.toggleFoldingReverse} color="primary" />
+              }
+              label="Watch what happens when folding the result sequence"
+            />
+            )}
+          </Paper>
+        )}
+
+        {/* Reverse Folding Steps View Pad */}
+        {exploreMore && showFoldingReverse && !resultReset && algorithm === Constants.algorithm.RECURSIVE && serviceReverse && serviceReverse.isComputeDone() && (
+          <Paper className={classes.pad} elevation={1}>
+            <h3>Steps of Reverse Folding</h3>
+            <p>Now you can try to align the final sequence and fold the numbers with the same steps. Then wait and observe the magic result!</p>
+            <div>
+              <Stepper activeStep={activeStepReverse} orientation="vertical">
+                {stepsReverse}
+              </Stepper>
+              {activeStepReverse === stepsReverse.length && (
+                <Paper square elevation={0} className={classes.resetContainer}>
+                  <Typography>All steps completed</Typography>
+                  <Button onClick={this.stepResetReverse} className={classes.button}>
+                    Start Again!
+                  </Button>
+                </Paper>
+              )}
+            </div>
+          </Paper>
         )}
 
       </div>

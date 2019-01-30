@@ -154,7 +154,7 @@ Folding.prototype.reset = function(original) {
   assert(original === undefined || _.isArray(original) && original.length === this.count,
     '`original` must be an array with ' + this.count + ' members.\nYour `original` is: ' + original);
 
-  this.original = _.isArray(original) && original.length === this.count ?
+  this.original = original ?
                  _.cloneDeep(original) : // use a copy of the given array
                  Array.from(new Array(this.count), (val, index) => index + 1); // create [1, 2, ..., n]
   this.final = this.original;
