@@ -293,6 +293,7 @@ After compiled successfully, then access: http://localhost:8080/
 1) 数字x（![](http://latex.codecogs.com/gif.latex?1\le%20x\le%20n)）的最终位置
 1) 最终序列中位置p的数字
 
+照旧列个表：
 
     名称     二阶一次对折  二阶二次对折                                 二阶三次对折
 

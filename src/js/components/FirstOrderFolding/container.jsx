@@ -103,6 +103,7 @@ class FirstOrderFolding extends Component {
     activeStepContent: [],
 
     exploreMore: false,
+    showFoldingReverse: false,
 
     serviceReverse: null,
     resultReverse: null,
@@ -136,6 +137,7 @@ class FirstOrderFolding extends Component {
         activeStepContent: [],
 
         exploreMore: false,
+        showFoldingReverse: false,
 
         serviceReverse: null,
         resultReverse: null,
@@ -166,6 +168,7 @@ class FirstOrderFolding extends Component {
       activeStepContent: [],
 
       exploreMore: false,
+      showFoldingReverse: false,
 
       serviceReverse: null,
       resultReverse: null,
@@ -197,6 +200,7 @@ class FirstOrderFolding extends Component {
       activeStep: 0,
 
       exploreMore: false,
+      showFoldingReverse: false,
 
       resultReverse: state.serviceReverse ? state.serviceReverse.init() : null,
       activeStepReverse: 0
@@ -205,6 +209,10 @@ class FirstOrderFolding extends Component {
 
   toggleExplore = event => {
     this.setState({ exploreMore: event.target.checked });
+  };
+
+  toggleFoldingReverse = event => {
+    this.setState({ showFoldingReverse: event.target.checked });
   };
 
   /**
@@ -339,7 +347,7 @@ class FirstOrderFolding extends Component {
       result, resultReset, colors,
       number, position,
       activeStep, activeStepContent,
-      exploreMore,
+      exploreMore, showFoldingReverse,
       serviceReverse, resultReverse, activeStepReverse, activeStepContentReverse
     } = this.state;
 
@@ -389,7 +397,7 @@ class FirstOrderFolding extends Component {
             <Tooltip title={'Enable to view more details' + (algorithm === Constants.algorithm.RECURSIVE ? ' and REVERSE MAGIC!' : '')}>
               <FormControlLabel
                 control={
-                  <Switch checked={exploreMore} onChange={this.toggleExplore} color="primary" />
+                  <Switch checked={exploreMore} disabled={resultReset} onChange={this.toggleExplore} color="primary" />
                 }
                 label="Explore More"
               />
@@ -451,11 +459,19 @@ class FirstOrderFolding extends Component {
             <div>
               Number in position <Input className={classes.textField} type={'number'} value={position} onChange={this.numberOfPosition} /> is <span style={{ color: 'blue', fontWeight: 'bolder', fontSize: 32 }}>{service.valueOf(position)}</span>.
             </div>
+            {algorithm === Constants.algorithm.RECURSIVE && (
+            <FormControlLabel
+              control={
+                <Switch checked={showFoldingReverse} onChange={this.toggleFoldingReverse} color="primary" />
+              }
+              label="Watch what happens when folding the result sequence"
+            />
+            )}
           </Paper>
         )}
 
         {/* Reverse Folding Steps View Pad */}
-        {exploreMore && !resultReset && algorithm === Constants.algorithm.RECURSIVE && serviceReverse && serviceReverse.isComputeDone() && (
+        {exploreMore && showFoldingReverse && !resultReset && algorithm === Constants.algorithm.RECURSIVE && serviceReverse && serviceReverse.isComputeDone() && (
           <Paper className={classes.pad} elevation={1}>
             <h3>Steps of Reverse Folding</h3>
             <p>Now you can try to align the final sequence and fold the numbers with the same steps. Then wait and observe the magic result!</p>
