@@ -15,6 +15,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Constants from '../../utils/constants';
 import FirstOrderFolding from '../FirstOrderFolding';
 import SecondOrderFolding from '../SecondOrderFolding';
+import TestPanel from '../TestPanel';
 
 function TabContainer(props) {
   return (
@@ -120,10 +121,13 @@ class Container extends React.Component {
             <Tooltip title="2nd Order Folding">
               <Tab label="SOF" />
             </Tooltip>
+
+            <Tab label="Test Panel"/>
           </Tabs>
         </Paper>
         {tab === 0 && <TabContainer><FirstOrderFolding algorithm={algorithm} ui={ui} /></TabContainer>}
         {tab === 1 && <TabContainer><SecondOrderFolding algorithm={algorithm} ui={ui} /></TabContainer>}
+        {tab === 2 && <TabContainer><TestPanel /></TabContainer>}
       </div>
     );
   }

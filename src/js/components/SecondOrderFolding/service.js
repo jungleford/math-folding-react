@@ -8,9 +8,10 @@ import Constants from '../../utils/constants';
  * @param power the exponent of the number of the elements.
  * @param original (optional) assign the initial sequence to the folding service.
  *                 If omitted, use the sequence of natural numbers.
+ * @param isFlat (optional) true if `original` is a one-dimension array.
  * @constructor
  */
-function Folding(power, original) {
+function Folding(power, original, isFlat) {
   assert(typeof power === 'number' && power > 0, '`power` must be an positive integer.');
 
   this.power = power;
@@ -20,7 +21,7 @@ function Folding(power, original) {
   _.each(Constants.algorithm, alg => {
     this.cache[alg] = {};
   });
-  this.reset(original);
+  this.reset(original, isFlat);
 }
 
 /**
@@ -131,21 +132,46 @@ Folding.prototype.isComputeDone = function() {
 };
 
 /**
+ * Private method: convert an array of 4^k elements to a (2^k)*(2^k) matrix.
+ *
+ * @param arr must be an array of 4^k elements.
+ * @return {number[][] | *[][]} a two-dimension (2^k)*(2^k) matrix.
+ */
+Folding.prototype.arrayToMatrix = function(arr) {
+  assert(_.isArray(arr) && arr.length === this.count,
+    '`arr` must be a one-dimension array with ' + this.count + ' members.\nYour `arr` is: ' + arr);
+
+  return Array.from(new Array(this.rowCount), (val, rowIndex) =>
+                    Array.from(new Array(this.rowCount), (val, colIndex) =>
+                                         arr[rowIndex * this.rowCount + colIndex]));
+};
+
+/**
+ * Private method: reset internal states.
  * ATTENTION: NOT RECOMMEND to call this method directly.
  * Keep this as a private method.
  *
  * @param original (optional) re-assign another initial sequence to the folding service.
  *                 If omitted, use the matrix of natural numbers.
+ * @param isFlat (optional) true if `original` is a one-dimension array.
  */
-Folding.prototype.reset = function(original) {
-  assert(original === undefined || _.isArray(original) && original.length === this.rowCount,
-    '`original` must be a two-dimension array with ' + this.count + ' members.\nYour `original` is: ' + original);
+Folding.prototype.reset = function(original, isFlat) {
+  assert(original === undefined || _.isArray(original) &&
+                                   (!isFlat && original.length === this.rowCount && original[0].length === this.rowCount ||
+                                    isFlat === true && original.length === this.count) ,
+    '`original` must be a matrix with ' + this.rowCount + '*' + this.rowCount + ' elements.\n' +
+    'Or an array with ' + this.count + ' elements.\n' +
+    'Your `original` is: ' + original);
 
-  this.original = original ?
-                 _.cloneDeep(original) : // use a copy of the given array
-                 Array.from(new Array(this.rowCount), (val, rowIndex) => // build up a two-dimension array [[1, 2, ..., 2k], ..., [..., n]]
-                             Array.from(new Array(this.rowCount), (val, colIndex) =>
-                                        rowIndex * this.rowCount + colIndex + 1));
+  if (original) {
+    let temp = _.cloneDeep(original); // use a copy of the given array/matrix
+    this.original = isFlat ? this.arrayToMatrix(temp) : temp;
+  } else {
+    // build up a two-dimension array [[1, 2, ..., 2k], ..., [..., n]]
+    this.original = Array.from(new Array(this.rowCount), (val, rowIndex) =>
+                               Array.from(new Array(this.rowCount), (val, colIndex) =>
+                                                    rowIndex * this.rowCount + colIndex + 1));
+  }
   this.final = this.original; // the final array is one-dimension
   this.finalFlat = this.original.reduce((accumulator, currentValue) => accumulator.concat(currentValue));
   this.steps = [this.final.map(row => row.map(number => [number]))];// steps is 4-dimension array
@@ -153,15 +179,16 @@ Folding.prototype.reset = function(original) {
 };
 
 /**
- * Give the result of the first-order folading problem.
+ * Give the result of the second order folding problem.
  *
  * @param algorithm (optional) By default, `recursive` is used.
- * @return {number[] | *[]} the final folding result.
+ * @return {number[][] | *[][]} the final folding result.
  */
 Folding.prototype.compute = function(algorithm) {
   assert(algorithm === undefined || typeof algorithm === 'string',
          '`algorithm` must be a flag defined in `Constants`, or it can be just omitted.\nYour algorithm: ' + algorithm);
 
+  algorithm = algorithm || Constants.algorithm.RECURSIVE;
   if (this.cache[algorithm].result) {
     this.final = this.cache[algorithm].result;
     this.finalFlat = this.cache[algorithm].flat;

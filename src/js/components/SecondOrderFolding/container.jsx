@@ -410,7 +410,7 @@ class SecondOrderFolding extends Component {
       <div key={rowIndex} style={{ display: 'flex' }}>
         {
           row.map((number, colIndex) =>
-            <div key={colIndex} style={{ width: 16 + 2 ** (power - 1), textAlign: 'center', margin: 4, }}>
+            <div key={colIndex} style={{ width: 16 + 2 ** (power - 1), textAlign: 'center', margin: 4 }}>
               <span>{number}</span>
             </div>
           )

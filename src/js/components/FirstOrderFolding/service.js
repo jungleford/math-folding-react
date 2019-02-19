@@ -144,6 +144,7 @@ Folding.prototype.isComputeDone = function() {
 };
 
 /**
+ * Private method: reset internal states.
  * ATTENTION: NOT RECOMMEND to call this method directly.
  * Keep this as a private method.
  *
@@ -152,7 +153,7 @@ Folding.prototype.isComputeDone = function() {
  */
 Folding.prototype.reset = function(original) {
   assert(original === undefined || _.isArray(original) && original.length === this.count,
-    '`original` must be an array with ' + this.count + ' members.\nYour `original` is: ' + original);
+    '`original` must be an array with ' + this.count + ' elements.\nYour `original` is: ' + original);
 
   this.original = original ?
                  _.cloneDeep(original) : // use a copy of the given array
@@ -163,7 +164,7 @@ Folding.prototype.reset = function(original) {
 };
 
 /**
- * Give the result of the first-order folading problem.
+ * Give the result of the first order folding problem.
  *
  * Supported algorithm:
  *   recursive, formula
@@ -175,6 +176,7 @@ Folding.prototype.compute = function(algorithm) {
   assert(algorithm === undefined || typeof algorithm === 'string',
          '`algorithm` must be a flag defined in `Constants`, or it can be just omitted.\nYour algorithm: ' + algorithm);
 
+  algorithm = algorithm || Constants.algorithm.RECURSIVE;
   if (this.cache[algorithm].result) {
     this.final = this.cache[algorithm].result;
     this.steps = this.cache[algorithm].steps;
