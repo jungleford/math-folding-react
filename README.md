@@ -284,6 +284,8 @@ After compiled successfully, then access: http://localhost:8080/
 
 根据对称性，求序列位置上的数字的公式也是完全一样的。
 
+这个迭代计算的方法，我们可以总结为一句话——**一阶k-1次对折序列决定了k次序列的前半段，而k次序列的前半段又决定了k次序列的后半段**。
+
 最后，必须重申的是：以上我的所有推理都是根据观察和归纳，**并非严格的数学证明**。
 
 ## 二阶对折（Second Order Folding）
@@ -410,7 +412,7 @@ After compiled successfully, then access: http://localhost:8080/
 
 ### 头部稳定
 
-二阶对折过程同样服从头部稳定规律，但是这需要是以“**轮**”为一个计数单位。
+二阶对折过程同样服从头部稳定规律，但是这里需要是以“**轮**”为一个计数单位。
 
 ### 锚点
 
@@ -426,9 +428,38 @@ After compiled successfully, then access: http://localhost:8080/
  * （结论2'）2位于右下角，也就是1的对角位置
  * （结论3'）![](http://latex.codecogs.com/gif.latex?4^k)位于顶边的第3个位置，也就是和数字1隔了一个数字。当k=1时例外，4位于左下角，因为此时数字太少，仅有4个。
 
+结论1和结论2与一阶对折的情形完全一致。
+
 然后，紧跟着![](http://latex.codecogs.com/gif.latex?4^k)的两个数字，也就是第4个和第5个数字也很特别：
  * （结论4）第4个数字是n的平方根，也就是![](http://latex.codecogs.com/gif.latex?2^k)
  * （结论5）第5个数字是n的一半![](http://latex.codecogs.com/gif.latex?n\over2)，也就是![](http://latex.codecogs.com/gif.latex?2^{2k-1})
+
+即——
+
+![](http://latex.codecogs.com/gif.latex?P%281%29=1)
+
+![](http://latex.codecogs.com/gif.latex?P%282%29=n=4^k)
+
+![](http://latex.codecogs.com/gif.latex?P%28n%29=P%284^k%29=3)
+
+![](http://latex.codecogs.com/gif.latex?P%28\sqrt{n}%29=P%282^k%29=4)
+
+![](http://latex.codecogs.com/gif.latex?P%28n\over2%29=P%282^{2k-1}%29=5)
+
+或——
+
+![](http://latex.codecogs.com/gif.latex?V%281%29=1)
+
+![](http://latex.codecogs.com/gif.latex?V%28n%29=V%284^k%29=2)
+
+![](http://latex.codecogs.com/gif.latex?V%283%29=n=4^k)
+
+![](http://latex.codecogs.com/gif.latex?V%284%29=\sqrt{n}=2^k)
+
+![](http://latex.codecogs.com/gif.latex?V%285%29=2^{2k-1}=n\over2)
+
+
+![](https://github.com/jungleford/math-folding/raw/master/fig1.jpg)
 
 还有：
  * （结论6）除2以外的2的各幂次皆位于结果方阵的上半部分。这点和一阶对折的情形很相似。
@@ -437,6 +468,14 @@ After compiled successfully, then access: http://localhost:8080/
  * （结论7）从**二次对折**开始，数字**4**总是位于结果方阵最右边，且在这一边的位置呈2的幂次数变化，也就是说，4是最右边的第![](http://latex.codecogs.com/gif.latex?2^{k-2})个数，换算成一维结果，则是第![](http://latex.codecogs.com/gif.latex?4^{k-1})个数。
  * （结论8）从**四次对折**开始，数字**8**总是位于结果方阵最右边，且在这一边的位置呈2的幂次数变化，也就是说，4是最右边的第![](http://latex.codecogs.com/gif.latex?2^{k-4})个数，换算成一维结果，则是第![](http://latex.codecogs.com/gif.latex?4^{k-2})个数。
  * ……
+
+### 一阶对折与二阶对折之间的关系
+
+略微对比一下马上就能发现，**一阶对折的结果序列在同次的二阶对折结果序列中是保序的**——
+
+![](https://github.com/jungleford/math-folding/raw/master/fig2.jpg)
+
+在一阶对折的推导过程中我们发现了“**镜像对称**”关系，既然一阶序列在二阶序列中保序，那么二阶序列（或方阵）是否存在类似的性质呢？
 
 ### 中心对称与孪生点
 
@@ -456,18 +495,47 @@ After compiled successfully, then access: http://localhost:8080/
 
 ### 分布规律
 
+由于二阶一次对折比较简单且特殊，可以视为**平凡结论**，因此下文中如未作特殊声明，我们皆视为**二阶二次及以上各次对折（及其同阶结果方阵）**。
+
 我们以**中位数**![](http://latex.codecogs.com/gif.latex?n\over2)（即![](http://latex.codecogs.com/gif.latex?2^{2k-1})）为参考点，将这n个数分为前后两部分：“**高位数**”（_Upper Numbers_，大于![](http://latex.codecogs.com/gif.latex?n\over2)）和“**低位数**”（_Lower Numbers_，小于或等于![](http://latex.codecogs.com/gif.latex?n\over2)）。
 
 再观察结果方阵中的每一行，我们发现：
- * （结论9）二次及以上各次对折的结果方阵中，中位数![](http://latex.codecogs.com/gif.latex?n\over2)位于方阵的上半部分。这个由**结论5**可知。
+ * （结论9）中位数![](http://latex.codecogs.com/gif.latex?n\over2)位于方阵的上半部分。这个由**结论5**可知。
  * （结论10）在任意一行中，高位数和低位数总是各占一半。
  * （结论11）在行与行之间，高位数与低位数总是以两个为一组（头尾除外，它们分别只有一个数，并且皆为低位数）间隔着排列。
 
 结论11可以用下图来表示——
 
-![](https://github.com/jungleford/math-folding/raw/master/fig1.jpg)
+![](https://github.com/jungleford/math-folding/raw/master/fig3.jpg)
 
 在这里我沿用在一阶对折的推导过程中使用过的概念，也将每个方框内的那些数定义为一个“**块**”（_Block_）。块的分布规律让我们定位范围又缩小了一些。
 
+块的间隔分布又可以导出另外一个重要发现——
+ * （结论12）在任意一行中每隔一列的两个数字相加，得到的值相等，并且等于**n+1**。
+
+![](http://latex.codecogs.com/gif.latex?V%28x%29+V%28x+2%29=n+1=4^k+1,x=\begin{cases}4i+1\\\\4i+2\end{cases},0\le%20i\le%204^{k-1}-1)
+
+例如：二次折叠的第1列和第3列，第2列和第4列，分别相加，值均为17（16+1）；三次折叠，第1列和第3列，第2列和第4列，第5列和第7列，第6列和第8列，两两相加，得到65（64+1）；四次折叠也类同，加和为257（256+1）。如下图所示——
+
+![](https://github.com/jungleford/math-folding/raw/master/fig4.jpg)
+
+因此可以说**结论3（以及结论3'）是结论12的特例**。
+
+当然，**对于每列数字，相邻的两行数字两两相加也可以得到一个相等的数**，比如三次对折的结果方阵的第1列：1+28=12+17=10+19=3+26=29。但这其实是中心对称性质的一个推论，并且不同列得到的加和也不一定相等（**只有轴对称的两列的各自加和才相等**）。
+
+这个规律（结论12）使得需要计算的数目又减少了一半，结合中心对称规律，至此我们**最多需要推算![](http://latex.codecogs.com/gif.latex?n\over4)即![](http://latex.codecogs.com/gif.latex?4^{k-1})个数的位置即可**。到这里我们是否能联想到什么呢？总数的![](http://latex.codecogs.com/gif.latex?1\over4)，不正好就是k-1次对折和k次对折之间的比例关系吗？还记得我们在一阶对折的推导中最后得出的那个迭代关系吗：
+
+    （一阶）k-1次对折序列决定了k次序列的前半段，而k次序列的前半段又决定了k次序列的后半段。
+
+那么对于二阶对折，是否也存在类似的迭代计算方法？关键是要找到二阶k-1次结果方阵在k次结果方阵中的分布规律。
+
+### 次间的迭代规律
+
+先看粗的分布。下图用不同颜色的框，在k次结果方阵中把k-1次折叠中出现的所有数字标注出来——
+
+![](https://github.com/jungleford/math-folding/raw/master/fig5.jpg)
+
+可见k-1次折叠的各元，在k次折叠的结果方阵中大致呈列状分布。一次和二次折叠存在间隔，呈离散状，但**在三次及以上折叠的结果方阵中，k-1次各元均稳定且（按列）“连续”整齐排列**。
+
 ## 算法
-目前仅支持最容易设计的“**递归算法**”（_Recursive_）一阶对折还额外支持“**迭代公式算法**”（_Formula_）。请参见源代码中各组件的service部分。
+目前仅支持最容易设计的“**递归算法**”（_Recursive_），一阶对折还额外支持“**迭代公式算法**”（_Formula_）。请参见源代码中各组件的service部分。

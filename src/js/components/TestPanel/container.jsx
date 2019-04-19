@@ -87,7 +87,7 @@ class TestPanel extends Component {
         <div key={rowIndex} style={{ display: 'flex' }}>
           {
             row.map((number, colIndex) =>
-              <div key={colIndex} style={{ width: 16 + 2 ** (defaultPower - 1), textAlign: 'center', margin: 4 }}>
+              <div key={colIndex} style={{ width: 16 + 2 ** (defaultPower - 1), textAlign: 'center', margin: power <= 4 ? 4 : 8 }}>
                 <span>{number}</span>
               </div>
             )
