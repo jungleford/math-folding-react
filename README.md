@@ -13,7 +13,7 @@ After compiled successfully, then access: http://localhost:8080/
 
 故事的起因是在一个同学微信群里有大佬抛出一道据说是奥数题，就是下面这个——
 
-<img src="https://github.com/jungleford/math-folding/raw/master/puzzle.jpg" width="60%" height="60%" />
+<img src="https://github.com/jungleford/math-folding/raw/master/docs/img/puzzle.jpg" width="60%" height="60%" />
 
 虽然问题本身很容易理解，不过名不正则言不顺，首先需要定义一些概念。以下命名皆为本人自行命名，未查证在数学里的标准命名方式，未必规范严格，可能有所出入：
 * **轮**（_Turn_）：经过一系列操作使对象达到与操作前“**自相似**”的状态，我们称为“一轮”，每一轮都有着相同的操作序列。如一张纸条从右往左对折，成为宽度减半，厚度加倍的“纸条”，这算作一轮；一张正方形的纸，从下往上对折，然后从右往左对折，成为面积1/4，厚度4倍的“纸”，这也算作是一轮。
@@ -464,7 +464,7 @@ After compiled successfully, then access: http://localhost:8080/
 ![](http://latex.codecogs.com/gif.latex?V%285%29=2^{2k-1}={n\over2})
 
 
-![](https://github.com/jungleford/math-folding/raw/master/fig1.jpg)
+![](https://github.com/jungleford/math-folding/raw/master/docs/img/fig1.jpg)
 
 还有：
 * （结论6）除2以外的2的各幂次皆位于结果方阵的上半部分。这点和一阶对折的情形很相似。
@@ -477,7 +477,7 @@ After compiled successfully, then access: http://localhost:8080/
 如果考察全部2的幂次值的话，我们发现：
 * （结论9）2的幂次分布于三处：第1行，第![](http://latex.codecogs.com/gif.latex?2^k)列（最后一列），以及第![](http://latex.codecogs.com/gif.latex?2^k-3)列（倒数第4列）。
 
-![](https://github.com/jungleford/math-folding/raw/master/fig2.jpg)
+![](https://github.com/jungleford/math-folding/raw/master/docs/img/fig2.jpg)
 
 ### 中间数
 
@@ -490,7 +490,7 @@ After compiled successfully, then access: http://localhost:8080/
 
 结论10如下图所示——
 
-![](https://github.com/jungleford/math-folding/raw/master/fig3.jpg)
+![](https://github.com/jungleford/math-folding/raw/master/docs/img/fig3.jpg)
 
 这两个数我称为“**中间数**"（_Middle Numbers_），它们在下面还将起到重要作用。
 
@@ -498,7 +498,7 @@ After compiled successfully, then access: http://localhost:8080/
 
 略微对比一下马上就能发现，**一阶对折的结果序列在同次的二阶对折结果序列中是保序的**——
 
-![](https://github.com/jungleford/math-folding/raw/master/fig4.jpg)
+![](https://github.com/jungleford/math-folding/raw/master/docs/img/fig4.jpg)
 
 并且，对任意次对折我们总是可以迭代计算一阶任意位置x的值![](http://latex.codecogs.com/gif.latex?V_1_%28x%29)在二阶结果中的位置![](http://latex.codecogs.com/gif.latex?P_2_%28V_1_%28x%29%29%)（这里的下标代表阶数）：
 
@@ -547,7 +547,7 @@ After compiled successfully, then access: http://localhost:8080/
 
 结论13可以用下图来表示——
 
-![](https://github.com/jungleford/math-folding/raw/master/fig5.jpg)
+![](https://github.com/jungleford/math-folding/raw/master/docs/img/fig5.jpg)
 
 在这里我沿用在一阶对折的推导过程中使用过的概念，也将每个方框内的那些数定义为一个“**块**”（_Block_）。块的分布规律让我们定位范围又缩小了一些。
 
@@ -558,7 +558,7 @@ After compiled successfully, then access: http://localhost:8080/
 
 例如：二次折叠的第1列和第3列，第2列和第4列，分别相加，值均为17（16+1）；三次折叠，第1列和第3列，第2列和第4列，第5列和第7列，第6列和第8列，两两相加，得到65（64+1）；四次折叠也类同，加和为257（256+1）。如下图所示——
 
-![](https://github.com/jungleford/math-folding/raw/master/fig6.jpg)
+![](https://github.com/jungleford/math-folding/raw/master/docs/img/fig6.jpg)
 
 因此可以说**结论3（以及结论3'）是结论14的特例**。
 
@@ -576,7 +576,7 @@ After compiled successfully, then access: http://localhost:8080/
 
 先看粗的分布。下图用不同颜色的框，在k次结果方阵中把k-1次折叠中出现的所有数字标注出来——
 
-![](https://github.com/jungleford/math-folding/raw/master/fig7.jpg)
+![](https://github.com/jungleford/math-folding/raw/master/docs/img/fig7.jpg)
 
 可见k-1次折叠的各元，在k次折叠的结果方阵中大致呈列状分布。一次和二次折叠存在间隔，呈离散状，但**在三次及以上折叠的结果方阵中，k-1次各元均稳定且（按列）“连续”整齐排列**。
 
@@ -584,7 +584,7 @@ After compiled successfully, then access: http://localhost:8080/
 
 结合上面的**从一阶点位对二阶点位的迭代推算方法**，我们可以准确得出![](http://latex.codecogs.com/gif.latex?2^{k+1})个数的位置。这些推算出来的点位在下图中用马克笔高亮标示——
 
-![](https://github.com/jungleford/math-folding/raw/master/fig8.jpg)
+![](https://github.com/jungleford/math-folding/raw/master/docs/img/fig8.jpg)
 
 再结合**结论10**的中间数规律，还能再推出4个点位——
 
@@ -592,7 +592,7 @@ After compiled successfully, then access: http://localhost:8080/
 
 ![](http://latex.codecogs.com/gif.latex?\begin{cases}P%284^k-2^k%29=2^{2k-1}-2\\\\P%284^k-2^k-1%29=2^{2k-1}+3\end{cases})
 
-![](https://github.com/jungleford/math-folding/raw/master/fig9.jpg)
+![](https://github.com/jungleford/math-folding/raw/master/docs/img/fig9.jpg)
 
 然后我们很快又发现一个规律：
 * （结论15）中间数排在前面的那个（即![](http://latex.codecogs.com/gif.latex?2^k+1)）的**补数**，在它前面的数恰好就是![](http://latex.codecogs.com/gif.latex?2^{k+1})！同时它的补数也就立知了。
@@ -603,44 +603,44 @@ After compiled successfully, then access: http://localhost:8080/
 
 ![](http://latex.codecogs.com/gif.latex?\begin{cases}P%284^k-2^{k+1}+1%29=2^{2k-1}-1\\\\P%284^k-2^{k+1}+2%29=2^{2k-1}+2\end{cases})
 
-![](https://github.com/jungleford/math-folding/raw/master/fig10.jpg)
+![](https://github.com/jungleford/math-folding/raw/master/docs/img/fig10.jpg)
 
 关于列的加和，还有另外一个：
 * （结论16）最左边和最右边的两列，分别与它们往中间数4列，然后这两列的加和是![](http://latex.codecogs.com/gif.latex?{n\over2}+1)，即![](http://latex.codecogs.com/gif.latex?2^{2k-1}+1)
 
   ![](http://latex.codecogs.com/gif.latex?V%28x%29+V%28x+4%29={n\over2}+1=2^{2k-1}+1,x=\begin{cases}{2^k}i+1\\\\{2^k}%28i+1%29-4\end{cases},0\le%20i\le%202^k-1)
 
-![](https://github.com/jungleford/math-folding/raw/master/fig11.jpg)
+![](https://github.com/jungleford/math-folding/raw/master/docs/img/fig11.jpg)
 
 类似地，也可以说**结论5是结论16的特例**。
 
 当然，事情到此并未结束，继续观察可以发现四次及以上对折还能挖掘出更多加和为![](http://latex.codecogs.com/gif.latex?2^{2k-1}+1)的成对两列出来——
 
-![](https://github.com/jungleford/math-folding/raw/master/fig12.jpg)
+![](https://github.com/jungleford/math-folding/raw/master/docs/img/fig12.jpg)
 
 ### 连续数对
 
 在研究中心对称规律的时候我们引入过**孪生数对**的概念，只要两个前后相继的数是奇数排在偶数前面，那么必然满足中心对称。那么我们是否可以在此基础上再进一步，如果在初始方阵中一对前后相继的数对是偶数排在前面呢？首先，容易观察到方阵的左右两边列似乎有较多这样的数对，我就二次到五次对折整理了一下位于侧边列的分布，将偶数在前的两个数用线连接起来——
 
-![](https://github.com/jungleford/math-folding/raw/master/fig13.jpg)
+![](https://github.com/jungleford/math-folding/raw/master/docs/img/fig13.jpg)
 
 为了让规律看起来更清晰一些，我把k的值继续升至6，这样元数就有4096个之多，形成一个相当大的64x64的结果方阵——
 
-![](https://github.com/jungleford/math-folding/raw/master/fig14.jpg)
+![](https://github.com/jungleford/math-folding/raw/master/docs/img/fig14.jpg)
 
 这里将**在初始方阵中**前后相继且偶数在前的一对数称为“**偶先数对**”（_Even-First Pair_）。上面从二次到六次对折，两侧边列的偶先对满足这样一种分布规律：
 * （结论17）**侧边列**的偶先数对在结果方阵的上半部分和下半部分有着不同的分布规律。二次对折比较特殊，两对数都位于下半部且呈轴对称；三次对折，有四对数全部分布在下半部，且以下半部的垂直方向再均分为上下两部分，四对数平均分布在两部分，且沿各自的对称中心分布；四次及以上对折，下半部呈现和三次对折相同的规律，上半部开始有数对出现，但是总数要少于下半部。
 
 以上是偶先数位于结果方阵两端的情形。如果数对位于**方阵内部**的话——
 
-![](https://github.com/jungleford/math-folding/raw/master/fig15.jpg)
+![](https://github.com/jungleford/math-folding/raw/master/docs/img/fig15.jpg)
 
 可见
 * （结论18）内部的偶先数对分布规律与侧边的偶先数对几乎相反。除了二次对折的内部偶先数对也是位于下半部之外，三次及以上对折全部的内部偶先数对皆分布与上半部。
 
 偶先数对在方阵下半部的分布尤为引人注目，比起上半部，下半部显然规律性更强一些。比如我们继续观察位于中间的两列，同样可以发现和侧边列偶先数对相同的分布规律——
 
-![](https://github.com/jungleford/math-folding/raw/master/fig16.jpg)
+![](https://github.com/jungleford/math-folding/raw/master/docs/img/fig16.jpg)
 
 继而你可以发现，整个下半部只要是对称的两列，全部服从这种“**半中心对称**”规律！
 
