@@ -159,7 +159,7 @@ After compiled successfully, then access: http://localhost:8080/
 
 从此结论出发，可以进一步观察，我们发现**所有2的指幂所在的位置都是“特殊点位”**！
 
-![](http://latex.codecogs.com/gif.latex?P%282^{j}%29=2^{k-j+1},0<j\le%20k)
+![](http://latex.codecogs.com/gif.latex?P%282^{j}%29=2^{k-j+1},\quad0<j\le%20k)
 
 这些点，我不妨将其称为“**锚点**”（_anchor_）。锚点有这样一些特点：
 1) 锚点在它所在的块当中，总是这个块里的两个数字当中排在前面的那个。
@@ -169,13 +169,13 @@ After compiled successfully, then access: http://localhost:8080/
 在此，我们已经得到了这幅拼图当中的一小块，能够精确计算锚点的位置了。现在我们尝试继续往前迈一步，分析“块”的性质：
 1) 首先，容易看出的，除去头尾两个数字，每个块均由一奇一偶两个数字组成，且**偶数总是排在前面**。于是对于任何一个折叠序列，总是奇偶相间排列的。
 1) 因此，加上头尾的1和2，我们可以断定：**奇数总是排列在奇数号位置，偶数总是排列在偶数号位置**。
-1) 锚点所在的块中，紧跟着锚点j后面的数字是![](http://latex.codecogs.com/gif.latex?2^{j-1}+1)，因此根据上面总结的锚点位置公式，有![](http://latex.codecogs.com/gif.latex?P%282^{j-1}+1%29=2^{k-j+1}+1,0<j\le%20k)，不妨将此点称为“**邻锚点**”。拼图又接上了一小块。
+1) 锚点所在的块中，紧跟着锚点j后面的数字是![](http://latex.codecogs.com/gif.latex?2^{j-1}+1)，因此根据上面总结的锚点位置公式，有![](http://latex.codecogs.com/gif.latex?P%282^{j-1}+1%29=2^{k-j+1}+1,\quad0<j\le%20k)，不妨将此点称为“**邻锚点**”。拼图又接上了一小块。
 
 我们通过层层推理，推出了所有锚点和邻锚点的准确位置，那么根据对折的轴对称性质，可以立即推算出比它们大1或小1的相邻数的位置了。这里锚点的镜像位数字比锚点数小1，而邻锚点的镜像位数字比邻锚点大1：
 
-![](http://latex.codecogs.com/gif.latex?P%282^j-1%29=2^k-2^{k-j+1}+1,0<j\le%20k)
+![](http://latex.codecogs.com/gif.latex?P%282^j-1%29=2^k-2^{k-j+1}+1,\quad0<j\le%20k)
 
-![](http://latex.codecogs.com/gif.latex?P%282^{j-1}+2%29=2^k-2^{k-j+1},1<j\le%20k)
+![](http://latex.codecogs.com/gif.latex?P%282^{j-1}+2%29=2^k-2^{k-j+1},\qquad1<j\le%20k)
 
 补完两块新的拼图。至此，当**k>1**时，我们能够准确推算的点位数有：
 * **锚点**：**k+1**个（包括1和2）
@@ -205,13 +205,13 @@ After compiled successfully, then access: http://localhost:8080/
 
 用值关系表示为，我们得到**第二个迭代**：
 
-![](http://latex.codecogs.com/gif.latex?V_{k+1}_%28x%29=\begin{cases}2V_k_%28x%29,&\textrm{x%20is%20even}\\\\2V_k_%28x%29-1,&\textrm{x%20is%20odd}\end{cases},1<x\le2^k)
+![](http://latex.codecogs.com/gif.latex?V_{k+1}_%28x%29=\begin{cases}2V_k_%28x%29,&\textrm{x%20is%20even}\\\\2V_k_%28x%29-1,&\textrm{x%20is%20odd}\end{cases},\quad1<x\le2^k)
 
 观察第一和第二迭代式，似乎长得完全一样啊？不对，其实它们是两个不同的等式。因为第一迭代式的条件是P(x)即**位置序号的奇偶性**；而第二迭代式的条件是**x本身的奇偶性**。但是却可以得出形式完全相同的迭代关系，这也从另一个角度揭示了前面总结过的**对称性**。
 
 如果换算成数字的位置关系，则应该是：
 
-![](http://latex.codecogs.com/gif.latex?\begin{cases}P_{k+1}_%282x%29=P_k_%28x%29,&\textrm{x%20is%20even}\\\\P_{k+1}_%282x-1%29=P_k_%28x%29,&\textrm{x%20is%20odd}\end{cases},1<x\le2^k)
+![](http://latex.codecogs.com/gif.latex?\begin{cases}P_{k+1}_%282x%29=P_k_%28x%29,&\textrm{x%20is%20even}\\\\P_{k+1}_%282x-1%29=P_k_%28x%29,&\textrm{x%20is%20odd}\end{cases},\quad1<x\le2^k)
 
 至此，k+1次序列的前一半的所有块的数字，都可以从k次序列完全推出！
 
@@ -222,7 +222,7 @@ After compiled successfully, then access: http://localhost:8080/
 
 这个性质和前面锚点/邻锚点及其镜像点位的关系完全一致，即
 
-![](http://latex.codecogs.com/gif.latex?M%28x%29=\begin{cases}x-1,&\textrm{x%20is%20even}\\\\x+1,&\textrm{x%20is%20odd}\end{cases},1\le%20P%28x%29\le%202^{k-1})
+![](http://latex.codecogs.com/gif.latex?M%28x%29=\begin{cases}x-1,&\textrm{x%20is%20even}\\\\x+1,&\textrm{x%20is%20odd}\end{cases},\quad1\le%20P%28x%29\le%202^{k-1})
 
 此处记M(x)为数字x对称位（镜像位）上的数字。转换成位置函数关系就是：
 
@@ -230,7 +230,7 @@ After compiled successfully, then access: http://localhost:8080/
 
 或
 
-![](http://latex.codecogs.com/gif.latex?\begin{cases}P%28x-1%29=2^k-P%28x%29+1,&\textrm{x%20is%20even}\\\\P%28x+1%29=2^k-P%28x%29+1,&\textrm{x%20is%20odd}\end{cases},1\le%20P%28x%29\le%202^{k-1})
+![](http://latex.codecogs.com/gif.latex?\begin{cases}P%28x-1%29=2^k-P%28x%29+1,&\textrm{x%20is%20even}\\\\P%28x+1%29=2^k-P%28x%29+1,&\textrm{x%20is%20odd}\end{cases},\quad1\le%20P%28x%29\le%202^{k-1})
 
 于是序列的后半段也可以完全构造出来。至此，我们已经可以完全计算整个序列：
 1) 确定头尾分别为1和2，即
@@ -259,15 +259,15 @@ After compiled successfully, then access: http://localhost:8080/
 
    ......
 
-   ![](http://latex.codecogs.com/gif.latex?P%282^{j}%29=2^{k-j+1},0<j\le%20k)
+   ![](http://latex.codecogs.com/gif.latex?P%282^{j}%29=2^{k-j+1},\qquad\qquad\quad0<j\le%20k)
 
-   ![](http://latex.codecogs.com/gif.latex?P%282^{j-1}+1%29=2^{k-j+1}+1,0<j\le%20k)
+   ![](http://latex.codecogs.com/gif.latex?P%282^{j-1}+1%29=2^{k-j+1}+1,\quad0<j\le%20k)
 
    ......
 
-   ![](http://latex.codecogs.com/gif.latex?P_k_%284i%29=P_{k-1}%282i%29=P_{k-2}_%28i%29,1\le%20i\le%202^{k-2})
+   ![](http://latex.codecogs.com/gif.latex?P_k_%284i%29=P_{k-1}%282i%29=P_{k-2}_%28i%29,\qquad\qquad1\le%20i\le%202^{k-2})
 
-   ![](http://latex.codecogs.com/gif.latex?P_k%284i-3%29=P_{k-1}_%282i-1%29=P_{k-2}_%28i%29,1\le%20i\le%202^{k-2})
+   ![](http://latex.codecogs.com/gif.latex?P_k%284i-3%29=P_{k-1}_%282i-1%29=P_{k-2}_%28i%29,\quad1\le%20i\le%202^{k-2})
 
 1) 构造序列的后半段（模4余2或余3）：
 
@@ -277,15 +277,15 @@ After compiled successfully, then access: http://localhost:8080/
 
    ......
 
-   ![](http://latex.codecogs.com/gif.latex?P%282^j-1%29=2^k-2^{k-j+1}+1,0<j\le%20k)
+   ![](http://latex.codecogs.com/gif.latex?P%282^j-1%29=2^k-2^{k-j+1}+1,\quad0<j\le%20k)
 
-   ![](http://latex.codecogs.com/gif.latex?P%282^{j-1}+2%29=2^k-2^{k-j+1},1<j\le%20k)
+   ![](http://latex.codecogs.com/gif.latex?P%282^{j-1}+2%29=2^k-2^{k-j+1},\qquad1<j\le%20k)
 
    ......
 
-   ![](http://latex.codecogs.com/gif.latex?P_k_%284i-1%29=2^k-P_k_%284i%29+1=2^k-P_{k-2}_%28i%29+1,1\le%20i\le%202^{k-2})
+   ![](http://latex.codecogs.com/gif.latex?P_k_%284i-1%29=2^k-P_k_%284i%29+1=2^k-P_{k-2}_%28i%29+1,\qquad\quad1\le%20i\le%202^{k-2})
 
-   ![](http://latex.codecogs.com/gif.latex?P_k_%284i-2%29=2^k-P_k_%284i-3%29+1=2^k-P_{k-2}_%28i%29+1,1\le%20i\le%202^{k-2})
+   ![](http://latex.codecogs.com/gif.latex?P_k_%284i-2%29=2^k-P_k_%284i-3%29+1=2^k-P_{k-2}_%28i%29+1,\quad1\le%20i\le%202^{k-2})
 
 根据对称性，求序列位置上的数字的公式也是完全一样的。
 
@@ -522,7 +522,10 @@ After compiled successfully, then access: http://localhost:8080/
 
 我们把初始自然数序列按两两为一组，就像这样：(1,2) (3,4) (5,6) ... (![](http://latex.codecogs.com/gif.latex?4^k-1), ![](http://latex.codecogs.com/gif.latex?4^k))
 
-然后观察这些数字对在**结果方阵**中的位置，我们很快就发现一个有趣的现象：这些数对中的每一对数字，在结果方阵里都呈现“**中心对称**”分布！也就是说，如果我们把对称中心定在这个结果方阵的正中心位置，那么我们挑选的一对数字正是以此为中心的对称。不信你可以在上面给出的一次到五次结果方阵中验证。比如任意次数的结果方阵中，1和2分别位于左上和右下两对角位；二阶三次结果方阵中，3位于第7行（倒数第2行）第1列，而4位于第2行第8列；二阶四次结果方阵，100在第5行第8列，而第12行（倒数第5行）第9列正是数字99。
+然后观察这些数字对在**结果方阵**中的位置，我们很快就发现一个有趣的现象：
+* （结论11）这些数对中的每一对数字，在结果方阵里都呈现“**中心对称**”分布！也就是说，如果我们把对称中心定在这个结果方阵的正中心位置，那么我们挑选的一对数字正是以此为中心的对称。
+
+不信你可以在上面给出的一次到五次结果方阵中验证。比如任意次数的结果方阵中，1和2分别位于左上和右下两对角位；二阶三次结果方阵中，3位于第7行（倒数第2行）第1列，而4位于第2行第8列；二阶四次结果方阵，100在第5行第8列，而第12行（倒数第5行）第9列正是数字99。
 
 这里我就将这样一对数称为“**孪生数**”或者“**孪生点**”。
 
@@ -541,32 +544,32 @@ After compiled successfully, then access: http://localhost:8080/
 我们以**中位数**![](http://latex.codecogs.com/gif.latex?n\over2)（即![](http://latex.codecogs.com/gif.latex?2^{2k-1})）为参考点，将这n个数分为前后两部分：“**高位数**”（_Upper Numbers_，大于![](http://latex.codecogs.com/gif.latex?n\over2)）和“**低位数**”（_Lower Numbers_，小于或等于![](http://latex.codecogs.com/gif.latex?n\over2)）。
 
 再观察结果方阵中的每一行，我们发现：
-* （结论11）中位数![](http://latex.codecogs.com/gif.latex?n\over2)位于方阵的上半部分。这个由**结论5**可知。
-* （结论12）在任意一行中，高位数和低位数总是各占一半。
-* （结论13）在行与行之间，高位数与低位数总是以两个为一组（头尾除外，它们分别只有一个数，并且皆为低位数）间隔着排列。
+* （结论12）中位数![](http://latex.codecogs.com/gif.latex?n\over2)位于方阵的上半部分。这个由**结论5**可知。
+* （结论13）在任意一行中，高位数和低位数总是各占一半。
+* （结论14）在行与行之间，高位数与低位数总是以两个为一组（头尾除外，它们分别只有一个数，并且皆为低位数）间隔着排列。
 
-结论13可以用下图来表示——
+结论14可以用下图来表示——
 
 ![](https://github.com/jungleford/math-folding/raw/master/docs/img/fig5.jpg)
 
 在这里我沿用在一阶对折的推导过程中使用过的概念，也将每个方框内的那些数定义为一个“**块**”（_Block_）。块的分布规律让我们定位范围又缩小了一些。
 
 块的间隔分布又可以导出另外一个重要发现——
-* （结论14）在任意一行中每隔一列的两个数字相加，得到的值相等，并且等于**n+1**。
+* （结论15）在任意一行中每隔一列的两个数字相加，得到的值相等，并且等于**n+1**。
 
-  ![](http://latex.codecogs.com/gif.latex?V%28x%29+V%28x+2%29=n+1=4^k+1,x=\begin{cases}4i+1\\\\4i+2\end{cases},0\le%20i\le%204^{k-1}-1)
+  ![](http://latex.codecogs.com/gif.latex?V%28x%29+V%28x+2%29=n+1=4^k+1,\quad%20x=\begin{cases}4i+1\\\\4i+2\end{cases},\quad0\le%20i\le%204^{k-1}-1)
 
 例如：二次折叠的第1列和第3列，第2列和第4列，分别相加，值均为17（16+1）；三次折叠，第1列和第3列，第2列和第4列，第5列和第7列，第6列和第8列，两两相加，得到65（64+1）；四次折叠也类同，加和为257（256+1）。如下图所示——
 
 ![](https://github.com/jungleford/math-folding/raw/master/docs/img/fig6.jpg)
 
-因此可以说**结论3（以及结论3'）是结论14的特例**。
+因此可以说**结论3（以及结论3'）是结论15的特例**。
 
 我将这样的两列称为“**互补**”（_Complementary_），互补列中对应的两个数互相称为“**补数**”（_Complement_）。
 
 当然，**对于每列数字，相邻的两行数字两两相加也可以得到一个相等的数**，比如三次对折的结果方阵的第1列：1+28=12+17=10+19=3+26=29。但这其实是中心对称性质的一个推论，并且不同列得到的加和也不一定相等（**只有轴对称的两列的各自加和才相等**）。
 
-这个规律（结论14）使得需要计算的数目又减少了一半，结合中心对称规律，至此我们**最多需要推算![](http://latex.codecogs.com/gif.latex?n\over4)即![](http://latex.codecogs.com/gif.latex?4^{k-1})个数的位置即可**。到这里我们是否能联想到什么呢？总数的![](http://latex.codecogs.com/gif.latex?1\over4)，不正好就是k-1次对折和k次对折之间的比例关系吗？还记得我们在一阶对折的推导中最后得出的那个迭代关系吗：
+这个规律（结论15）使得需要计算的数目又减少了一半，结合中心对称规律，至此我们**最多需要推算![](http://latex.codecogs.com/gif.latex?n\over4)即![](http://latex.codecogs.com/gif.latex?4^{k-1})个数的位置即可**。到这里我们是否能联想到什么呢？总数的![](http://latex.codecogs.com/gif.latex?1\over4)，不正好就是k-1次对折和k次对折之间的比例关系吗？还记得我们在一阶对折的推导中最后得出的那个迭代关系吗：
 
     （一阶）k-1次对折序列决定了k次序列的前半段，而k次序列的前半段又决定了k次序列的后半段。
 
@@ -595,7 +598,7 @@ After compiled successfully, then access: http://localhost:8080/
 ![](https://github.com/jungleford/math-folding/raw/master/docs/img/fig9.jpg)
 
 然后我们很快又发现一个规律：
-* （结论15）中间数排在前面的那个（即![](http://latex.codecogs.com/gif.latex?2^k+1)）的**补数**，在它前面的数恰好就是![](http://latex.codecogs.com/gif.latex?2^{k+1})！同时它的补数也就立知了。
+* （结论16）中间数排在前面的那个（即![](http://latex.codecogs.com/gif.latex?2^k+1)）的**补数**，在它前面的数恰好就是![](http://latex.codecogs.com/gif.latex?2^{k+1})！同时它的补数也就立知了。
 
 这样我们又多推出4个数的点位——
 
@@ -606,21 +609,21 @@ After compiled successfully, then access: http://localhost:8080/
 ![](https://github.com/jungleford/math-folding/raw/master/docs/img/fig10.jpg)
 
 关于列的加和，还有另外一个：
-* （结论16）最左边和最右边的两列，分别与它们往中间数4列，然后这两列的加和是![](http://latex.codecogs.com/gif.latex?{n\over2}+1)，即![](http://latex.codecogs.com/gif.latex?2^{2k-1}+1)
+* （结论17）最左边和最右边的两列，分别与它们往中间数4列，然后这两列的加和是![](http://latex.codecogs.com/gif.latex?{n\over2}+1)，即![](http://latex.codecogs.com/gif.latex?2^{2k-1}+1)
 
-  ![](http://latex.codecogs.com/gif.latex?V%28x%29+V%28x+4%29={n\over2}+1=2^{2k-1}+1,x=\begin{cases}{2^k}i+1\\\\{2^k}%28i+1%29-4\end{cases},0\le%20i\le%202^k-1)
+  ![](http://latex.codecogs.com/gif.latex?V%28x%29+V%28x+4%29={n\over2}+1=2^{2k-1}+1,x=\begin{cases}{2^k}i+1\\\\{2^k}%28i+1%29-4\end{cases},\quad0\le%20i\le%202^k-1)
 
 ![](https://github.com/jungleford/math-folding/raw/master/docs/img/fig11.jpg)
 
-类似地，也可以说**结论5是结论16的特例**。
+类似地，也可以说**结论5是结论17的特例**。
 
 当然，事情到此并未结束，继续观察可以发现四次及以上对折还能挖掘出更多加和为![](http://latex.codecogs.com/gif.latex?2^{2k-1}+1)的成对两列出来——
 
 ![](https://github.com/jungleford/math-folding/raw/master/docs/img/fig12.jpg)
 
-### 连续数对
+### 偶先数对
 
-在研究中心对称规律的时候我们引入过**孪生数对**的概念，只要两个前后相继的数是奇数排在偶数前面，那么必然满足中心对称。那么我们是否可以在此基础上再进一步，如果在初始方阵中一对前后相继的数对是偶数排在前面呢？首先，容易观察到方阵的左右两边列似乎有较多这样的数对，我就二次到五次对折整理了一下位于侧边列的分布，将偶数在前的两个数用线连接起来——
+在研究中心对称规律的时候我们引入过**孪生数对**的概念，只要两个前后相继的数是奇数排在偶数前面，那么必然满足中心对称。那么我们是否可以在此基础上再进一步，如果在初始方阵中一对前后相继的数对是**偶数排在前面**呢？首先，容易观察到方阵的左右两边列似乎有较多这样的数对，我就二次到五次对折整理了一下位于侧边列的分布，将偶数在前的两个数用线连接起来——
 
 ![](https://github.com/jungleford/math-folding/raw/master/docs/img/fig13.jpg)
 
@@ -629,24 +632,313 @@ After compiled successfully, then access: http://localhost:8080/
 ![](https://github.com/jungleford/math-folding/raw/master/docs/img/fig14.jpg)
 
 这里将**在初始方阵中**前后相继且偶数在前的一对数称为“**偶先数对**”（_Even-First Pair_）。上面从二次到六次对折，两侧边列的偶先对满足这样一种分布规律：
-* （结论17）**侧边列**的偶先数对在结果方阵的上半部分和下半部分有着不同的分布规律。二次对折比较特殊，两对数都位于下半部且呈轴对称；三次对折，有四对数全部分布在下半部，且以下半部的垂直方向再均分为上下两部分，四对数平均分布在两部分，且沿各自的对称中心分布；四次及以上对折，下半部呈现和三次对折相同的规律，上半部开始有数对出现，但是总数要少于下半部。
+* （结论18）**侧边列**的偶先数对在结果方阵的上半部分和下半部分有着不同的分布规律。为了避免与前面定义的“高位数”和“低位数”概念混淆，我在这里将方阵沿垂直方向划分为数字个数相等的上下两部分，其中上半部分称为“**上半区**”或“**前半区**”（_First Half_），而下半部分称为“**下半区**”或“**后半区**”（_Later Half_）。二次对折比较特殊，两对数都位于下半区且呈轴对称；三次对折，有四对数全部分布在下半区，且以下半区的垂直方向再均分为上下两部分，四对数平均分布在两部分，且沿各自的对称中心分布；四次及以上对折，下半区呈现和三次对折相同的规律，上半区开始有数对出现，但是总数要少于下半区。
 
 以上是偶先数位于结果方阵两端的情形。如果数对位于**方阵内部**的话——
 
 ![](https://github.com/jungleford/math-folding/raw/master/docs/img/fig15.jpg)
 
 可见
-* （结论18）内部的偶先数对分布规律与侧边的偶先数对几乎相反。除了二次对折的内部偶先数对也是位于下半部之外，三次及以上对折全部的内部偶先数对皆分布与上半部。
+* （结论19）内部的偶先数对分布规律与侧边的偶先数对几乎相反。除了二次对折的内部偶先数对也是位于下半区之外，三次及以上对折全部的内部偶先数对皆分布与上半区。
 
-偶先数对在方阵下半部的分布尤为引人注目，比起上半部，下半部显然规律性更强一些。比如我们继续观察位于中间的两列，同样可以发现和侧边列偶先数对相同的分布规律——
+偶先数对在方阵下半区的分布尤为引人注目，比起上半区，下半区显然规律性更强一些。比如我们继续观察位于中间的两列，同样可以发现和侧边列偶先数对相同的分布规律——
 
 ![](https://github.com/jungleford/math-folding/raw/master/docs/img/fig16.jpg)
 
-继而你可以发现，整个下半部只要是对称的两列，全部服从这种“**半中心对称**”规律！
+继而你可以发现，整个下半区只要是对称的两列，全部服从这种“**半中心对称**”规律！
 
-![](http://latex.codecogs.com/gif.latex?\begin{cases}P%28x+{%28-1%29^x+1\over2}%29=4^k+4^{k-1}-P%28x+{%28-1%29^x-1\over2}%29+1,&\rm{0%20\le%20i<2^{k-2}}\\\\P%28x+{%28-1%29^x+1\over2}%29=4^k+4^{k-1}+2^{2k-1}}-P%28x+{%28-1%29^x-1\over2}%29+1,&\rm{2^{k-2}}%20\le%20i<2^{k-1}}\end{cases},&\rm{2^{2k-1}+2^ki+1%20\le%20x<2^{2k-1}+2^ki+2^k})
+![](http://latex.codecogs.com/gif.latex?\begin{cases}P%28x+1%29=4^k+4^{k-1}-P%28x%29+1,&\textrm{x%20is%20even},%200\le%20i<2^{k-2}\\\\P%28x%29=4^k+4^{k-1}-P%28x-1%29+1,&\textrm{x%20is%20odd},%200\le%20i<2^{k-2}\\\\P%28x+1%29=4^k+4^{k-1}+2^{2k-1}}-P%28x%29+1,&\textrm{x%20is%20even},%202^{k-2}}\le%20i<2^{k-1}\\\\P%28x%29=4^k+4^{k-1}+2^{2k-1}}-P%28x-1%29+1,&\textrm{x%20is%20odd},%202^{k-2}}\le%20i<2^{k-1}\end{cases},\quad2^{2k-1}+2^ki+1\le%20P%28x%29<2^{2k-1}+2^ki+2^k)
+
+利用-1的奇偶幂次正负交变的性质，上式可以简化为——
+
+![](http://latex.codecogs.com/gif.latex?\begin{cases}P%28x+{%28-1%29^x+1\over2}%29=4^k+4^{k-1}-P%28x+{%28-1%29^x-1\over2}%29+1,&\rm{0\le%20i<2^{k-2}}\\\\P%28x+{%28-1%29^x+1\over2}%29=4^k+4^{k-1}+2^{2k-1}}-P%28x+{%28-1%29^x-1\over2}%29+1,&\rm{2^{k-2}}\le%20i<2^{k-1}}\end{cases},\quad2^{2k-1}+2^ki+1\le%20P%28x%29<2^{2k-1}+2^ki+2^k)
+
+若定义二值函数
+
+![](http://latex.codecogs.com/gif.latex?Bool%28x%29=\begin{cases}0,&\rm{x<0}\\\\1,&\rm{x\ge0}\end{cases})
+
+又可以进一步简化为——
+
+![](http://latex.codecogs.com/gif.latex?P%28x+{%28-1%29^x+1\over2}%29=4^k+4^{k-1}+Bool%28i-2^{k-2}%292^{2k-1}}-P%28x+{%28-1%29^x-1\over2}%29+1,\quad0\le%20i<2^{k-1},\quad2^{2k-1}+2^ki+1\le%20P%28x%29<2^{2k-1}+2^ki+2^k)
+
+或
+
+![](http://latex.codecogs.com/gif.latex?P%28x+{%28-1%29^x+1\over2}%29=4^k+4^{k-1}+Bool%28floor%28{x-2^{2k-1}-1\over2^k}%29-2^{k-2}%292^{2k-1}}-P%28x+{%28-1%29^x-1\over2}%29+1,\quad2^{2k-1}+1\le%20P%28x%29\le4^k)
+
+### 正规节与正规节组
+
+下半区的分布已经得到完美解决，真正困难的在于上半区，虽然有一部分数字分布有规律，但整体的规律性却不好找，现在能发现的一些规律是：
+* （结论20）结果方阵还原成一维序列的话，内部偶先数对出现的位置和间隔对于不同次数的对折都是相同的，但是还不能确定在这些位置上的确切数字。
+* （结论21）从三次对折开始，上半区的数字里有一半是呈现轴对称或“半中心对称”，且其中对于每行上的数字而言有着相同的对称中心。
+
+事实上，所谓“中心对称”或“半中心对称”都是以方阵形态为观察对象，如果把“对称”的这一部分重新还原成局部一维序列的话，它们都是轴对称的。以这种视角来观察上半区的构造，就会发现它非常像是一种“**分形**”（_Fractal_）的结构。为方便描述**上半区规律**，这里我先定义两个概念：**正规**和**正规节**。
+* 一段一维数字序列是“**正规的**”（_Regular_），当且仅当序列含偶数个数字，且所有数字按**偶先数对**形成中心对称。
+* 这样的一个序列称为一个**正规节**（_Regular Segment_），若序列包含m对偶先数对，该序列也称为“**m-正规**”，m也称为“**节容**”（_Segment Size_）。也就是说，m是序列所含元数的一半。
+* 不满足正规条件的序列称为“**非正规的**”（_Non-regular_）。
+
+于是当**上半区**展开成一维序列之后，满足这样一种结构：
+
+**非正规，2-正规 x 4，非正规，8-正规 x 4，非正规，2-正规 x 4，非正规，32-正规 x 4，非正规，2-正规 x 4，非正规，8-正规 x 4，非正规，2-正规 x 4，非正规，128-正规 x 4，非正规，2-正规 x 4，非正规，8-正规 x 4，非正规，2-正规 x 4，非正规，32-正规 x 4，非正规，2-正规 x 4，非正规，8-正规 x 4，非正规，2-正规 x 4，非正规，……**
+
+看着头晕么？那么依次列举就是：
+
+    二次对折：
+      非正规（4个数）
+      非正规
+
+    三次对折：
+      非正规（8个数）
+        2-正规 x 4  <-中心节组
+      非正规
+
+    四次对折：
+      非正规
+        2-正规 x 4
+      非正规
+          8-正规 x 4  <-中心节组
+      非正规
+        2-正规 x 4
+      非正规
+
+    五次对折：
+      非正规
+        2-正规 x 4
+      非正规
+          8-正规 x 4
+      非正规
+        2-正规 x 4
+      非正规
+            32-正规 x 4  <-中心节组
+      非正规
+        2-正规 x 4
+      非正规
+          8-正规 x 4
+      非正规
+        2-正规 x 4
+      非正规
+
+    六次对折：
+      非正规
+        2-正规 x 4
+      非正规
+          8-正规 x 4
+      非正规
+        2-正规 x 4
+      非正规
+            32-正规 x 4
+      非正规
+        2-正规 x 4
+      非正规
+          8-正规 x 4
+      非正规
+        2-正规 x 4
+      非正规
+              128-正规 x 4  <-中心节组
+      非正规
+        2-正规 x 4
+      非正规
+          8-正规 x 4
+      非正规
+        2-正规 x 4
+      非正规
+            32-正规 x 4
+      非正规
+        2-正规 x 4
+      非正规
+          8-正规 x 4
+      非正规
+        2-正规 x 4
+      非正规
+
+    ……
+
+这里的一个“非正规节”是一段包含8个数字的小序列。中间最长的一个正规节称为“**中心节**”（_Center Regular Segment_），正规节一般**一次连续出现4个**，称为“**正规节组**”（_Regular Segment Group_，简称为“节组”），因此中间这4个也就是“**中心节组**”（_Center Regular Segment Group_），中心节组占有上半区一半的数字，也就是![](http://latex.codecogs.com/gif.latex?n\over4)，或者说![](http://latex.codecogs.com/gif.latex?2^{2k-2})个数。不同数目的正规节以4倍为一个周期增长，并且这些节组在整个上半区也是以中心节组为中心对称分布。
+* （结论22）中心节的节容为![](http://latex.codecogs.com/gif.latex?2^{2k-5})，这里![](http://latex.codecogs.com/gif.latex?k\ge3)
+* （结论22'）各正规节的节容为![](http://latex.codecogs.com/gif.latex?2^{2i-5},\quad3\le%20i\le%20k)
+
+其实如果我们把范围不仅局限于上半区的话，那么下半区的两个“半中心对称”区域同样可以视为两个正规节，也就是半个节组，节容为![](http://latex.codecogs.com/gif.latex?2^{2k-3})。所以，
+* （结论23）**整个k次对折的结果序列的分布形态正好就构成k+1次对折的前![](http://latex.codecogs.com/gif.latex?1\over4)部分的分布形态！**
+
+![](https://github.com/jungleford/math-folding/raw/master/docs/img/fig17.jpg)
+
+图中位于方框内的都是正规节，由于比较稠密，可能不容易分辨。
+
+因此如果偶数x的位置P(x)能够正好落到一个“正规节”区间，那还是能够推算它的配对奇数的位置的。例如，对于中心节组——
+
+![](http://latex.codecogs.com/gif.latex?P%28x+1%29=\begin{cases}2^{2k-2}+2^{2k-4}-P%28x%29+1,&\rm{2^{2k-3}+1\le%20P%28x%29\le2^{2k-3}+2^{2k-4}}\\\\2^{2k-2}+2^{2k-3}+2^{2k-4}-P%28x%29+1,&\rm{2^{2k-3}+2^{2k-4}+1\le%20P%28x%29\le2^{2k-2}}\\\\2^{2k-1}+2^{2k-4}-P%28x%29+1,&\rm{2^{2k-2}+1\le%20P%28x%29\le2^{2k-2}+2^{2k-4}}\\\\2^{2k-1}+2^{2k-3}+2^{2k-4}-P%28x%29+1,&\rm{2^{2k-2}+2^{2k-4}+1\le%20P%28x%29\le2^{2k-2}+2^{2k-3}}\end{cases},&\textrm{x%20is%20even})
+
+若以![](http://latex.codecogs.com/gif.latex?2^{2k-4})为基准单位，上式可整理为——
+
+![](http://latex.codecogs.com/gif.latex?P%28x+1%29=\begin{cases}5\times2^{2k-4}-P%28x%29+1,&\rm{2\times2^{2k-4}+1\le%20P%28x%29\le3\times2^{2k-4}}\\\\7\times2^{2k-4}-P%28x%29+1,&\rm{3\times2^{2k-4}+1\le%20P%28x%29\le4\times2^{2k-4}}\\\\9\times2^{2k-4}-P%28x%29+1,&\rm{4\times2^{2k-4}+1\le%20P%28x%29\le5\times2^{2k-4}}\\\\11\times2^{2k-4}-P%28x%29+1,&\rm{5\times2^{2k-4}+1\le%20P%28x%29\le6\times2^{2k-4}}\end{cases},&\textrm{x%20is%20even})
+
+同理可以计算落到比中心节组“次一级”的正规节区间的偶数，其后继奇数的位置——
+
+![](http://latex.codecogs.com/gif.latex?P%28x+1%29=\begin{cases}2^{2k-2}-2^{2k-3}-2^{2k-4}+2^{2k-6}-P%28x%29+1,&\rm{2^{2k-3}-2^{2k-4}-2^{2k-5}+1\le%20P%28x%29\le2^{2k-3}-2^{2k-4}-2^{2k-5}+2^{2k-6}}\\\\2^{2k-2}-2^{2k-3}-2^{2k-4}+2^{2k-5}+2^{2k-6}-P%28x%29+1,&\rm{2^{2k-3}-2^{2k-4}-2^{2k-5}+2^{2k-6}+1\le%20P%28x%29\le2^{2k-3}-2^{2k-4}}\\\\2^{2k-2}-2^{2k-3}+2^{2k-6}-P%28x%29+1,&\rm{2^{2k-3}-2^{2k-4}+1\le%20P%28x%29\le2^{2k-3}-2^{2k-4}+2^{2k-6}}\\\\2^{2k-2}-2^{2k-3}+2^{2k-5}+2^{2k-6}-P%28x%29+1,&\rm{2^{2k-3}-2^{2k-4}+2^{2k-6}+1\le%20P%28x%29\le2^{2k-3}-2^{2k-4}+2^{2k-5}}\end{cases},&\textrm{x%20is%20even})
+
+![](http://latex.codecogs.com/gif.latex?P%28x+1%29=\begin{cases}2^{2k-1}+2^{2k-2}+2^{2k-4}+2^{2k-6}-P%28x%29+1,&\rm{2^{2k-2}+2^{2k-3}+2^{2k-5}+1\le%20P%28x%29\le2^{2k-2}+2^{2k-3}+2^{2k-5}+2^{2k-6}}\\\\2^{2k-1}+2^{2k-2}+2^{2k-4}+2^{2k-5}+2^{2k-6}-P%28x%29+1,&\rm{2^{2k-2}+2^{2k-3}+2^{2k-5}+2^{2k-6}+1\le%20P%28x%29\le2^{2k-2}+2^{2k-3}+2^{2k-4}}\\\\2^{2k-1}+2^{2k-2}+2^{2k-3}+2^{2k-6}-P%28x%29+1,&\rm{2^{2k-2}+2^{2k-3}+2^{2k-4}+1\le%20P%28x%29\le2^{2k-2}+2^{2k-3}+2^{2k-4}+2^{2k-6}}\\\\2^{2k-1}+2^{2k-2}+2^{2k-3}+2^{2k-5}+2^{2k-6}-P%28x%29+1,&\rm{2^{2k-2}+2^{2k-3}+2^{2k-4}+2^{2k-6}+1\le%20P%28x%29\le2^{2k-2}+2^{2k-3}+2^{2k-4}+2^{2k-5}}\end{cases},&\textrm{x%20is%20even})
+
+若以![](http://latex.codecogs.com/gif.latex?2^{2k-6})为基准单位，上两式可整理为——
+
+![](http://latex.codecogs.com/gif.latex?P%28x+1%29=\begin{cases}5\times2^{2k-6}-P%28x%29+1,&\rm{2\times2^{2k-6}+1\le%20P%28x%29\le3\times2^{2k-6}}\\\\7\times2^{2k-6}-P%28x%29+1,&\rm{3\times2^{2k-6}+1\le%20P%28x%29\le4\times2^{2k-6}}\\\\9\times2^{2k-6}-P%28x%29+1,&\rm{4\times2^{2k-6}+1\le%20P%28x%29\le5\times2^{2k-6}}\\\\11\times2^{2k-6}-P%28x%29+1,&\rm{5\times2^{2k-6}+1\le%20P%28x%29\le6\times2^{2k-6}}\end{cases},&\textrm{x%20is%20even})
+
+![](http://latex.codecogs.com/gif.latex?P%28x+1%29=\begin{cases}53\times2^{2k-6}-P%28x%29+1,&\rm{26\times2^{2k-6}+1\le%20P%28x%29\le27\times2^{2k-6}}\\\\55\times2^{2k-6}-P%28x%29+1,&\rm{27\times2^{2k-6}+1\le%20P%28x%29\le28\times2^{2k-6}}\\\\57\times2^{2k-6}-P%28x%29+1,&\rm{28\times2^{2k-6}+1\le%20P%28x%29\le29\times2^{2k-6}}\\\\59\times2^{2k-6}-P%28x%29+1,&\rm{29\times2^{2k-6}+1\le%20P%28x%29\le30\times2^{2k-6}}\end{cases},&\textrm{x%20is%20even})
+
+依此类推再次一级的正规节组——
+
+![](http://latex.codecogs.com/gif.latex?P%28x+1%29=\begin{cases}5\times2^{2k-8}-P%28x%29+1,&\rm{2\times2^{2k-8}+1\le%20P%28x%29\le3\times2^{2k-8}}\\\\7\times2^{2k-8}-P%28x%29+1,&\rm{3\times2^{2k-8}+1\le%20P%28x%29\le4\times2^{2k-8}}\\\\9\times2^{2k-8}-P%28x%29+1,&\rm{4\times2^{2k-8}+1\le%20P%28x%29\le5\times2^{2k-8}}\\\\11\times2^{2k-8}-P%28x%29+1,&\rm{5\times2^{2k-8}+1\le%20P%28x%29\le6\times2^{2k-8}}\end{cases},&\textrm{x%20is%20even})
+
+![](http://latex.codecogs.com/gif.latex?P%28x+1%29=\begin{cases}53\times2^{2k-8}-P%28x%29+1,&\rm{26\times2^{2k-8}+1\le%20P%28x%29\le27\times2^{2k-8}}\\\\55\times2^{2k-8}-P%28x%29+1,&\rm{27\times2^{2k-8}+1\le%20P%28x%29\le28\times2^{2k-8}}\\\\57\times2^{2k-8}-P%28x%29+1,&\rm{28\times2^{2k-8}+1\le%20P%28x%29\le29\times2^{2k-8}}\\\\59\times2^{2k-8}-P%28x%29+1,&\rm{29\times2^{2k-8}+1\le%20P%28x%29\le30\times2^{2k-8}}\end{cases},&\textrm{x%20is%20even})
+
+![](http://latex.codecogs.com/gif.latex?P%28x+1%29=\begin{cases}197\times2^{2k-8}-P%28x%29+1,&\rm{98\times2^{2k-8}+1\le%20P%28x%29\le99\times2^{2k-8}}\\\\199\times2^{2k-8}-P%28x%29+1,&\rm{99\times2^{2k-8}+1\le%20P%28x%29\le100\times2^{2k-8}}\\\\201\times2^{2k-8}-P%28x%29+1,&\rm{100\times2^{2k-8}+1\le%20P%28x%29\le101\times2^{2k-8}}\\\\203\times2^{2k-8}-P%28x%29+1,&\rm{101\times2^{2k-8}+1\le%20P%28x%29\le102\times2^{2k-8}}\end{cases},&\textrm{x%20is%20even})
+
+![](http://latex.codecogs.com/gif.latex?P%28x+1%29=\begin{cases}245\times2^{2k-8}-P%28x%29+1,&\rm{122\times2^{2k-8}+1\le%20P%28x%29\le123\times2^{2k-8}}\\\\247\times2^{2k-8}-P%28x%29+1,&\rm{123\times2^{2k-8}+1\le%20P%28x%29\le124\times2^{2k-8}}\\\\249\times2^{2k-8}-P%28x%29+1,&\rm{124\times2^{2k-8}+1\le%20P%28x%29\le125\times2^{2k-8}}\\\\251\times2^{2k-8}-P%28x%29+1,&\rm{125\times2^{2k-8}+1\le%20P%28x%29\le126\times2^{2k-8}}\end{cases},&\textrm{x%20is%20even})
+
+由于每一级节组均匀等距分布于它的上一级节组的两侧，我们可以计算它们的间距
+* （结论24）假定本级节组的基准单位为u（一般为![](http://latex.codecogs.com/gif.latex?2^{2k-i})形式），则距离它的上一级节组最近的间隔是**9u**。
+
+例如，中心节组基准单位是![](http://latex.codecogs.com/gif.latex?2^{2k-4})，则次级节组的基准单位是![](http://latex.codecogs.com/gif.latex?2^{2k-6})，而它前后两个最近的次级节组距离中心节组边缘是![](http://latex.codecogs.com/gif.latex?9\times2^{2k-6})；三级节组距离次级节组最近间距是![](http://latex.codecogs.com/gif.latex?9\times2^{2k-8})；依此类推。
+
+由于下半区可视为k+1次序列的中心节组的前半段（两个![](http://latex.codecogs.com/gif.latex?2^{2k-2})-正规节），故结论19中的所谓“半中心对称规律”也可以用统一化的表示——
+
+![](http://latex.codecogs.com/gif.latex?P%28x+1%29=\begin{cases}5\times2^{2k-2}-P%28x%29+1,&\rm{2\times2^{2k-2}+1\le%20P%28x%29\le3\times2^{2k-2}}\\\\7\times2^{2k-2}-P%28x%29+1,&\rm{3\times2^{2k-2}+1\le%20P%28x%29\le4\times2^{2k-2}}\end{cases},&\textrm{x%20is%20even})
+
+至此，**我们可以定位到所有落在结果序列的正规节内的偶先数对的位置了**。那么二阶对折问题只剩下最后一道坎：非正规节内的偶先数对。
+
+#### 番外
+
+这里有一个简易的判断方法（尚未证明），用于判定任意一个值它到底是在上半区还是下半区——
+* （结论25）**在初始方阵中**分布于上半区的数字和分布于下半区的数字以每两列为一个单位（头尾除外，分别占一列），间隔排列，这样就分成两组，其中头尾所在的那一组是在上半区的数字，而另外一组则是下半区的数字。
+
+![](http://latex.codecogs.com/gif.latex?Zone(x)=\begin{cases}first%20half,&\rm{x=\begin{cases}2^ki+1\\\\2^ki+4j\\\\2^ki+4j+1\\\\2^ki+4(k-1)\end{cases}}\\\\later%20half,&\rm{x=\begin{cases}2^ki+4j+2\\\\2^ki+4j+3\end{cases}}\end{cases},\quad0\le%20i\le%202^k-1,\quad1\le%20j\le%20k-2)
+
+![](https://github.com/jungleford/math-folding/raw/master/docs/img/fig18.jpg)
+
+这和前面结论14得到的高位数和低位数分布规律是不是非常相似？但记住这里是对**初始方阵**而言的。
+
+### 非正规节
+
+“非正规节”并非完全没有规律可循。如果我们把非正规节的节容固定为8的话（对于二次对折的结果方阵的前两行合并为一个非正规节），就能发现：
+* （结论26）所有非正规节的中间4个数字皆为偶数。而且不仅如此，
+* （结论26'）**非正规节中间这4个偶数皆为![](http://latex.codecogs.com/gif.latex?2^k)的倍数**！
+
+![](https://github.com/jungleford/math-folding/raw/master/docs/img/fig19.jpg)
+
+为了看得清楚一些，我把这些偶数单独拎出来
+
+![](https://github.com/jungleford/math-folding/raw/master/docs/img/fig20.jpg)
+
+上图中每个数字上面用不同颜色标注的数字是![](http://latex.codecogs.com/gif.latex?2^k)的倍数。于是前面的**结论4至结论9皆可视为结论26'的推论**。
+
+如果我们单独考察这些倍数的话，
+
+    4 1 2 3
+
+    8 1 4 5 6 3 2 7
+
+    16 1 8 9 12 5 4 13 14 3 6 11 10 7 2 15
+
+    32 1 16 17 24 9 8 25 28 5 12 21 20 13 4 29 30 3 14 19 22 11 6 27 26 7 10 23 18 15 2 31
+
+是不是有些眼熟？还记不记得前面推导过的**一阶**各次序列
+
+    1 2
+
+    1 4 3 2
+
+    1 8 5 4 3 6 7 2
+
+    1 16 9 8 5 12 13 4 3 14 11 6 7 10 15 2
+
+    1 32 17 16 9 24 25 8 5 28 21 12 13 20 29 4 3 30 19 14 11 22 27 6 7 26 23 10 15 18 31 2
+
+可见
+* （结论27）这些![](http://latex.codecogs.com/gif.latex?2^k)的倍数组成的序列，恰好就是一阶序列中把数字两两一组，然后组内的两个数字相互交换，这样得到的一个序列。
+
+虽然这个规律可以推导出这些倍数以及原数字，但考虑到非递归一阶序列计算也是要花费时间和空间的，故我们希望最好避开直接使用一阶序列。由于我们前面已经得到了**列的“加和规律”**（结论15），于是只要确定其中偶数的位置，非正规节内剩下的4个奇数的位置马上也能计算出来（因为一个非正规节只有8个数，且4个偶数位于中间）。如何在不引用一阶序列的计算过程的情况下推算偶数的位置呢？首先，我们发现这个倍数的序列也是满足两两加和相等的规律：
+* （结论28）![](http://latex.codecogs.com/gif.latex?2^k)的倍数组成的序列中，两两编为一组，其加和相等，且等于![](http://latex.codecogs.com/gif.latex?2^k+1)
+
+我们再把这些倍数中的**偶倍数**单独提出来——
+
+    4 2
+    8 4 6 2
+    16 8 12 4 14 6 10 2
+    32 16 24 8 28 12 20 4 30 14 22 6 26 10 18 2
+
+把这些偶倍数再两两编为一组
+
+    (4 2)
+    (8 4) (6 2)
+    (16 8) (12 4) (14 6) (10 2)
+    (32 16) (24 8) (28 12) (20 4) (30 14) (22 6) (26 10) (18 2)
+
+于是我们可以发现这么一个规律：
+* （结论29）把这些偶倍数分为高位和低位两部分，即较大的![](http://latex.codecogs.com/gif.latex?2^{k-2})个为高位的偶倍数，较小的![](http://latex.codecogs.com/gif.latex?2^{k-2})个为低位的偶倍数，首先，每个编组内各包含一个高位偶倍数和一个低位偶倍数，且高位偶倍数排在前面，编组内的两个数之差为![](http://latex.codecogs.com/gif.latex?2^{k-2})。
+* （结论29'）然后把这些编组也均分为前后两部分，高位偶倍数从前半段开始轮流填入前后半段，低位偶倍数亦然。
+
+以k=5为例，8个高位偶倍数是：18，20，22，24，26，28，30，32。它们是这样分布的：
+1) 首先挑出最大的32，放在前半段第一个编组的第一位；再挑出次大的30，放在后半段第一个编组的第一位。
+1) 然后是28放在前半段第二个编组的第一位；26放在后半段第二个编组的第一位。
+1) 接着是24放在前半段第三个编组的第一位；22放在后半段第三个编组的第一位。
+1) 最后是20放在前半段第四个编组的第一位；18放在后半段第四个编组的第一位。
+
+低位偶倍数依相同规律放置，但是放在编组的第二位。
+
+这样所有偶倍数的位置都可以确定了，根据前面的“倍数的加和规律”（结论28），所有奇倍数的位置也可以确定，事实上，**奇倍数的位置分布和上面这个规律恰好相似**，只不过是高低位互换，低位奇倍数排在编组的第一位，且从低到高开始轮流填入前后半段。
+
+事实上由于等效性，此规律也可以用于解决前面的一阶序列问题。
+
+到此为止，我们就解决了非正规节，从而也完整解决了二阶序列的计算问题。
+
+### 非递归的计算步骤
+
+1) 准备工作：首先构造关于正规节和非正规节的两张映射关系表。
+
+   1) 首先，根据次数k值，推出上半区最多能有几级正规节组，计算![](http://latex.codecogs.com/gif.latex?2^{2k-2})、![](http://latex.codecogs.com/gif.latex?2^{2k-4})、![](http://latex.codecogs.com/gif.latex?2^{2k-6})、![](http://latex.codecogs.com/gif.latex?2^{2k-8})、……，直至最小值4。
+   1) 构造“取值区间-偶先数对”的对应关系表，称为“表I”。
+   1) 构造“取值区间-非正规节”的对应关系表，称为“表II”。
+
+1) 从第一个数1开始，若遇到奇数，则使用“**中心对称规律**”（结论11），得到下一个偶数位置为
+
+   ![](http://latex.codecogs.com/gif.latex?P%28x+1%29=4^k-P%28x%29+1,\quad&\textrm{x%20is%20odd})
+
+1) 若遇到偶数，
+
+   1) 若该偶数落入一个正规节取值区间（包括下半区）内，那么查表I，根据该区间上的函数得到下一个奇数的位置。
+   1) 若该偶数不属于任何一个正规节区间，则其落入了一个非正规节区间，那么查表II，得到下一个奇数的位置。
+   1) 回到步骤2。
+
+1) 二阶一次对折的结果可作为平凡结论直接给出。
 
 ## 算法
+
 目前仅支持最容易设计的“**递归算法**”（_Recursive_），一阶对折还额外支持“**迭代公式算法**”（_Formula_）。请参见源代码中各组件的service部分。
 
 Web程序的UI部分基于[React JS](https://github.com/facebook/react)和[Material UI](https://github.com/mui-org/material-ui)。
+
+## 余论
+
+在（非严格地）解决了一阶和二阶对折问题之后，我们是否可以进一步推广到**三阶对折**情形——
+
+    一个立方形，均分成8^k小立方体，
+    从最底下的位置开始算起，先按从左到右，然后从上到下，最后从底到顶的顺序
+    在每个小立方体内写下自然数序列1，2，3，……，n
+
+    将立方体先从顶部往底部，然后从下往上，最后从右往左不断“对折”（共k轮，3k步），直至剩下一个格子，求：
+    1. 最后从下往上数字的序列
+    2. 数字x的最终位置
+    3. 最终序列中位置p的数字
+
+这里首先要理解所谓立方体是如何“对折”的。一个真实的三维立方体当然无法“对折”，这样它就会从中间断裂开，并且得到的是一个柱体，明显与我们在一阶纸条和二阶纸片的直观结果不符。所以这里并非是一个真实的，充满一块空间的“立方体”，而是撕开来的n张正方形小纸片，按照问题中的排列方式，整齐排列在一个三维立方体内部，然后就可以定义“对折”操作了：每次对折是把一部分纸片叠放到另一部分纸片的“上面”。每轮对折过后，纸片的“堆数”是前一轮的![](http://latex.codecogs.com/gif.latex?1\over8)
+
+所以这个问题可以一直推广到更一般的“**r阶对折**”的情形——
+
+    一个r维空间的“超立方形”，均分成2^(r*k)小超立方体，
+    从最后一维开始算起，每次在该维内按从低到高的顺序
+    在每个小立方体内写下自然数序列1，2，3，……，n
+
+    将这个超立方体从最后一维开始，把后半部分往前半部分不断“对折”（共k轮，r*k步），直至剩下一个一维序列，求：
+    1. 最后从下往上数字的序列
+    2. 数字x的最终位置
+    3. 最终序列中位置p的数字
+
+这个“最一般”的问题虽然我们可以理解了，但计算依然不是一件容易的事情。大家是否可以推导出它的一般规律呢？
