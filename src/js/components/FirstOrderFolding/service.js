@@ -70,10 +70,11 @@ function doFoldingByRecursive(piles, steps) {
  *
  * This algorithm will not save steps.
  *
- * @return {number[] | *[]} the array of the folding result.
+ * @param power the exponent of the number of the elements.
+ * @return {number[]} the array of the folding result.
  */
 function doFoldingByFormula(power) {
-  assert(power >= 1, '`power` must larger than 1.\nYour power is: ' + power);
+  assert(typeof power === 'number' && power >= 1, '`power` must larger than 1.\nYour power is: ' + power);
 
   let result = [];
   let level1Result = [1, 2];
