@@ -31,8 +31,8 @@ function Folding(power, original, isFlat) {
  *              and each pile is composed of the current result.
  *              Example: [[x, x], [x, x], [x, x], [x, x]]
  * @param steps a three-dimension array that represents the state of each step during the folding.
- * @return {number[][] | *[][]} the two-dimension array of the merge result.
- *                              Actually it has only one array inside the first level.
+ * @return {number[][][] | *[][][]} the three-dimension array of the merge result.
+ *                              Actually it has only one two-dimension array inside the first level.
  */
 function doFoldingByRecursive(piles, steps) {
   if (piles.length === 1) return piles;
@@ -436,7 +436,7 @@ Folding.prototype.reset = function(original, isFlat) {
                                Array.from(new Array(this.rowCount), (val, colIndex) =>
                                                     rowIndex * this.rowCount + colIndex + 1));
   }
-  this.final = this.original; // the final array is one-dimension
+  this.final = this.original; // the final array is two-dimension
   this.finalFlat = this.original.reduce((accumulator, currentValue) => accumulator.concat(currentValue));
   this.steps = [this.final.map(row => row.map(number => [number]))];// steps is 4-dimension array
   this.computeDone = false; // expected to true when computing done.
@@ -467,7 +467,7 @@ Folding.prototype.compute = function(algorithm) {
   let result = this.original;
   switch (algorithm) {
     case Constants.algorithm.FORMULA:
-      result = doFoldingByFormula(this.power);
+      result = [doFoldingByFormula(this.power)];
       break;
     case Constants.algorithm.RECURSIVE:
     default:

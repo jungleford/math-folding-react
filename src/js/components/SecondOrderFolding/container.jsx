@@ -184,6 +184,7 @@ class SecondOrderFolding extends Component {
       resultReset: false,
       activeStep: 0,
       activeStepContent: state.service.getSteps(),
+      activeStepContent: state.algorithm === Constants.algorithm.RECURSIVE ? state.service.getSteps() : [],
     }));
   };
 
@@ -474,8 +475,31 @@ class SecondOrderFolding extends Component {
           </div>
         </Paper>
 
+        {/* Formula View Pad */}
+        <Paper className={classes.pad} elevation={1}
+               style={{ display: algorithm === Constants.algorithm.FORMULA ? 'flex' : 'none', flexDirection: 'column' }}>
+          <h3>Formula of Computing</h3>
+          <p>\(P(1) = 1\)</p>
+          <p>If \(x\) is <b>odd</b>, \(P(x+1)=4^k-P(x)+1\).</p>
+          <p>If \(x\) is <b>even</b>, things are more complicated...</p>
+          <p>If \(x\) is in a "<b>Regular Segment</b>":</p>
+          <p>{'\\( P(x+1)=\\begin{cases}5\\times4^{k-1}-P(x)+1,&\\rm{2\\times4^{k-1}+1\\le P(x)\\le3\\times4^{k-1}}\\\\\\\\7\\times4^{k-1}-P(x)+1,&\\rm{3\\times4^{k-1}+1\\le P(x)\\le4\\times4^{k-1}}\\end{cases} \\)'}</p>
+          <p></p>
+          <p>{'\\( P(x+1)=\\begin{cases}5\\times4^{k-2}-P(x)+1,&\\rm{2\\times4^{k-2}+1\\le P(x)\\le3\\times4^{k-2}}\\\\\\\\7\\times4^{k-2}-P(x)+1,&\\rm{3\\times4^{k-2}+1\\le P(x)\\le4\\times4^{k-2}}\\\\\\\\9\\times4^{k-2}-P(x)+1,&\\rm{4\\times4^{k-2}+1\\le P(x)\\le5\\times4^{k-2}}\\\\\\\\11\\times4^{k-2}-P(x)+1,&\\rm{5\\times4^{k-2}+1\\le P(x)\\le6\\times4^{k-2}}\\end{cases} \\)'}</p>
+          <p></p>
+          <p>{'\\( P(x+1)=\\begin{cases}5\\times4^{k-3}-P(x)+1,&\\rm{2\\times4^{k-3}+1\\le P(x)\\le3\\times4^{k-3}}\\\\\\\\7\\times4^{k-3}-P(x)+1,&\\rm{3\\times4^{k-3}+1\\le P(x)\\le4\\times4^{k-3}}\\\\\\\\9\\times4^{k-3}-P(x)+1,&\\rm{4\\times4^{k-3}+1\\le P(x)\\le5\\times4^{k-3}}\\\\\\\\11\\times4^{k-3}-P(x)+1,&\\rm{5\\times4^{k-3}+1\\le P(x)\\le6\\times4^{k-3}}\\end{cases} \\)'}</p>
+          <p>{'\\( P(x+1)=\\begin{cases}53\\times4^{k-3}-P(x)+1,&\\rm{26\\times4^{k-3}+1\\le P(x)\\le27\\times4^{k-3}}\\\\\\\\55\\times4^{k-3}-P(x)+1,&\\rm{27\\times4^{k-3}+1\\le P(x)\\le28\\times4^{k-3}}\\\\\\\\57\\times4^{k-3}-P(x)+1,&\\rm{28\\times4^{k-3}+1\\le P(x)\\le29\\times4^{k-3}}\\\\\\\\59\\times4^{k-3}-P(x)+1,&\\rm{29\\times4^{k-3}+1\\le P(x)\\le30\\times4^{k-3}}\\end{cases} \\)'}</p>
+          <p></p>
+          <p>{'\\( P(x+1)=\\begin{cases}5\\times4^{k-4}-P(x)+1,&\\rm{2\\times4^{k-4}+1\\le P(x)\\le3\\times4^{k-4}}\\\\\\\\7\\times4^{k-4}-P(x)+1,&\\rm{3\\times4^{k-4}+1\\le P(x)\\le4\\times4^{k-4}}\\\\\\\\9\\times4^{k-4}-P(x)+1,&\\rm{4\\times4^{k-4}+1\\le P(x)\\le5\\times4^{k-4}}\\\\\\\\11\\times4^{k-4}-P(x)+1,&\\rm{5\\times4^{k-4}+1\\le P(x)\\le6\\times4^{k-4}}\\end{cases} \\)'}</p>
+          <p>{'\\( P(x+1)=\\begin{cases}53\\times4^{k-4}-P(x)+1,&\\rm{26\\times4^{k-4}+1\\le P(x)\\le27\\times4^{k-4}}\\\\\\\\55\\times4^{k-4}-P(x)+1,&\\rm{27\\times4^{k-4}+1\\le P(x)\\le28\\times4^{k-4}}\\\\\\\\57\\times4^{k-4}-P(x)+1,&\\rm{28\\times4^{k-4}+1\\le P(x)\\le29\\times4^{k-4}}\\\\\\\\59\\times4^{k-4}-P(x)+1,&\\rm{29\\times4^{k-4}+1\\le P(x)\\le30\\times4^{k-4}}\\end{cases} \\)'}</p>
+          <p>{'\\( P(x+1)=\\begin{cases}197\\times4^{k-4}-P(x)+1,&\\rm{98\\times4^{k-4}+1\\le P(x)\\le99\\times4^{k-4}}\\\\\\\\199\\times4^{k-4}-P(x)+1,&\\rm{99\\times4^{k-4}+1\\le P(x)\\le100\\times4^{k-4}}\\\\\\\\201\\times4^{k-4}-P(x)+1,&\\rm{100\\times4^{k-4}+1\\le P(x)\\le101\\times4^{k-4}}\\\\\\\\203\\times4^{k-4}-P(x)+1,&\\rm{101\\times4^{k-4}+1\\le P(x)\\le102\\times4^{k-4}}\\end{cases} \\)'}</p>
+          <p>{'\\( P(x+1)=\\begin{cases}245\\times4^{k-4}-P(x)+1,&\\rm{122\\times4^{k-4}+1\\le P(x)\\le123\\times4^{k-4}}\\\\\\\\247\\times4^{k-4}-P(x)+1,&\\rm{123\\times4^{k-4}+1\\le P(x)\\le124\\times4^{k-4}}\\\\\\\\249\\times4^{k-4}-P(x)+1,&\\rm{124\\times4^{k-4}+1\\le P(x)\\le125\\times4^{k-4}}\\\\\\\\251\\times4^{k-4}-P(x)+1,&\\rm{125\\times4^{k-4}+1\\le P(x)\\le126\\times4^{k-4}}\\end{cases} \\)'}</p>
+          <p>{'\\( ...... \\)'}</p>
+          <p>Otherwise \(x\) is in a "<b>Non-regular Segment</b>".</p>
+        </Paper>
+
         {/* Steps View Pad: a vertical stepper */}
-        {exploreMore && !resultReset && service.isComputeDone() && (
+        {exploreMore && !resultReset && algorithm === Constants.algorithm.RECURSIVE && service.isComputeDone() && (
         <Paper className={classes.pad} elevation={1}>
           <h3>Steps of each Turn</h3>
           <div>
