@@ -1,4 +1,5 @@
 import Constants from '../../utils/constants';
+import utils from '../../utils/utils';
 
 /**
  * Define an array `[1, 2, ..., n]`, that `n = 4 ^ k`, and a series of methods to compute folding result.
@@ -6,7 +7,8 @@ import Constants from '../../utils/constants';
  * sixty-four numbers... etc.
  *
  * @param power the exponent of the number of the elements.
- * @param original (optional) assign the initial sequence to the folding service.
+ * @param original (optional) assign the initial matrix to the folding service.
+ *                 This argument can be a two-dimension or one-dimension array.
  *                 If omitted, use the sequence of natural numbers.
  * @param isFlat (optional) true if `original` is a one-dimension array.
  * @constructor
@@ -294,24 +296,28 @@ function buildNrsMapping(power) {
  * This algorithm will not save steps.
  *
  * @param power the exponent of the number of the elements.
+ * @param originalFlat the flatted original matrix, which should be a one-dimension array.
  * @return {number[]} the array of the folding result.
  */
-function doFoldingByFormula(power) {
+function doFoldingByFormula(power, originalFlat) {
   assert(typeof power === 'number' && power >= 1, '`power` must larger than 1.\nYour power is: ' + power);
 
   if (power === 1) {
-    return [1, 3, 4, 2]; // ordinary result for k=1
+    return [originalFlat[0], originalFlat[2], originalFlat[3], originalFlat[1]]; // ordinary result for k=1
   }
 
   let count = 4 ** power;
   let result = new Array(count);
   let currentPos = 1, nextPos = 1;
-  result[currentPos - 1] = 1; // place 1 to the first position in the result array.
+  let v = 1; // v is a number in the natural sequence,
+             // or is an index of the original array.
+  result[currentPos - 1] = originalFlat[v - 1]; // place 1 (or the first object in the original array)
+                                                // to the first position in the result array.
 
   let rsg = buildRsgMapping(power); // Regular Segment Groups
   let nrs = buildNrsMapping(power); // Non-regular Segments
 
-  for (let v = 1; v < count; v++) {
+  for (; v < count; v++) {
     if (v % 2 === 1) {
       /*
        * Odd number
@@ -337,7 +343,7 @@ function doFoldingByFormula(power) {
       }
     }
 
-    result[nextPos - 1] = v + 1; // the succeeded number
+    result[nextPos - 1] = originalFlat[(v + 1) - 1]; // the succeeded number
     currentPos = nextPos; // move forward the pointer of current position
   }
 
@@ -349,7 +355,7 @@ function doFoldingByFormula(power) {
  * Build the original array before computing.
  *
  * @param forceReset (optional) true if you want to reset all internal states when initiating.
- * @return {number[] | *[]} the original array.
+ * @return {number[][] | *[][]} the original two-dimension array.
  */
 Folding.prototype.init = function(forceReset) {
   if (forceReset === true) {
@@ -392,25 +398,6 @@ Folding.prototype.isComputeDone = function() {
 };
 
 /**
- * Private method: convert an array of 4^k elements to a (2^k)*(2^k) matrix.
- *
- * @param arr must be an array of 4^k elements.
- * @param count the length of the original array.
- * @param rowCount the length of the row count of the original matrix.
- * @return {number[][] | *[][]} a two-dimension (2^k)*(2^k) matrix.
- */
-function arrayToMatrix(arr, count, rowCount) {
-  assert(count > 0 && rowCount > 0 && count === rowCount ** 2,
-    '`count` and `rowCount` must be integers, and `count` must be a square of `rowCount`');
-  assert(_.isArray(arr) && arr.length === count,
-    '`arr` must be a one-dimension array with ' + count + ' members.\nYour `arr` is: ' + arr);
-
-  return Array.from(new Array(rowCount), (val, rowIndex) =>
-                    Array.from(new Array(rowCount), (val, colIndex) =>
-                                         arr[rowIndex * rowCount + colIndex]));
-}
-
-/**
  * Private method: reset internal states.
  * ATTENTION: NOT RECOMMEND to call this method directly.
  * Keep this as a private method.
@@ -429,16 +416,14 @@ Folding.prototype.reset = function(original, isFlat) {
 
   if (original) {
     let temp = _.cloneDeep(original); // use a copy of the given array/matrix
-    this.original = isFlat ? arrayToMatrix(temp, this.count, this.rowCount) : temp;
+    this.original = isFlat ? utils.arrayToMatrix(temp, this.count, this.rowCount) : temp;
   } else {
     // build up a two-dimension array [[1, 2, ..., 2k], ..., [..., n]]
-    this.original = Array.from(new Array(this.rowCount), (val, rowIndex) =>
-                               Array.from(new Array(this.rowCount), (val, colIndex) =>
-                                                    rowIndex * this.rowCount + colIndex + 1));
+    this.original = utils.generateNaturalMatrix(this.rowCount);
   }
   this.final = this.original; // the final array is two-dimension
-  this.finalFlat = this.original.reduce((accumulator, currentValue) => accumulator.concat(currentValue));
-  this.steps = [this.final.map(row => row.map(number => [number]))];// steps is 4-dimension array
+  this.finalFlat = utils.matrixToArray(this.original);
+  this.steps = [_.map(this.final, row => _.map(row, number => [number]))];// steps is 4-dimension array
   this.computeDone = false; // expected to true when computing done.
 };
 
@@ -467,13 +452,13 @@ Folding.prototype.compute = function(algorithm) {
   let result = this.original;
   switch (algorithm) {
     case Constants.algorithm.FORMULA:
-      result = [doFoldingByFormula(this.power)];
+      result = [doFoldingByFormula(this.power, utils.matrixToArray(this.original))];
       break;
     case Constants.algorithm.RECURSIVE:
     default:
       result = doFoldingByRecursive(this.steps[0], this.steps)[0];
   }
-  let finalFlat = result.reduce((accumulator, currentValue) => accumulator.concat(currentValue));
+  let finalFlat = utils.matrixToArray(result);
   this.cache[algorithm].result = _.cloneDeep(result);
   this.cache[algorithm].flat = _.cloneDeep(finalFlat);
   this.cache[algorithm].steps = _.cloneDeep(this.steps);
@@ -512,7 +497,7 @@ Folding.prototype.valueOf = function(p) {
 };
 
 /**
- * You must run `compute()` first.
+ * You must run `compute()` with RECURSIVE algorithm first.
  *
  * @return {Array} All steps in the process of computation.
  */

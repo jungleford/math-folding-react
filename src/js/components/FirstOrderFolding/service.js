@@ -1,4 +1,5 @@
 import Constants from '../../utils/constants';
+import utils from '../../utils/utils';
 
 /**
  * Define an array `[1, 2, ..., n]`, that `n = 2 ^ k`, and a series of methods to compute folding result.
@@ -158,9 +159,9 @@ Folding.prototype.reset = function(original) {
 
   this.original = original ?
                  _.cloneDeep(original) : // use a copy of the given array
-                 Array.from(new Array(this.count), (val, index) => index + 1); // create [1, 2, ..., n]
+                 utils.generateNaturalSequence(this.count); // create [1, 2, ..., n]
   this.final = this.original;
-  this.steps = [this.original.map(n => [n])];
+  this.steps = [_.map(this.original, n => [n])];
   this.computeDone = false; // expected to true when computing done.
 };
 

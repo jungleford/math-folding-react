@@ -178,8 +178,9 @@ class FirstOrderFolding extends Component {
   };
 
   doFolding = () => {
-    let result = this.state.service.compute(this.state.algorithm);
-    let foldingReverse = new Folding(this.state.power, result);
+    let { algorithm, power, service } = this.state;
+    let result = service.compute(algorithm);
+    let foldingReverse = new Folding(power, result);
     this.setState(state => ({
       result: result,
       resultReset: false,
@@ -187,7 +188,7 @@ class FirstOrderFolding extends Component {
       activeStepContent: state.algorithm === Constants.algorithm.RECURSIVE ? state.service.getSteps() : [],
 
       serviceReverse: foldingReverse,
-      resultReverse: foldingReverse.compute(this.state.algorithm),
+      resultReverse: foldingReverse.compute(state.algorithm),
       activeStepReverse: 0,
       activeStepContentReverse: state.algorithm === Constants.algorithm.RECURSIVE ? foldingReverse.getSteps() : []
     }));
@@ -246,22 +247,22 @@ class FirstOrderFolding extends Component {
   generateSteps = (titleOfStartStep, service, activeStep, activeStepContent, cards, resultReset, stepNext, stepBack) => {
     const { classes, ui } = this.props;
 
-    return Array.from(new Array(service.getPower() + 1), (value, index) =>
+    return _.map(Array.from(new Array(service.getPower() + 1), (value, index) =>
       index === 0 ? titleOfStartStep : 'Turn ' + index
-    ).map((label, index) => {
+    ), (label, index) => {
       return (
         <Step key={label}>
           <StepLabel><b>{label}</b></StepLabel>
           <StepContent>
             <div style={{ display: 'flex' }}>
               {
-                activeStepContent.length > 0 && activeStepContent[index].map((pile, i) =>
+                activeStepContent.length > 0 && _.map(activeStepContent[index], (pile, i) =>
                   ui === Constants.ui.GRAPHICS ? (
                     <Paper key={i} className={classes.pile}
                            style={{ display: 'flex', flexDirection: 'column-reverse',
                              width: 32 }}>
                       {
-                        pile.map(number =>
+                        _.map(pile, number =>
                           resultReset ?
                             cards[number - 1] :
                             /* Here I use the symmetry of folding: cards[number] equals the position. */
@@ -274,7 +275,7 @@ class FirstOrderFolding extends Component {
                          style={{ display: 'flex', flexDirection: 'column-reverse', justifyContent: 'space-around',
                            width: '100%' }}>
                       {
-                        pile.map(number =>
+                        _.map(pile, number =>
                           <span key={number}>{number}</span>
                         )
                       }
@@ -423,8 +424,8 @@ class FirstOrderFolding extends Component {
           <h3>Formula of Computing</h3>
           <p>\(P(1) = 1\)</p>
           <p>\(P(2) = n = 2^k\)</p>
-          <p>{'\\( P_k(x) = \\begin{cases} 2P_{k-1}(x), &\\textrm{x is even} \\\\ 2P_{k-1}(x)-1, &\\textrm{x is odd} \\end{cases}, 1<x\\le2^{k-1} \\)'}</p>
-          <p>{'\\( P_k(2^k-x+1) = \\begin{cases} P_k(x)-1, &\\textrm{x is even} \\\\ P_k(x)+1, &\\textrm{x is odd} \\end{cases}, 1<x\\le2^{k-1} \\)'}</p>
+          <p>{'\\( P_k(x) = \\begin{cases} 2P_{k-1}(x),&\\textrm{x is even} \\\\ 2P_{k-1}(x)-1,&\\textrm{x is odd} \\end{cases},\\quad1<x\\le2^{k-1} \\)'}</p>
+          <p>{'\\( P_k(2^k-x+1) = \\begin{cases} P_k(x)-1,&\\textrm{x is even} \\\\ P_k(x)+1,&\\textrm{x is odd} \\end{cases},\\quad1<x\\le2^{k-1} \\)'}</p>
           <p>You can replace \(P(x)\) with \(V(x)\) as well to compute the value in a given position \(x\) in the final sequence.</p>
         </Paper>
 
@@ -437,58 +438,58 @@ class FirstOrderFolding extends Component {
               {steps}
             </Stepper>
             {activeStep === steps.length && (
-              <Paper square elevation={0} className={classes.resetContainer}>
-                <Typography>All steps completed</Typography>
-                <Button onClick={this.stepReset} className={classes.button}>
-                  Start Again!
-                </Button>
-              </Paper>
+            <Paper square elevation={0} className={classes.resetContainer}>
+              <Typography>All steps completed</Typography>
+              <Button onClick={this.stepReset} className={classes.button}>
+                Start Again!
+              </Button>
+            </Paper>
             )}
           </div>
         </Paper>
         )}
 
-        {/* Result View Pad */}
+        {/* Explore View Pad */}
         {exploreMore && !resultReset && service.isComputeDone() && (
-          <Paper className={classes.pad} elevation={1}>
-            <h3>Explore More</h3>
-            <div style={{ marginBottom: 10 }}>You can observe that giving the same number or position, you will get the same position/number! It looks amazing, doesn't it? We call this <b>SYMMETRY</b>.</div>
-            <div>
-              Number <Input className={classes.textField} type={'number'} value={number} onChange={this.positionOfNumber} /> is in position <span style={{ color: 'red', fontWeight: 'bolder', fontSize: 32 }}>{service.positionOf(number)}</span>.
-            </div>
-            <div>
-              Number in position <Input className={classes.textField} type={'number'} value={position} onChange={this.numberOfPosition} /> is <span style={{ color: 'blue', fontWeight: 'bolder', fontSize: 32 }}>{service.valueOf(position)}</span>.
-            </div>
-            {algorithm === Constants.algorithm.RECURSIVE && (
-            <FormControlLabel
-              control={
-                <Switch checked={showFoldingReverse} onChange={this.toggleFoldingReverse} color="primary" />
-              }
-              label="Watch what happens when folding the result sequence"
-            />
-            )}
-          </Paper>
+        <Paper className={classes.pad} elevation={1}>
+          <h3>Explore More</h3>
+          <div style={{ marginBottom: 10 }}>You can observe that giving the same number or position, you will get the same position/number! It looks amazing, doesn't it? We call this <b>SYMMETRY</b>.</div>
+          <div>
+            Number <Input className={classes.textField} type={'number'} value={number} onChange={this.positionOfNumber} /> is in position <span style={{ color: 'red', fontWeight: 'bolder', fontSize: 32 }}>{service.positionOf(number)}</span>.
+          </div>
+          <div>
+            Number in position <Input className={classes.textField} type={'number'} value={position} onChange={this.numberOfPosition} /> is <span style={{ color: 'blue', fontWeight: 'bolder', fontSize: 32 }}>{service.valueOf(position)}</span>.
+          </div>
+          {algorithm === Constants.algorithm.RECURSIVE && (
+          <FormControlLabel
+            control={
+              <Switch checked={showFoldingReverse} onChange={this.toggleFoldingReverse} color="primary" />
+            }
+            label="Watch what happens when folding the result sequence"
+          />
+          )}
+        </Paper>
         )}
 
         {/* Reverse Folding Steps View Pad */}
         {exploreMore && showFoldingReverse && !resultReset && algorithm === Constants.algorithm.RECURSIVE && serviceReverse && serviceReverse.isComputeDone() && (
-          <Paper className={classes.pad} elevation={1}>
-            <h3>Steps of Reverse Folding</h3>
-            <p>Now you can try to align the final sequence and fold the numbers with the same steps. Then wait and observe the magic result!</p>
-            <div>
-              <Stepper activeStep={activeStepReverse} orientation="vertical">
-                {stepsReverse}
-              </Stepper>
-              {activeStepReverse === stepsReverse.length && (
-                <Paper square elevation={0} className={classes.resetContainer}>
-                  <Typography>All steps completed</Typography>
-                  <Button onClick={this.stepResetReverse} className={classes.button}>
-                    Start Again!
-                  </Button>
-                </Paper>
-              )}
-            </div>
-          </Paper>
+        <Paper className={classes.pad} elevation={1}>
+          <h3>Steps of Reverse Folding</h3>
+          <p>Now you can try to align the final sequence and fold the numbers with the same steps. Then wait and observe the magic result!</p>
+          <div>
+            <Stepper activeStep={activeStepReverse} orientation="vertical">
+              {stepsReverse}
+            </Stepper>
+            {activeStepReverse === stepsReverse.length && (
+            <Paper square elevation={0} className={classes.resetContainer}>
+              <Typography>All steps completed</Typography>
+              <Button onClick={this.stepResetReverse} className={classes.button}>
+                Start Again!
+              </Button>
+            </Paper>
+            )}
+          </div>
+        </Paper>
         )}
 
       </div>

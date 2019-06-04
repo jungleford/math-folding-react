@@ -83,6 +83,11 @@ const styles = theme => ({
 let defaultPower = 3;
 let maxPower = 5;
 
+/* for SOF k=1, there are 2 rounds back to the initial matrix.
+   for SOF k=2, there are 3 rounds back to the initial matrix.
+   for SOF k=3, there are 27 rounds back to the initial matrix. */
+let countReverse = [2, 3, 27];
+
 class SecondOrderFolding extends Component {
   defaultService = new Folding(defaultPower);
 
@@ -106,10 +111,9 @@ class SecondOrderFolding extends Component {
     exploreMore: false,
     showFoldingReverse: false,
 
-    serviceReverse: null,
-    resultReverse: null,
+    reverseCount: countReverse[defaultPower - 1],
     activeStepReverse: 0,
-    activeStepContentReverse: []
+    servicesReverse: []
   };
 
   /*
@@ -140,10 +144,8 @@ class SecondOrderFolding extends Component {
         exploreMore: false,
         showFoldingReverse: false,
 
-        serviceReverse: null,
-        resultReverse: null,
         activeStepReverse: 0,
-        activeStepContentReverse: []
+        servicesReverse: []
       }
     }
 
@@ -171,20 +173,31 @@ class SecondOrderFolding extends Component {
       exploreMore: false,
       showFoldingReverse: false,
 
-      serviceReverse: null,
-      resultReverse: null,
+      reverseCount: newPower > 3 ? 0 : countReverse[newPower - 1],
       activeStepReverse: 0,
-      activeStepContentReverse: []
+      servicesReverse: []
     });
   };
 
   doFolding = () => {
+    let { algorithm, power, service, reverseCount, servicesReverse } = this.state;
+    let result = service.compute(algorithm);
+    if (reverseCount > 0 && servicesReverse.length === 0) {
+      for (let i = 0, count = reverseCount + 1, svc = service;
+           i <= count;
+           i++, svc = new Folding(power, svc.compute(algorithm)[0], true)) {
+        servicesReverse.push(svc); // servicesReverse contains all SOF services of each step
+      }
+    }
+
     this.setState(state => ({
-      result: state.service.compute(state.algorithm),
+      result: result,
       resultReset: false,
       activeStep: 0,
-      activeStepContent: state.service.getSteps(),
       activeStepContent: state.algorithm === Constants.algorithm.RECURSIVE ? state.service.getSteps() : [],
+
+      activeStepReverse: 0,
+      servicesReverse: servicesReverse
     }));
   };
 
@@ -197,7 +210,6 @@ class SecondOrderFolding extends Component {
       exploreMore: false,
       showFoldingReverse: false,
 
-      resultReverse: state.serviceReverse ? state.serviceReverse.init() : null,
       activeStepReverse: 0
     }));
   };
@@ -213,15 +225,15 @@ class SecondOrderFolding extends Component {
   /**
    * PRIVATE METHOD
    *
-   * Generate graphics view: this is a square matrix
+   * Generate graphics view: this is a set of single cards.
    */
   generateCards = (service, result, colors) => {
     const {classes} = this.props;
 
-    return result.map((row, rowIndex) =>
-      row.map((number, colIndex) => {
+    return _.map(result, (row, rowIndex) =>
+      _.map(row, (number, colIndex) => {
         let p = service.getPower() * rowIndex + colIndex;
-        let n = service.valueOf(p + 1) - 1;// number starts from 1, but coordinate is from 0
+        let n = service.valueOf(p + 1) - 1; // number starts from 1, but coordinate is from 0
         let y = _.floor(n / service.getRowCount());
         let x = n % service.getRowCount();
         let background = result.length === 1 ? colors[y][x] : colors[rowIndex][colIndex];
@@ -241,6 +253,37 @@ class SecondOrderFolding extends Component {
   /**
    * PRIVATE METHOD
    *
+   * Generate graphics view: arrange all single cards into a square matrix.
+   */
+  generateCardRows = cards => {
+    return _.map(cards, (cardRow, rowIndex) => (
+      <div key={rowIndex} style={{ display: 'flex' }}>{cardRow}</div>
+    ));
+  };
+
+  /**
+   * PRIVATE METHOD
+   *
+   * Generate character view: arrange all numbers in the result into a square matrix.
+   */
+  generateNumberRows = (power, result) => {
+    return _.map(result, (row, rowIndex) => (
+      //<div key={rowIndex} style={{ display: 'flex' }}>{row.toString()}</div>
+      <div key={rowIndex} style={{ display: 'flex' }}>
+        {
+          _.map(row, (number, colIndex) =>
+            <div key={colIndex} style={{ width: 16 + 2 ** (power - 1), textAlign: 'center', margin: 4 }}>
+              <span>{number}</span>
+            </div>
+          )
+        }
+      </div>
+    ));
+  };
+
+  /**
+   * PRIVATE METHOD
+   *
    * Generate the steps UI.
    * There are k+1 steps, including the beginning state.
    */
@@ -248,9 +291,9 @@ class SecondOrderFolding extends Component {
     const { classes, ui } = this.props;
     let power = service.getPower();
 
-    return Array.from(new Array(2 * power + 1), (value, index) =>
+    return _.map(Array.from(new Array(2 * power + 1), (value, index) =>
       index === 0 ? titleOfStartStep : 'Turn ' + _.ceil(index / 2) + ', Step ' + index
-    ).map((label, index) => {
+    ), (label, index) => {
       let turn = _.ceil(index / 2);
       let isLaterHalfTurn = index > 0 && index % 2 === 0;
       let numberCountInRow = index > 0 ? 2 ** (power - turn + 1) : 2 ** power;
@@ -259,9 +302,9 @@ class SecondOrderFolding extends Component {
         <Step key={label}>
           <StepLabel><b>{label}</b></StepLabel>
           <StepContent>
-            <div style={{ display: 'flex', flexWrap: 'wrap', width: containerWidth, }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', width: containerWidth }}>
               {
-                activeStepContent.length > 0 && activeStepContent[index].map((row, rowIndex) => {// activeStepContent[index] is a three-dimension matrix
+                activeStepContent.length > 0 && _.map(activeStepContent[index], (row, rowIndex) => {// activeStepContent[index] is a three-dimension matrix
                   let rowCount = activeStepContent[index].length;
 
                   if (ui === Constants.ui.GRAPHICS) {
@@ -272,7 +315,7 @@ class SecondOrderFolding extends Component {
                                width: '100%',
                              }}>
                         {
-                          row.map((column, colIndex) => {
+                          _.map(row, (column, colIndex) => {
                             return (
                               <Paper key={colIndex} className={classes.pile}
                                      style={{
@@ -280,7 +323,7 @@ class SecondOrderFolding extends Component {
                                        width: 'calc(100%/' + rowCount + ')', // row count = column count
                                      }}>
                                 {
-                                  column.map((number, i) => {
+                                  _.map(column, (number, i) => {
                                     let p = number - 1;// number starts from 1, but coordinate is from 0
                                     let y = _.floor(p / service.getRowCount());
                                     let x = p % service.getRowCount();
@@ -306,14 +349,14 @@ class SecondOrderFolding extends Component {
                              width: '100%',
                            }}>
                         {
-                          row.map((column, colIndex) =>
+                          _.map(row, (column, colIndex) =>
                             <div key={colIndex}
                                  style={{
                                    display: 'flex', flexDirection: 'column-reverse',
                                    margin: 10,
                                  }}>
                               {
-                                column.map(number =>
+                                _.map(column, number =>
                                   <span key={number}>{number}</span>
                                 )
                               }
@@ -371,6 +414,61 @@ class SecondOrderFolding extends Component {
     this.setState({ activeStep: 0 });
   };
 
+  /**
+   * PRIVATE METHOD
+   *
+   * Generate repeat folding steps UI.
+   */
+  generateStepsReverse = (power, activeStep, services, colors, resultReset, stepNext, stepBack) => {
+    const { classes, ui } = this.props;
+    let containerWidth = (cardWidth + 28) * (2 ** power) + 10;
+    let colorSet = _.reduce(colors, (accumulator, row) => accumulator.concat(row)); // colors of original matrix
+
+    return _.map(services, (service, index) => {
+      let label = '';
+      switch (index) {
+        case 0:
+          label = 'Original Matrix';
+          break;
+        case 1:
+          label = 'Result Matrix';
+          break;
+        default:
+          label = 'Round ' + (index - 1) + (index === services.length - 1 ? ' (Back to the Original Matrix)' : '');
+      }
+
+      let result = service.init(); // a two-dimension array
+      let actualColors = _.map(result, row => _.map(row, number => colorSet[number - 1])); // keep same color for each number
+      let cards = this.generateCards(service, result, actualColors);
+      let cardRows = this.generateCardRows(cards);
+      let numberRows = this.generateNumberRows(power, result);
+
+      return (
+        <Step key={label}>
+          <StepLabel><b>{label}</b></StepLabel>
+          <StepContent>
+            <div style={{ display: 'flex', flexDirection: 'column', width: containerWidth }}>
+              {ui === Constants.ui.GRAPHICS ? cardRows : numberRows}
+            </div>
+            <div className={classes.actionsContainer}>
+              <div>
+                <Button className={classes.button}
+                        disabled={activeStep === 0}
+                        onClick={stepBack}>
+                  Back
+                </Button>
+                <Button className={classes.button} color="primary" variant="contained"
+                        onClick={stepNext}>
+                  {activeStep === services.length - 1 ? 'Finish' : 'Next'}
+                </Button>
+              </div>
+            </div>
+          </StepContent>
+        </Step>
+      );
+    });
+  };
+
   stepNextReverse = () => {
     this.setState(state => ({ activeStepReverse: state.activeStepReverse + 1 }));
   };
@@ -391,7 +489,7 @@ class SecondOrderFolding extends Component {
       number, position,
       activeStep, activeStepContent,
       exploreMore, showFoldingReverse,
-      serviceReverse, resultReverse, activeStepReverse, activeStepContentReverse
+      reverseCount, activeStepReverse, servicesReverse
     } = this.state;
 
     // Options of values of power
@@ -401,25 +499,11 @@ class SecondOrderFolding extends Component {
     );
 
     let cards = this.generateCards(service, result, colors);
-
-    let cardRows = cards.map((cardRow, rowIndex) => (
-      <div key={rowIndex} style={{ display: 'flex' }}>{cardRow}</div>
-    ));
-
-    let numberRows = result.map((row, rowIndex) => (
-      //<div key={rowIndex} style={{ display: 'flex' }}>{row.toString()}</div>
-      <div key={rowIndex} style={{ display: 'flex' }}>
-        {
-          row.map((number, colIndex) =>
-            <div key={colIndex} style={{ width: 16 + 2 ** (power - 1), textAlign: 'center', margin: 4 }}>
-              <span>{number}</span>
-            </div>
-          )
-        }
-      </div>
-    ));
+    let cardRows = this.generateCardRows(cards);
+    let numberRows = this.generateNumberRows(power, result);
 
     let steps = this.generateSteps('Original Matrix', service, activeStep, activeStepContent, cards, result, resultReset, this.stepNext, this.stepBack);
+    let stepsReverse = servicesReverse.length > 0 ? this.generateStepsReverse(power, activeStepReverse, servicesReverse, colors, resultReset, this.stepNextReverse, this.stepBackReverse) : null;
 
     return (
       <div className={classes.root}>
@@ -452,7 +536,7 @@ class SecondOrderFolding extends Component {
               Reset
             </Button>
             {service.isComputeDone() && (
-            <Tooltip title={'Enable to view more details' /*+ (algorithm === Constants.algorithm.RECURSIVE ? ' and REVERSE MAGIC!' : '')*/}>
+            <Tooltip title={'Enable to view more details' + (stepsReverse ? ' and REVERSE MAGIC!' : '')}>
               <FormControlLabel
                 control={
                   <Switch checked={exploreMore} disabled={resultReset} onChange={this.toggleExplore} color="primary" />
@@ -494,7 +578,7 @@ class SecondOrderFolding extends Component {
           <p>{'\\( P(x+1)=\\begin{cases}53\\times4^{k-4}-P(x)+1,&\\rm{26\\times4^{k-4}+1\\le P(x)\\le27\\times4^{k-4}}\\\\\\\\55\\times4^{k-4}-P(x)+1,&\\rm{27\\times4^{k-4}+1\\le P(x)\\le28\\times4^{k-4}}\\\\\\\\57\\times4^{k-4}-P(x)+1,&\\rm{28\\times4^{k-4}+1\\le P(x)\\le29\\times4^{k-4}}\\\\\\\\59\\times4^{k-4}-P(x)+1,&\\rm{29\\times4^{k-4}+1\\le P(x)\\le30\\times4^{k-4}}\\end{cases} \\)'}</p>
           <p>{'\\( P(x+1)=\\begin{cases}197\\times4^{k-4}-P(x)+1,&\\rm{98\\times4^{k-4}+1\\le P(x)\\le99\\times4^{k-4}}\\\\\\\\199\\times4^{k-4}-P(x)+1,&\\rm{99\\times4^{k-4}+1\\le P(x)\\le100\\times4^{k-4}}\\\\\\\\201\\times4^{k-4}-P(x)+1,&\\rm{100\\times4^{k-4}+1\\le P(x)\\le101\\times4^{k-4}}\\\\\\\\203\\times4^{k-4}-P(x)+1,&\\rm{101\\times4^{k-4}+1\\le P(x)\\le102\\times4^{k-4}}\\end{cases} \\)'}</p>
           <p>{'\\( P(x+1)=\\begin{cases}245\\times4^{k-4}-P(x)+1,&\\rm{122\\times4^{k-4}+1\\le P(x)\\le123\\times4^{k-4}}\\\\\\\\247\\times4^{k-4}-P(x)+1,&\\rm{123\\times4^{k-4}+1\\le P(x)\\le124\\times4^{k-4}}\\\\\\\\249\\times4^{k-4}-P(x)+1,&\\rm{124\\times4^{k-4}+1\\le P(x)\\le125\\times4^{k-4}}\\\\\\\\251\\times4^{k-4}-P(x)+1,&\\rm{125\\times4^{k-4}+1\\le P(x)\\le126\\times4^{k-4}}\\end{cases} \\)'}</p>
-          <p>{'\\( ...... \\)'}</p>
+          <p>\( ...... \)</p>
           <p>Otherwise \(x\) is in a "<b>Non-regular Segment</b>".</p>
         </Paper>
 
@@ -507,57 +591,60 @@ class SecondOrderFolding extends Component {
               {steps}
             </Stepper>
             {activeStep === steps.length && (
-              <Paper square elevation={0} className={classes.resetContainer}>
-                <Typography>All steps completed</Typography>
-                <Button onClick={this.stepReset} className={classes.button}>
-                  Start Again!
-                </Button>
-              </Paper>
+            <Paper square elevation={0} className={classes.resetContainer}>
+              <Typography>All steps completed</Typography>
+              <Button onClick={this.stepReset} className={classes.button}>
+                Start Again!
+              </Button>
+            </Paper>
             )}
           </div>
         </Paper>
         )}
 
-        {/* Result View Pad */}
+        {/* Explore View Pad */}
         {exploreMore && !resultReset && service.isComputeDone() && (
-          <Paper className={classes.pad} elevation={1}>
-            <h3>Explore More</h3>
-            <div>
-              Number <Input className={classes.textField} type={'number'} value={number} onChange={this.positionOfNumber} /> is in position <span style={{ color: 'red', fontWeight: 'bolder', fontSize: 32 }}>{service.positionOf(number)}</span>.
-            </div>
-            <div>
-              Number in position <Input className={classes.textField} type={'number'} value={position} onChange={this.numberOfPosition} /> is <span style={{ color: 'blue', fontWeight: 'bolder', fontSize: 32 }}>{service.valueOf(position)}</span>.
-            </div>
-            {false && algorithm === Constants.algorithm.RECURSIVE && (
-            <FormControlLabel
-              control={
-                <Switch checked={showFoldingReverse} onChange={this.toggleFoldingReverse} color="primary" />
-              }
-              label="Watch what happens when folding the result sequence"
-            />
-            )}
-          </Paper>
+        <Paper className={classes.pad} elevation={1}>
+          <h3>Explore More</h3>
+          <div>
+            Number <Input className={classes.textField} type={'number'} value={number} onChange={this.positionOfNumber} /> is in position <span style={{ color: 'red', fontWeight: 'bolder', fontSize: 32 }}>{service.positionOf(number)}</span>.
+          </div>
+          <div>
+            Number in position <Input className={classes.textField} type={'number'} value={position} onChange={this.numberOfPosition} /> is <span style={{ color: 'blue', fontWeight: 'bolder', fontSize: 32 }}>{service.valueOf(position)}</span>.
+          </div>
+          {stepsReverse && (
+          <FormControlLabel
+            control={
+              <Switch checked={showFoldingReverse} onChange={this.toggleFoldingReverse} color="primary" />
+            }
+            label="Watch what happens when folding the result matrix (Only support k=1 to 3)"
+          />
+          )}
+        </Paper>
         )}
 
         {/* Reverse Folding Steps View Pad */}
-        {exploreMore && showFoldingReverse && !resultReset && algorithm === Constants.algorithm.RECURSIVE && serviceReverse && serviceReverse.isComputeDone() && (
-          <Paper className={classes.pad} elevation={1}>
-            <h3>Steps of Reverse Folding</h3>
-            <p>Now you can try to align the final sequence and fold the numbers with the same steps. Then wait and observe the magic result!</p>
-            <div>
-              <Stepper activeStep={activeStepReverse} orientation="vertical">
-                {stepsReverse}
-              </Stepper>
-              {activeStepReverse === stepsReverse.length && (
-                <Paper square elevation={0} className={classes.resetContainer}>
-                  <Typography>All steps completed</Typography>
-                  <Button onClick={this.stepResetReverse} className={classes.button}>
-                    Start Again!
-                  </Button>
-                </Paper>
-              )}
-            </div>
-          </Paper>
+        {exploreMore && showFoldingReverse && !resultReset && stepsReverse && (
+        <Paper className={classes.pad} elevation={1}>
+          <h3>Steps of Reverse Folding</h3>
+          <p>Now you can try to align the final sequence into a square matrix, and fold the matrix with the same steps. Then wait and observe the magic result!</p>
+          <div>
+            There are <span style={{ color: 'red', fontWeight: 'bolder', fontSize: 32 }}>{reverseCount}</span> rounds in total.
+          </div>
+          <div>
+            <Stepper activeStep={activeStepReverse} orientation="vertical">
+              {stepsReverse}
+            </Stepper>
+            {activeStepReverse === stepsReverse.length && (
+            <Paper square elevation={0} className={classes.resetContainer}>
+              <Typography>All steps completed</Typography>
+              <Button onClick={this.stepResetReverse} className={classes.button}>
+                Start Again!
+              </Button>
+            </Paper>
+            )}
+          </div>
+        </Paper>
         )}
 
       </div>
