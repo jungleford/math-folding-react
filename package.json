@@ -1,16 +1,18 @@
 {
-  "name": "@jungleford/math-folding",
-  "version": "0.0.2",
-  "description": "Research for number folding puzzels.",
+  "name": "@jungleford/math-folding-react",
+  "version": "0.1.0",
+  "description": "ReactJS UI for number folding puzzels.",
   "author": "Samuel Lee",
-  "homepage": "https://github.com/jungleford/math-folding",
+  "homepage": "https://github.com/jungleford/math-folding-react",
   "license": "(MIT)",
   "repository": {
     "type": "git",
-    "url": "git://github.com/jungleford/math-folding.git"
+    "url": "git://github.com/jungleford/math-folding-react.git"
   },
   "keywords": [
-    "math"
+    "math",
+    "math-folding",
+    "react"
   ],
   "scripts": {
     "build": "webpack --config ./webpack.babel.js",
@@ -19,6 +21,8 @@
     "start": "npm run build && npm run dev"
   },
   "dependencies": {
+    "@jungleford/math-folding": "~0.0.1",
+    "@jungleford/simple-utils": "~0.0.4",
     "@material-ui/core": "^3.6.2",
     "@material-ui/icons": "^3.0.1",
     "babel-polyfill": "^6.26.0",

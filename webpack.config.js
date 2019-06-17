@@ -62,7 +62,8 @@ export default {
     new webpack.ProvidePlugin({
       $: 'jquery',
       _: 'lodash',
-      assert: 'assert'
+      assert: 'assert',
+      utils: ['@jungleford/simple-utils', 'default']
     }),
     // Generates an `index.html` file with the <script> injected.
     new HtmlWebpackPlugin({

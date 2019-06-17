@@ -8,6 +8,11 @@ Research for number folding puzzels
 
 After compiled successfully, then access: http://localhost:8080/
 
+## Relate Projects
+
+* [math-folding](https://github.com/jungleford/math-folding): Algorithms to resolve this problem.
+* [simple-utils](https://github.com/jungleford/simple-utils): A set of simple utilities for internal usage.
+
 # Background: 对折序列问题（Number Folding Problem）
 (Chinese edition)
 
@@ -940,9 +945,14 @@ After compiled successfully, then access: http://localhost:8080/
 
 ## 算法
 
-目前支持最容易设计的“**递归算法**”（_Recursive_），以及非递归的“**迭代公式算法**”（_Formula_，即应用本篇文字所归纳总结的结论）。请参见源代码中各组件的service部分。
+目前支持最容易设计的“**递归算法**”（_Recursive_），以及非递归的“**迭代公式算法**”（_Formula_，即应用本篇文字所归纳总结的结论）。请参见本人的相关开源项目[math-folding](https://github.com/jungleford/math-folding)的源代码。
 
 Web程序的UI部分基于[React JS](https://github.com/facebook/react)和[Material UI](https://github.com/mui-org/material-ui)。
+
+## 相关项目
+
+* [math-folding](https://github.com/jungleford/math-folding)
+* [simple-utils](https://github.com/jungleford/simple-utils)
 
 ## 余论
 

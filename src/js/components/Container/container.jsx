@@ -12,7 +12,8 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 
-import Constants from '../../utils/constants';
+import {Constants as ServiceConstants} from '@jungleford/math-folding/src/js';
+import UiConstants from '../../utils/constants';
 import FirstOrderFolding from '../FirstOrderFolding';
 import SecondOrderFolding from '../SecondOrderFolding';
 
@@ -52,8 +53,8 @@ const styles = theme => ({
 class Container extends React.Component {
   state = {
     tab: 0,
-    algorithm: Constants.algorithm.RECURSIVE,
-    ui: Constants.ui.CHARACTER
+    algorithm: ServiceConstants.algorithm.RECURSIVE,
+    ui: UiConstants.style.CHARACTER
   };
 
   handleDropdownChange = event => {
@@ -70,11 +71,11 @@ class Container extends React.Component {
 
     let algMenus = [], uiMenus = [];
 
-    _.each(Constants.algorithm, alg => {
+    _.each(ServiceConstants.algorithm, alg => {
       algMenus.push(<MenuItem key={alg} value={alg}>{alg}</MenuItem>);
     });
 
-    _.each(Constants.ui, ui => {
+    _.each(UiConstants.style, ui => {
       uiMenus.push(<MenuItem key={ui} value={ui}>{ui}</MenuItem>);
     });
 

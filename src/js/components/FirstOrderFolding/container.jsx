@@ -20,8 +20,8 @@ import StepContent from '@material-ui/core/StepContent';
 import Typography from '@material-ui/core/Typography';
 
 import Folding from './service';
-import utils from '../../utils/utils';
-import Constants from '../../utils/constants';
+import {Constants as ServiceConstants} from '@jungleford/math-folding/src/js';
+import UiConstants from '../../utils/constants';
 
 const styles = theme => ({
   root: {
@@ -185,12 +185,12 @@ class FirstOrderFolding extends Component {
       result: result,
       resultReset: false,
       activeStep: 0,
-      activeStepContent: state.algorithm === Constants.algorithm.RECURSIVE ? state.service.getSteps() : [],
+      activeStepContent: state.algorithm === ServiceConstants.algorithm.RECURSIVE ? state.service.getSteps() : [],
 
       serviceReverse: foldingReverse,
       resultReverse: foldingReverse.compute(state.algorithm),
       activeStepReverse: 0,
-      activeStepContentReverse: state.algorithm === Constants.algorithm.RECURSIVE ? foldingReverse.getSteps() : []
+      activeStepContentReverse: state.algorithm === ServiceConstants.algorithm.RECURSIVE ? foldingReverse.getSteps() : []
     }));
   };
 
@@ -257,7 +257,7 @@ class FirstOrderFolding extends Component {
             <div style={{ display: 'flex' }}>
               {
                 activeStepContent.length > 0 && _.map(activeStepContent[index], (pile, i) =>
-                  ui === Constants.ui.GRAPHICS ? (
+                  ui === UiConstants.style.GRAPHICS ? (
                     <Paper key={i} className={classes.pile}
                            style={{ display: 'flex', flexDirection: 'column-reverse',
                              width: 32 }}>
@@ -395,7 +395,7 @@ class FirstOrderFolding extends Component {
               Reset
             </Button>
             {service.isComputeDone() && (
-            <Tooltip title={'Enable to view more details' + (algorithm === Constants.algorithm.RECURSIVE ? ' and REVERSE MAGIC!' : '')}>
+            <Tooltip title={'Enable to view more details' + (algorithm === ServiceConstants.algorithm.RECURSIVE ? ' and REVERSE MAGIC!' : '')}>
               <FormControlLabel
                 control={
                   <Switch checked={exploreMore} disabled={resultReset} onChange={this.toggleExplore} color="primary" />
@@ -414,13 +414,13 @@ class FirstOrderFolding extends Component {
         <Paper className={classes.pad} elevation={1}>
           <h3>Result View</h3>
           <div style={{ display: 'flex' }}>
-          {ui === Constants.ui.GRAPHICS ? cards : result.toString()}
+          {ui === UiConstants.style.GRAPHICS ? cards : result.toString()}
           </div>
         </Paper>
 
         {/* Formula View Pad */}
         <Paper className={classes.pad} elevation={1}
-               style={{ display: algorithm === Constants.algorithm.FORMULA ? 'flex' : 'none', flexDirection: 'column' }}>
+               style={{ display: algorithm === ServiceConstants.algorithm.FORMULA ? 'flex' : 'none', flexDirection: 'column' }}>
           <h3>Formula of Computing</h3>
           <p>\(P(1) = 1\)</p>
           <p>\(P(2) = n = 2^k\)</p>
@@ -430,7 +430,7 @@ class FirstOrderFolding extends Component {
         </Paper>
 
         {/* Steps View Pad: a vertical stepper */}
-        {exploreMore && !resultReset && algorithm === Constants.algorithm.RECURSIVE && service.isComputeDone() && (
+        {exploreMore && !resultReset && algorithm === ServiceConstants.algorithm.RECURSIVE && service.isComputeDone() && (
         <Paper className={classes.pad} elevation={1}>
           <h3>Steps of each Turn</h3>
           <div>
@@ -460,7 +460,7 @@ class FirstOrderFolding extends Component {
           <div>
             Number in position <Input className={classes.textField} type={'number'} value={position} onChange={this.numberOfPosition} /> is <span style={{ color: 'blue', fontWeight: 'bolder', fontSize: 32 }}>{service.valueOf(position)}</span>.
           </div>
-          {algorithm === Constants.algorithm.RECURSIVE && (
+          {algorithm === ServiceConstants.algorithm.RECURSIVE && (
           <FormControlLabel
             control={
               <Switch checked={showFoldingReverse} onChange={this.toggleFoldingReverse} color="primary" />
@@ -472,7 +472,7 @@ class FirstOrderFolding extends Component {
         )}
 
         {/* Reverse Folding Steps View Pad */}
-        {exploreMore && showFoldingReverse && !resultReset && algorithm === Constants.algorithm.RECURSIVE && serviceReverse && serviceReverse.isComputeDone() && (
+        {exploreMore && showFoldingReverse && !resultReset && algorithm === ServiceConstants.algorithm.RECURSIVE && serviceReverse && serviceReverse.isComputeDone() && (
         <Paper className={classes.pad} elevation={1}>
           <h3>Steps of Reverse Folding</h3>
           <p>Now you can try to align the final sequence and fold the numbers with the same steps. Then wait and observe the magic result!</p>

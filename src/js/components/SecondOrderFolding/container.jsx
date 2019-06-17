@@ -20,8 +20,8 @@ import StepContent from '@material-ui/core/StepContent';
 import Typography from '@material-ui/core/Typography';
 
 import Folding from './service';
-import utils from '../../utils/utils';
-import Constants from '../../utils/constants';
+import {Constants as ServiceConstants} from '@jungleford/math-folding/src/js';
+import UiConstants from '../../utils/constants';
 
 let cardWidth = 32;
 
@@ -194,7 +194,7 @@ class SecondOrderFolding extends Component {
       result: result,
       resultReset: false,
       activeStep: 0,
-      activeStepContent: state.algorithm === Constants.algorithm.RECURSIVE ? state.service.getSteps() : [],
+      activeStepContent: state.algorithm === ServiceConstants.algorithm.RECURSIVE ? state.service.getSteps() : [],
 
       activeStepReverse: 0,
       servicesReverse: servicesReverse
@@ -307,7 +307,7 @@ class SecondOrderFolding extends Component {
                 activeStepContent.length > 0 && _.map(activeStepContent[index], (row, rowIndex) => {// activeStepContent[index] is a three-dimension matrix
                   let rowCount = activeStepContent[index].length;
 
-                  if (ui === Constants.ui.GRAPHICS) {
+                  if (ui === UiConstants.style.GRAPHICS) {
                     return (
                       <Paper key={rowIndex} className={classes.pile}
                              style={{
@@ -323,7 +323,7 @@ class SecondOrderFolding extends Component {
                                        width: 'calc(100%/' + rowCount + ')', // row count = column count
                                      }}>
                                 {
-                                  _.map(column, (number, i) => {
+                                  _.map(column, number => {
                                     let p = number - 1;// number starts from 1, but coordinate is from 0
                                     let y = _.floor(p / service.getRowCount());
                                     let x = p % service.getRowCount();
@@ -448,7 +448,7 @@ class SecondOrderFolding extends Component {
           <StepLabel><b>{label}</b></StepLabel>
           <StepContent>
             <div style={{ display: 'flex', flexDirection: 'column', width: containerWidth }}>
-              {ui === Constants.ui.GRAPHICS ? cardRows : numberRows}
+              {ui === UiConstants.style.GRAPHICS ? cardRows : numberRows}
             </div>
             <div className={classes.actionsContainer}>
               <div>
@@ -555,13 +555,13 @@ class SecondOrderFolding extends Component {
         <Paper className={classes.pad} elevation={1}>
           <h3>Result View</h3>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            {ui === Constants.ui.GRAPHICS ? cardRows : numberRows}
+            {ui === UiConstants.style.GRAPHICS ? cardRows : numberRows}
           </div>
         </Paper>
 
         {/* Formula View Pad */}
         <Paper className={classes.pad} elevation={1}
-               style={{ display: algorithm === Constants.algorithm.FORMULA ? 'flex' : 'none', flexDirection: 'column' }}>
+               style={{ display: algorithm === ServiceConstants.algorithm.FORMULA ? 'flex' : 'none', flexDirection: 'column' }}>
           <h3>Formula of Computing</h3>
           <p>\(P(1) = 1\)</p>
           <p>If \(x\) is <b>odd</b>, \(P(x+1)=4^k-P(x)+1\).</p>
@@ -583,7 +583,7 @@ class SecondOrderFolding extends Component {
         </Paper>
 
         {/* Steps View Pad: a vertical stepper */}
-        {exploreMore && !resultReset && algorithm === Constants.algorithm.RECURSIVE && service.isComputeDone() && (
+        {exploreMore && !resultReset && algorithm === ServiceConstants.algorithm.RECURSIVE && service.isComputeDone() && (
         <Paper className={classes.pad} elevation={1}>
           <h3>Steps of each Turn</h3>
           <div>
