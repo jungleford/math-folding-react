@@ -432,7 +432,7 @@ class FirstOrderFolding extends Component {
         {/* Steps View Pad: a vertical stepper */}
         {exploreMore && !resultReset && algorithm === ServiceConstants.algorithm.RECURSIVE && service.isComputeDone() && (
         <Paper className={classes.pad} elevation={1}>
-          <h3>Steps of each Turn</h3>
+          <h3>Steps of Each Turn</h3>
           <div>
             <Stepper activeStep={activeStep} orientation="vertical">
               {steps}
