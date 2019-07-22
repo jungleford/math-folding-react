@@ -18,4 +18,4 @@ After compiled successfully, then access: http://localhost:8080/
 
 # Background: 对折序列问题（Number Folding Problem）
 
-You can read a detailed analysis (Chinese edition only) at [here](https://github.com/jungleford/math-folding#background-%E5%AF%B9%E6%8A%98%E5%BA%8F%E5%88%97%E9%97%AE%E9%A2%98number-folding-problem).
+You can read a detailed analysis (Chinese edition only) at [here](https://github.com/jungleford/math-folding/blob/master/docs/index.md).

@@ -63,7 +63,7 @@ export default {
       $: 'jquery',
       _: 'lodash',
       assert: 'assert',
-      utils: ['@jungleford/simple-utils', 'default']
+      utils: ['@jungleford/simple-utils', 'Utils']
     }),
     // Generates an `index.html` file with the <script> injected.
     new HtmlWebpackPlugin({
