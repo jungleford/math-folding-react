@@ -19,6 +19,7 @@ import StepLabel from '@material-ui/core/StepLabel';
 import StepContent from '@material-ui/core/StepContent';
 import Typography from '@material-ui/core/Typography';
 
+import Card from '../Card';
 import Folding from './service';
 import {Constants as ServiceConstants} from '@jungleford/math-folding/src/js';
 import UiConstants from '../../utils/constants';
@@ -56,14 +57,6 @@ const styles = theme => ({
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
     width: 32,
-  },
-  card: {
-    padding: 2,
-    margin: 5,
-    width: 20,
-    height: 20,
-    textAlign: 'center',
-    lineHeight: '20px',
   },
   pile: {
     padding: 2,
@@ -227,13 +220,7 @@ class FirstOrderFolding extends Component {
     return Array.from(new Array(result.length), (value, index) => {
       let background = colors[result[index] - 1];
       return (
-        <Paper key={index} className={classes.card}
-               style={{
-                 backgroundColor: background,
-                 color: utils.getReverseColor(background)
-               }}>
-          <b>{result[index]}</b>
-        </Paper>
+        <Card key={index} width={20} background={background} content={result[index]} />
       );
     });
   };
