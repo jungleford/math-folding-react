@@ -4,6 +4,7 @@
   "description": "ReactJS UI for number folding puzzels.",
   "author": "Samuel Lee",
   "homepage": "https://github.com/jungleford/math-folding-react",
+  "icon": "https://github.com/jungleford/math-folding/raw/master/logo.png",
   "license": "(MIT)",
   "repository": {
     "type": "git",
