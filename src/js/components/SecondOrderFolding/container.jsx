@@ -409,7 +409,7 @@ class SecondOrderFolding extends Component {
   generateStepsReverse = (power, activeStep, services, colors, resultReset, stepNext, stepBack) => {
     const { classes, ui } = this.props;
     let containerWidth = (cardWidth + 28) * (2 ** power) + 10;
-    let colorSet = _.reduce(colors, (accumulator, row) => accumulator.concat(row)); // colors of original matrix
+    let colorSet = _.reduce(colors, (accumulator, row) => [...accumulator, ...row]); // colors of original matrix
 
     return _.map(services, (service, index) => {
       let label = '';
