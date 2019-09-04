@@ -1,4 +1,4 @@
-# math-folding
+# math-folding-react
 
 Research for number folding puzzels.
 
